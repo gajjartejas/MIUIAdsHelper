@@ -38,7 +38,7 @@ The application supports Android 4.1.2 KitKat (API level 16) and above.
 ### With Gradle
 If you want to build from source, just do
 
-    git clone https://github.com/uberspot/2048-android.git
+    git clone https://github.com/gajjartejas/MIUIAdsHelper.git
     cd MIUIAdsHelper
     npm install or yarn
     ./gradlew build
