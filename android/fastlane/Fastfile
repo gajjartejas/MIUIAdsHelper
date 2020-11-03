@@ -1,0 +1,29 @@
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+desc "Build"
+lane :build do
+  gradle(task: "clean assembleRelease")
+end
+
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+  increment_version_code(
+gradle_file_path: "app/build.gradle"
+)
+    gradle(task: "clean bundleRelease")
+    upload_to_play_store
+  end
+end

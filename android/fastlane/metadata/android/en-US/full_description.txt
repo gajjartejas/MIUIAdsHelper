@@ -1,0 +1,18 @@
+This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) device with its simple and awesome card UI. There are a wide set of apps where you can able to enable or disable ads/recommendations. It's free and available to every Xiaomi's MIUI device.
+
+FEATURES
+- Support MIUI 11 and MIUI 12
+- Simple swipeable card UI and simple navigations
+- Wide sets of MIUI apps supported.
+- Supports easily navigate to ads or recommendations setting for some apps.
+- Ads setting is easily reversible
+
+DISCLAIMER
+- This app only works on a Xiaomi device with MIUI installed.
+- This app does not automatically change your system setting without your permission.
+
+We hope you enjoy our apps
+If you have any bug or suggestion, please contact us at
+gajjartejas26@gmail.com
+
+This app is written in React native.
