@@ -36,6 +36,7 @@ google-services.json
 node_modules/
 npm-debug.log
 yarn-error.log
+android/api-play-store-key.json
 
 # BUCK
 buck-out/
