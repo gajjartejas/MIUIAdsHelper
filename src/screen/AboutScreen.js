@@ -23,7 +23,7 @@ const MIButton = (props) => (
       props.onPress();
     }}>
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-      <View style={{width: 30, alignItems: 'center', justifyContent: 'center'}}>{props.icon}</View>
+      <View style={{width: 30, alignItems: 'center', justifyContent: 'center', marginLeft: 8}}>{props.icon}</View>
       <Text style={styles().miButtonText}>{props.title}</Text>
     </View>
   </TouchableOpacity>
@@ -157,12 +157,11 @@ const styles = () =>
     miButtonTouchable: {
       height: 50,
       justifyContent: 'center',
-      padding: 20,
     },
     miButtonText: {
       fontSize: 16,
       color: Themes.getColors().COLOR_WHITE,
-      margin: 8,
+      marginLeft: 20,
     },
     scrollview: {
       flex: 1,

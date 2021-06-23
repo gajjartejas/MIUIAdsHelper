@@ -12,7 +12,7 @@ config = use_native_modules!
     inherit! :complete
     # Pods for testing
   end
-  
+
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
@@ -20,4 +20,5 @@ config = use_native_modules!
   use_flipper!
   post_install do |installer|
     flipper_post_install(installer)
+  end
   end
