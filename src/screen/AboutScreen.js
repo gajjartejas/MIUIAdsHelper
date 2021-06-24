@@ -23,7 +23,7 @@ const MIButton = (props) => (
       props.onPress();
     }}>
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-      <View style={{width: 30, alignItems: 'center', justifyContent: 'center', marginLeft: 8}}>{props.icon}</View>
+      <View style={{width: 30, alignItems: 'center', justifyContent: 'center', marginLeft: 16}}>{props.icon}</View>
       <Text style={styles().miButtonText}>{props.title}</Text>
     </View>
   </TouchableOpacity>
@@ -40,25 +40,18 @@ class AboutScreen extends Component {
     switch (family) {
       case 'FontAwesome':
         return <FontAwesome name={name} size={26} color={`${Themes.getColors().COLOR_WHITE}80`} />;
-        break;
       case 'MaterialIcons':
         return <MaterialIcons name={name} size={26} color={`${Themes.getColors().COLOR_WHITE}80`} />;
-        break;
       case 'MaterialCommunityIcons':
         return <MaterialCommunityIcons name={name} size={26} color={`${Themes.getColors().COLOR_WHITE}80`} />;
-        break;
       case 'SimpleLineIcons':
         return <SimpleLineIcons name={name} size={26} color={`${Themes.getColors().COLOR_WHITE}80`} />;
-        break;
       case 'Ionicons':
         return <Ionicons name={name} size={26} color={`${Themes.getColors().COLOR_WHITE}80`} />;
-        break;
       case 'FontAwesome5Pro':
         return <FontAwesome5Pro name={name} size={26} color={`${Themes.getColors().COLOR_WHITE}80`} />;
-        break;
       default:
         return null;
-        break;
     }
   };
 
@@ -139,6 +132,7 @@ class AboutScreen extends Component {
           <View style={styles().copyrightContainerView}>
             <Text style={styles().copyrightNameText}>{strings.about_copy_right_name}</Text>
             <Text style={styles().copyrightVersionText}>{strings.about_copy_right}</Text>
+            <Text style={styles().translatorText}>{strings.about_russian_translation}</Text>
           </View>
         </ScrollView>
       </View>
@@ -175,6 +169,7 @@ const styles = () =>
       width: 50,
       height: 50,
       borderRadius: 20,
+      marginTop: 16
     },
     appNameText: {
       marginTop: 20,
@@ -190,7 +185,7 @@ const styles = () =>
       flex: 1,
     },
     copyrightContainerView: {
-      height: 60,
+      marginTop: 20,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -202,6 +197,13 @@ const styles = () =>
       fontSize: 14,
       color: Themes.getColors().COLOR_WHITE + 'bb',
       marginTop: 4,
+    },
+    translatorText: {
+      fontSize: 14,
+      color: Themes.getColors().COLOR_WHITE + 'bb',
+      marginTop: 20,
+      alignSelf: 'center',
+      textAlign: 'center',
     },
     container: {
       flex: 1,
