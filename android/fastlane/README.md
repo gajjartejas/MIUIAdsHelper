@@ -26,11 +26,11 @@ Runs all the tests
 fastlane android build
 ```
 Build
-### android beta
+### android distribute
 ```
-fastlane android beta
+fastlane android distribute
 ```
-Submit a new Beta Build to Crashlytics Beta
+Fastlane Firebase Distribution
 ### android deploy
 ```
 fastlane android deploy
