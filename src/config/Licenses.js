@@ -17,18 +17,6 @@ export default {
     licenseUrl: 'https://github.com/kmagiera/react-native-gesture-handler/raw/master/LICENSE',
     parents: 'MiUtils',
   },
-  'react-native-paper@2.15.1': {
-    licenses: 'MIT',
-    repository: 'https://github.com/callstack/react-native-paper',
-    licenseUrl: 'https://github.com/callstack/react-native-paper/raw/master/LICENSE.md',
-    parents: 'MiUtils',
-  },
-  'react-native-snap-carousel@3.7.5': {
-    licenses: 'BSD-3-Clause',
-    repository: 'github.com/archriss/react-native-snap-carousel',
-    licenseUrl: 'github.com/archriss/react-native-snap-carousel/raw/master/LICENSE',
-    parents: 'MiUtils',
-  },
   'react-native-vector-icons@6.4.2': {
     licenses: 'MIT',
     repository: 'https://github.com/oblador/react-native-vector-icons',
@@ -39,12 +27,6 @@ export default {
     licenses: 'MIT',
     repository: 'https://github.com/facebook/react-native',
     licenseUrl: 'https://github.com/facebook/react-native/raw/master/LICENSE',
-    parents: 'MiUtils',
-  },
-  'react-navigation-material-bottom-tabs@1.0.0': {
-    licenses: 'MIT',
-    repository: 'https://github.com/react-navigation/react-navigation-material-bottom-tabs',
-    licenseUrl: 'https://github.com/react-navigation/react-navigation-material-bottom-tabs/raw/master/LICENSE.md',
     parents: 'MiUtils',
   },
   'react-navigation@3.6.1': {

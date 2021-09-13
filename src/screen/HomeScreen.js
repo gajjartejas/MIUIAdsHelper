@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, SafeAreaView} from 'react-native';
 
-import SplashScreen from 'react-native-splash-screen';
-
+//App Modules
 import Config from '../config/index';
 import Components from '../components/index';
 import Themes from '../Themes/index';
+import RNBootSplash from 'react-native-bootsplash';
+import Utils from '../utils/index';
+import {connect} from 'react-redux';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -17,10 +19,11 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    SplashScreen.hide();
+    RNBootSplash.hide({fade: true});
   }
 
   cardTapped = (item, index) => {
+    Utils.RateApp.saveItem(item);
     this.props.navigation.navigate('Detail', {item: item});
   };
 
@@ -30,7 +33,7 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      <View style={styles().container}>
+      <SafeAreaView style={styles().container}>
         <View style={styles().carouselContainer}>
           <FlatList
             style={styles().flatlist}
@@ -43,7 +46,7 @@ class HomeScreen extends Component {
             numColumns={2}
           />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -62,4 +65,8 @@ const styles = () =>
     },
   });
 
-export default HomeScreen;
+const mapStateToProps = (state) => ({
+  purchased: state.user.purchased,
+});
+
+export default connect(mapStateToProps, null)(HomeScreen);

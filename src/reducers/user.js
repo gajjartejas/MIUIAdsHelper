@@ -1,22 +1,16 @@
-import {UPDATE_USER, NOTIFICATION_UPDATE, UPDATE_LANGUAGE, UPDATE_CART_TEIMS} from '../actions/actionTypes';
-
-import Utils from '../utils/index';
-import Config from '../config/index';
-import Modules from '../module/index';
+import {UPDATE_PURCHASE} from '../actions/actionTypes';
 
 const initialState = {
-  userdata: {},
+  purchased: false,
 };
 
 const updateUser = (state, action) => {
-  let ud = action.userdata;
-
-  return {...state, userdata: Object.assign({}, ud), loginStatus: ud ? 1 : 0};
+  return {...state, purchased: action.purchased};
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_USER:
+    case UPDATE_PURCHASE:
       return updateUser(state, action);
     default:
       return state;

@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, StatusBar, AppState} from 'react-native';
-import Constant from '../config/Constant';
+import {StyleSheet, View, StatusBar} from 'react-native';
+
+//App Modules
 import Themes from '../Themes/index';
 
 export default class AppGlobalModule extends React.Component {

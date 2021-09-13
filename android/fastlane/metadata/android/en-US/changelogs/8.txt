@@ -1,0 +1,3 @@
+v1.6
+1. MIUI 12.5 Compatible and more ads options added.
+2. Minor UI Layout changed.

@@ -1,30 +1,11 @@
 import React, {Component} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, NativeModules} from 'react-native';
 
-import {
-  Button,
-  ScrollView,
-  Dimensions,
-  StatusBar,
-  Navigator,
-  StyleSheet,
-  Image,
-  Text,
-  TextInput,
-  View,
-  Alert,
-  TouchableOpacity,
-  Platform,
-  WebView,
-  ActivityIndicator,
-  Linking,
-  NativeModules,
-} from 'react-native';
-
+//App Modules
 import strings from '../localization/LocalizedStrings';
-
 import Components from '../components/index';
-import Config from '../config/index';
 import Themes from '../Themes/index';
+import {connect} from 'react-redux';
 
 class DetailScreen extends Component {
   constructor(props) {
@@ -35,7 +16,7 @@ class DetailScreen extends Component {
   openActivity = (packageName, activityName) => {
     return new Promise((resolve, reject) => {
       NativeModules.OpenSettings.openNetworkSettings(packageName, activityName, (data) => {
-        if (data != true) {
+        if (data !== true) {
           resolve(data);
         } else {
           resolve(true);
@@ -60,7 +41,7 @@ class DetailScreen extends Component {
   };
 
   render() {
-    const item = this.props.route.params.item; 
+    const item = this.props.route.params.item;
     return (
       <View style={styles().container}>
         <Components.ParallaxBackground maxHeight={200} uri={item.illustration}>
@@ -109,7 +90,7 @@ const styles = () =>
       fontSize: 18,
       fontWeight: '400',
       marginTop: 4,
-      color: Themes.getColors().COLOR_WHITE,
+      color: Themes.getColors().COLOR_WHITE + 60,
     },
     stepsText: {
       marginHorizontal: 20,
@@ -123,7 +104,7 @@ const styles = () =>
       fontSize: 18,
       fontWeight: '400',
       marginTop: 4,
-      color: Themes.getColors().COLOR_WHITE,
+      color: Themes.getColors().COLOR_WHITE + 60,
     },
     openSettingsButton: {
       fontSize: 20,
@@ -133,12 +114,15 @@ const styles = () =>
       borderRadius: 8,
       alignSelf: 'center',
       marginTop: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     openSettingsButtonText: {
       fontSize: 18,
       fontWeight: '500',
       margin: 10,
       color: Themes.getColors().COLOR_WHITE,
+      textAlign: 'center',
     },
     specialNoteText: {
       fontSize: 14,
@@ -149,4 +133,8 @@ const styles = () =>
     },
   });
 
-export default DetailScreen;
+const mapStateToProps = (state) => ({
+  purchased: state.user.purchased,
+});
+
+export default connect(mapStateToProps, null)(DetailScreen);

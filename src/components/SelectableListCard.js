@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import {Text, Dimensions, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 
+//Third Party
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import Config from '../config/index';
+//App Modules
 import {AppTouchable} from './AppTouchable';
 import Themes from '../Themes/index';
-
-var {width, height} = Dimensions.get('window');
 
 export default class SelectableListCard extends Component {
   render() {
@@ -41,7 +40,6 @@ const styles = () =>
       shadowColor: Themes.getColors().COLOR_BLACK,
       elevation: 8,
       shadowOpacity: 1.0,
-      shadowRadius: 2,
       marginBottom: 16,
     },
     touchableButton: {

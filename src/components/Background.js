@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Image, TouchableHighlight, Dimensions, Animated, Easing} from 'react-native';
+import {StyleSheet, Dimensions, Animated, Easing} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -32,7 +32,6 @@ const imageTransform = (yAnim, maxHeight, xAnim, index) => {
 };
 
 class Background extends Component {
-
   constructor(props) {
     super(props);
     this.state = {

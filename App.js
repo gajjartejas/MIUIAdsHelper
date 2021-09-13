@@ -1,28 +1,20 @@
 import React from 'react';
-import {View, Text, TextInput, Button} from 'react-native';
+import {Appearance, View} from 'react-native';
 
+//Third Party
 import * as RNLocalize from 'react-native-localize';
-import AsyncStorage from '@react-native-community/async-storage';
-import RNRestart from 'react-native-restart';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Provider} from 'react-redux';
-import {store} from './src/store/index';
+import {store, persistor} from './src/store';
+import {PersistGate} from 'redux-persist/integration/react';
+
+//App Modules
 import MainNavigator from './src/navigator/MainNavigator';
 import Components from './src/components/index';
-
 import strings from './src/localization/LocalizedStrings';
-import Config from './src/config/index';
 import {supportedLanguages} from './src/localization/SupportedLanguages';
 import Themes from './src/Themes/index';
-
-if (Text.defaultProps == null) Text.defaultProps = {};
-Text.defaultProps.allowFontScaling = false;
-
-if (TextInput.defaultProps == null) TextInput.defaultProps = {};
-TextInput.defaultProps.allowFontScaling = false;
-
-if (Button.defaultProps == null) Button.defaultProps = {};
-Button.defaultProps.allowFontScaling = false;
+import Utils from './src/utils';
 
 class App extends React.Component {
   constructor(props) {
@@ -34,9 +26,10 @@ class App extends React.Component {
 
   async componentDidMount() {
     //Theme Config
+
     let appTheme = await AsyncStorage.getItem('app_theme');
     if (!appTheme) {
-      appTheme = 'auto';
+      appTheme = 'light';
       AsyncStorage.setItem('app_theme', appTheme);
     }
     Themes.configure(appTheme);
@@ -47,9 +40,9 @@ class App extends React.Component {
       let locates = RNLocalize.getLocales();
       if (locates && locates.length > 0) {
         let locate = locates[0];
-        let languageCode = locate.languageCode;
+        languageCode = locate.languageCode;
         let matchedLanguages = supportedLanguages.filter((value) => {
-          return value.languageCode == languageCode;
+          return value.languageCode === languageCode;
         });
         if (matchedLanguages && matchedLanguages.length > 0) {
           let matchedLanguage = matchedLanguages[0];
@@ -64,6 +57,10 @@ class App extends React.Component {
     } else {
       this.setLanguage(languageCode);
     }
+
+    Utils.RateApp.rateAppIfNeeded().then(() => {
+      console.log('Rate app opens');
+    });
   }
 
   setLanguage(languageCode) {
@@ -73,13 +70,21 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.loading) return <View style={{backgroundColor: Themes.getColors().COLOR_BLACK, flex: 1}} />;
+    const colorScheme = Appearance.getColorScheme();
+
+    if (this.state.loading) {
+      return <View style={{flex: 1, backgroundColor: colorScheme === 'dark' ? 'black' : 'white'}} />;
+    }
 
     return (
       <Provider store={store}>
-        <Components.AppGlobalModule>
-          <MainNavigator />
-        </Components.AppGlobalModule>
+        <PersistGate loading={null} persistor={persistor}>
+          <Components.AppGlobalModule>
+            <View style={{flex: 1, backgroundColor: colorScheme === 'dark' ? 'black' : 'white'}}>
+              <MainNavigator />
+            </View>
+          </Components.AppGlobalModule>
+        </PersistGate>
       </Provider>
     );
   }

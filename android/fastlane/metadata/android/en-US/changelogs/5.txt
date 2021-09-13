@@ -1,2 +1,0 @@
-v1.3
-1. Russian language added. Thanks to user Heathcliff.

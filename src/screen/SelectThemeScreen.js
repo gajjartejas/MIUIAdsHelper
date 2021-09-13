@@ -1,31 +1,11 @@
 import React, {Component} from 'react';
+import {StyleSheet, View, FlatList} from 'react-native';
 
-import {
-  Button,
-  ScrollView,
-  Dimensions,
-  StatusBar,
-  Navigator,
-  StyleSheet,
-  Image,
-  Text,
-  TextInput,
-  View,
-  Alert,
-  TouchableOpacity,
-  Platform,
-  WebView,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native';
-
-import SplashScreen from 'react-native-splash-screen';
-import AsyncStorage from '@react-native-community/async-storage';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import strings from '../localization/LocalizedStrings';
+//Third Party
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 
-import Config from '../config/index';
+//App Modules
 import Components from '../components/index';
 import Themes from '../Themes/index';
 
@@ -41,7 +21,7 @@ class SelectThemeScreen extends Component {
     let scheme = await AsyncStorage.getItem('app_theme');
 
     this.state.themes.forEach((value) => {
-      value.selected = value.scheme == scheme;
+      value.selected = value.scheme === scheme;
     });
 
     this.setState({
@@ -52,7 +32,7 @@ class SelectThemeScreen extends Component {
   cardTapped = (item, index) => {
     AsyncStorage.setItem('app_theme', item.scheme);
     this.state.themes.forEach((value) => {
-      value.selected = value.scheme == item.scheme;
+      value.selected = value.scheme === item.scheme;
     });
     this.setState({
       themes: this.state.themes,
