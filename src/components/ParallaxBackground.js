@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, ScrollView, Text, Dimensions, Animated} from 'react-native';
+import {View, StyleSheet, Dimensions, Animated} from 'react-native';
+
+//App Modules
 import Background from './Background';
 
-class ParallaxBackground extends Component {
+//Constants
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
+class ParallaxBackground extends Component {
   constructor(props) {
     super(props);
     let self = this;
     this.state = {
       anim: new Animated.Value(0),
-      rendered: props.xAnim ? false : true,
+      rendered: !props.xAnim,
     };
     this._listener =
       props.xAnim &&
@@ -32,7 +36,7 @@ class ParallaxBackground extends Component {
     const yAnim = this.state.anim;
     const rendered = this.state.rendered;
     if (!rendered) {
-      return <View style={[styles().container]}></View>;
+      return <View style={[styles().container]} />;
     }
 
     return (

@@ -14,5 +14,5 @@ export default {
   Licenses,
   LicensesListItem,
   AdsListItem,
-  SelectableListCard
+  SelectableListCard,
 };

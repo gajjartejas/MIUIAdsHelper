@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import LicensesListItem from './LicensesListItem';
 
 export default class Licenses extends Component {

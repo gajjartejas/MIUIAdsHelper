@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import {Text, TouchableOpacity, View, Linking, Image, StyleSheet} from 'react-native';
 
-import Config from '../config/index';
+//App Modules
 import Themes from '../Themes/index';
 
 export default class LicensesListItem extends Component {
   render() {
-    const {image, userUrl, username, name, version, licenses, repository, licenseUrl, parents} = this.props;
+    const {image, username, name, version, licenses, repository, licenseUrl} = this.props;
 
     let title = name;
     if (username) {
-      if (title.toLowerCase() != username.toLowerCase()) {
+      if (title.toLowerCase() !== username.toLowerCase()) {
         title += ` by ${username}`;
       }
     }

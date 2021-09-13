@@ -1,6 +1,0 @@
-v1.2
-1. App is now open-sourced and we have removed ads.
-2. MIUI 12 compatibility added.
-3. Russian language added and multi-language support will be added in the future.
-4. Dark theme support added and UI improvements.
-5. React native version updated to 0.63.3 and other packages version updated.

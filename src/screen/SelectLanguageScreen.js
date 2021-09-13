@@ -1,34 +1,16 @@
 import React, {Component} from 'react';
 
-import {
-  Button,
-  ScrollView,
-  Dimensions,
-  StatusBar,
-  Navigator,
-  StyleSheet,
-  Image,
-  Text,
-  TextInput,
-  View,
-  Alert,
-  TouchableOpacity,
-  Platform,
-  WebView,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 
-import SplashScreen from 'react-native-splash-screen';
-import AsyncStorage from '@react-native-community/async-storage';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import strings from '../localization/LocalizedStrings';
+//Third Party
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 
-import Config from '../config/index';
+//App Modules
 import Components from '../components/index';
 import {supportedLanguages} from '../localization/SupportedLanguages';
 import Themes from '../Themes/index';
+import strings from '../localization/LocalizedStrings';
 
 class SelectLanguageScreen extends Component {
   constructor(props) {
@@ -42,7 +24,7 @@ class SelectLanguageScreen extends Component {
     let languageCode = await AsyncStorage.getItem('app_language');
 
     this.state.supportedLanguages.forEach((value) => {
-      value.selected = value.languageCode == languageCode;
+      value.selected = value.languageCode === languageCode;
     });
 
     this.setState({
@@ -55,7 +37,7 @@ class SelectLanguageScreen extends Component {
     AsyncStorage.setItem('app_language', item.languageCode);
 
     this.state.supportedLanguages.forEach((value) => {
-      value.selected = value.languageCode == item.languageCode;
+      value.selected = value.languageCode === item.languageCode;
     });
 
     this.setState({

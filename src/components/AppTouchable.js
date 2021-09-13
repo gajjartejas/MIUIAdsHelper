@@ -1,5 +1,3 @@
-// function AppTouchable({style, children, onPress, rippleColor, enablePointerEvents = false, disabled = false}) {
-
 import React from 'react';
 import {TouchableNativeFeedback, TouchableOpacity, View, ViewPropTypes, StyleSheet, Platform} from 'react-native';
 
@@ -37,7 +35,9 @@ function AppTouchable({style, children, onPress, rippleColor = 'rgba(255,255,255
       OUTER_STYLES.forEach(({key, remove}) => {
         if (flattenedStyle.hasOwnProperty(key)) {
           outerStyle[key] = flattenedStyle[key];
-          if (remove) delete flattenedStyle[key];
+          if (remove) {
+            delete flattenedStyle[key];
+          }
         }
       });
     }

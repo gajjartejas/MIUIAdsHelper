@@ -22,7 +22,7 @@ const DARK_COLORS = {
   COLOR_RED: '#FF0000',
 };
 
-var colorScheme;
+let colorScheme;
 
 const configure = (scheme) => {
   colorScheme = scheme;
@@ -31,12 +31,12 @@ const configure = (scheme) => {
 const getColors = () => {
   const systemColorScheme = Appearance.getColorScheme();
 
-  if (colorScheme == 'dark') {
+  if (colorScheme === 'dark') {
     return DARK_COLORS;
-  } else if (colorScheme == 'light') {
+  } else if (colorScheme === 'light') {
     return LIGHT_COLORS;
-  } else if (colorScheme == 'auto') {
-    return systemColorScheme == 'dark' ? DARK_COLORS : LIGHT_COLORS;
+  } else if (colorScheme === 'auto') {
+    return systemColorScheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
   } else {
     return LIGHT_COLORS;
   }

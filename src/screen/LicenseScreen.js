@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
 
-import {Dimensions, StyleSheet, View} from 'react-native';
-
+//App Modules
 import Config from '../config/index';
-import Componments from '../components/index';
+import Components from '../components/index';
 import Themes from '../Themes/index';
 
 function extractNameFromGithubUrl(url) {
@@ -32,14 +32,13 @@ function capitalizeFirstLetter(string) {
 let licenses = Object.keys(Config.Licenses).map((key) => {
   let {licenses, ...license} = Config.Licenses[key];
   let [name, version] = key.split('@');
-  const reg = /((https?:\/\/)?(www\.)?github\.com\/)?(@|#!\/)?([A-Za-z0-9_]{1,15})(\/([-a-z]{1,20}))?/i;
   let username = extractNameFromGithubUrl(license.repository) || extractNameFromGithubUrl(license.licenseUrl);
   let userUrl;
   let image;
   if (username) {
     username = capitalizeFirstLetter(username);
-    image = `http://github.com/${username}.png`;
-    userUrl = `http://github.com/${username}`;
+    image = `https://github.com/${username}.png`;
+    userUrl = `https://github.com/${username}`;
   }
   return {
     key,
@@ -64,7 +63,7 @@ class LicenseScreen extends Component {
   render() {
     return (
       <View style={styles().container}>
-        <Componments.Licenses licenses={licenses} />
+        <Components.Licenses licenses={licenses} />
       </View>
     );
   }

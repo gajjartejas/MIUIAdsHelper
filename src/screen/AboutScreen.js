@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-
 import {ScrollView, StyleSheet, Image, Text, View, TouchableOpacity, Linking} from 'react-native';
 
+//Third Party
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,10 +9,12 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5Pro from 'react-native-vector-icons/FontAwesome5Pro';
 import DeviceInfo from 'react-native-device-info';
-import strings from '../localization/LocalizedStrings';
 
+//App Modules
+import strings from '../localization/LocalizedStrings';
 import Config from '../config/index';
 import Themes from '../Themes/index';
+import {connect} from 'react-redux';
 
 const BottomLine = () => <View style={styles().bottomLine} />;
 
@@ -76,7 +78,11 @@ class AboutScreen extends Component {
 
             <MIButton
               onPress={() => {
-                this.props.navigation.navigate('SelectTheme');
+                if (this.props.purchased) {
+                  this.props.navigation.navigate('SelectTheme');
+                } else {
+                  this.props.navigation.navigate('Purchase', {fromTheme: true});
+                }
               }}
               title={strings.navigator_screen_title_theme}
               icon={this.iconFrom('md-color-palette', 'Ionicons')}
@@ -169,7 +175,7 @@ const styles = () =>
       width: 50,
       height: 50,
       borderRadius: 20,
-      marginTop: 16
+      marginTop: 16,
     },
     appNameText: {
       marginTop: 20,
@@ -211,4 +217,8 @@ const styles = () =>
     },
   });
 
-export default AboutScreen;
+const mapStateToProps = (state) => ({
+  purchased: state.user.purchased,
+});
+
+export default connect(mapStateToProps, null)(AboutScreen);

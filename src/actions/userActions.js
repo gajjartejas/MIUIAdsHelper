@@ -1,10 +1,10 @@
-import {UPDATE_USER} from './actionTypes';
+import {UPDATE_PURCHASE} from './actionTypes';
 
-const updateuser = (userdata) => {
+const updatePurchase = (purchased) => {
   return {
-    type: UPDATE_USER,
-    userdata: userdata,
+    type: UPDATE_PURCHASE,
+    purchased: purchased,
   };
 };
 
-export {updateuser};
+export {updatePurchase};

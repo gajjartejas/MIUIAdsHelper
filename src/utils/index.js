@@ -1,5 +1,5 @@
-import MethodUtils from './MethodUtils';
+import RateApp from '../utils/RateApp';
 
 export default {
-  MethodUtils,
+  RateApp,
 };

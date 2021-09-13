@@ -1,11 +1,8 @@
 #import "AppDelegate.h"
-#import <GoogleMaps/GoogleMaps.h>
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-@import Firebase;
-#import "RNSplashScreen.h"  // here
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -14,7 +11,6 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
-
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -51,18 +47,6 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-  
-  for (NSString *familyName in [UIFont familyNames]){
-      NSLog(@"Family name: %@", familyName);
-      for (NSString *fontName in [UIFont fontNamesForFamilyName:familyName]) {
-          NSLog(@"--Font name: %@", fontName);
-      }
-  }
-  
-  [FIRApp configure];
-  [GMSServices provideAPIKey:@"AIzaSyDplLwazJoTONQY7iav0nLUexlgAmFDOLo"];
-  [RNSplashScreen show];  // here
-
   return YES;
 }
 
@@ -76,6 +60,3 @@ static void InitializeFlipper(UIApplication *application) {
 }
 
 @end
-
-//Family name: SF Compact Text
-//name: SFCompactText-Regular

@@ -1,45 +1,38 @@
 import React, {Component} from 'react';
-import {Text, Dimensions, View, Linking, Image, StyleSheet} from 'react-native';
+import {Text, Dimensions, View, StyleSheet} from 'react-native';
 
+//Third Party
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5Pro from 'react-native-vector-icons/FontAwesome5Pro';
-import strings from '../localization/LocalizedStrings';
 
-import Config from '../config/index';
-import {AppTouchable} from '../components/AppTouchable';
+//App Modules
+import {AppTouchable} from './AppTouchable';
 import Themes from '../Themes/index';
 
-var {width, height} = Dimensions.get('window');
+//Constants
+const {width} = Dimensions.get('window');
 
 export default class LicensesListItem extends Component {
-  
-  iconFrom = (name, family) => {
+  iconFrom = (name, family, color) => {
     switch (family) {
       case 'FontAwesome':
-        return <FontAwesome name={name} size={26} color={Themes.getColors().COLOR_WHITE} />;
-        break;
+        return <FontAwesome name={name} size={26} color={color} />;
       case 'MaterialIcons':
-        return <MaterialIcons name={name} size={26} color={Themes.getColors().COLOR_WHITE} />;
-        break;
+        return <MaterialIcons name={name} size={26} color={color} />;
       case 'MaterialCommunityIcons':
-        return <MaterialCommunityIcons name={name} size={26} color={Themes.getColors().COLOR_WHITE} />;
-        break;
+        return <MaterialCommunityIcons name={name} size={26} color={color} />;
       case 'SimpleLineIcons':
-        return <SimpleLineIcons name={name} size={26} color={Themes.getColors().COLOR_WHITE} />;
-        break;
+        return <SimpleLineIcons name={name} size={26} color={color} />;
       case 'Ionicons':
-        return <Ionicons name={name} size={26} color={Themes.getColors().COLOR_WHITE} />;
-        break;
+        return <Ionicons name={name} size={26} color={color} />;
       case 'FontAwesome5Pro':
-        return <FontAwesome5Pro name={name} size={26} color={Themes.getColors().COLOR_WHITE} />;
-        break;
+        return <FontAwesome5Pro name={name} size={26} color={color} />;
       default:
         return null;
-        break;
     }
   };
 
@@ -48,10 +41,8 @@ export default class LicensesListItem extends Component {
     return (
       <View style={styles().container}>
         <AppTouchable style={styles().touchableButton} onPress={() => this.props.onPress(item, index)}>
-          <View style={{...styles().iconContainerView, backgroundColor: item.iconBackgroundColor}}>
-            {this.iconFrom(item.iconName, item.iconFamily)}
-          </View>
-          <Text numberOfLines={2} style={styles().titleText}>
+          {this.iconFrom(item.iconName, item.iconFamily, item.iconBackgroundColor)}
+          <Text numberOfLines={1} style={styles().titleText}>
             {item.title}
           </Text>
           <Text numberOfLines={2} style={styles().subtitleText}>
@@ -78,14 +69,13 @@ const styles = () =>
       shadowColor: Themes.getColors().COLOR_BLACK,
       elevation: 8,
       shadowOpacity: 1.0,
-      shadowRadius: 2,
       marginBottom: 16,
     },
     touchableButton: {
       flex: 1,
       backgroundColor: Themes.getColors().COLOR_BACKGROUND_CELL_COLOR,
-      paddingVertical: 12,
-      paddingHorizontal: 12,
+      paddingVertical: 16,
+      paddingHorizontal: 16,
     },
     iconContainerView: {
       backgroundColor: 'red',
@@ -102,10 +92,10 @@ const styles = () =>
       marginTop: 8,
     },
     subtitleText: {
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: '500',
-      color: Themes.getColors().COLOR_WHITE,
-      marginTop: 12,
+      color: Themes.getColors().COLOR_WHITE + 60,
+      marginTop: 4,
     },
 
     card: {

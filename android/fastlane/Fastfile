@@ -35,4 +35,10 @@ end
     gradle(task: "clean bundleRelease")
     upload_to_play_store
   end
+
+    desc "Deploy a new version to the Google Play"
+    lane :alpha do
+      gradle(task: "clean bundleRelease")
+      upload_to_play_store(track: 'alpha')
+    end
 end

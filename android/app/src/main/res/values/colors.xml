@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary_dark">#000000</color>
-    <color name="primary_white">#ffffff</color>
+    <color name="primary_white">#000000</color>
     <color name="primary_app_color">#4680FF</color>
+    <color name="bootsplash_background">#000000</color>
 </resources>
