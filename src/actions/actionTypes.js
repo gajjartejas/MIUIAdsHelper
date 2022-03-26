@@ -1,1 +1,0 @@
-export const UPDATE_PURCHASE = 'UPDATE_PURCHASE';

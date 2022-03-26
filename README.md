@@ -1,7 +1,6 @@
  
  [<img align="right" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/instagram.svg" width="50" height="50" />](http://www.instagram.com/gajjartejas)
  [<img align="right" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/twitter.svg" width="50" height="50" />](http://www.twitter.com/gajjartejas)
- [<img align="right" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/reddit.svg" width="50" height="50" />](http://www.reddit.com/u/gajjartejas)
 
 # Introduction
 
@@ -13,20 +12,17 @@ This application allows you to enable/disable ads or recommendations for various
   <img alt="Android app on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
 </a>
 
-### From GitHub
-
-Download the .apk from [Releases](https://github.com/gajjartejas/MIUIAdsHelper/releases/latest)
-
 ### Screeshots
-Home Screen            |  Detail          |  Reports
+Home             |  Detail          |  About
 :-------------------------:|:-------------------------:|:-------------------------:
-![Accounts List](docs/images/v1.2.0_home_screen.png)   |  ![Transactions List](docs/images/v1.2.0_detail.png) |  ![Reports](docs/images/v1.2.0_about.png)
+![Accounts List](docs/images/v1.7.0/home.jpg)   |  ![Transactions List](docs/images/v1.7.0/details.jpg) |  ![Reports](docs/images/v1.7.0/about.jpg)
 
-The application supports Android 4.1.2 KitKat (API level 16) and above.
+The application supports Android 6.0 (API 23) and above.
+
 
 ## Features include:
 
-* Wide sets of MIUI apps supported.(MIUI 11 and MIUI 12 Supported.)
+* Wide sets of MIUI apps supported.(MIUI 11, MIUI 12 and  MIUI 13 Supported.)
 * Simple card UI and simple navigations.
 * Supports easily navigate to ads or recommendations setting for some apps.
 * Ads setting is easily reversible.
