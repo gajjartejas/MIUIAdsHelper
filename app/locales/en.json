@@ -5,6 +5,11 @@
   "NO_INTERNET": "No Internet Connection",
   "OPEN": "Open",
 
+  "miui_version": "MIUI Version: {{version}}",
+  "android_version": "Android Version: {{version}}",
+  "app_type_standard": "Standard Apps",
+  "app_type_system": "System Apps",
+  "app_type_other": "Other Apps",
   "ads_step_0_appname": "Music",
   "ads_step_0_title": "Mi Music App",
   "ads_step_0_subtitle": "Mi Music Player is the MIUI native music player which is designed just for Mi Fans.",
@@ -28,7 +33,7 @@
   "ads_step_3_subtitle": "Mi File Manager is a free, secure tool that helps you find file faster, manage files easily, and share them offline with others",
   "ads_step_3_detail": "Mi File Manager is a free, secure tool that helps you find file faster, manage files easily, and share them offline with others",
   "ads_step_3_steps": "1. Open Mi File Manager app.\n2. Tap on three horizontal lines at the top corner of Mi File Explorer.\n3. Go to Settings and About.\n4. Turn off Recommendations.",
-  "c": "You have to manually find ads setting.",
+  "ads_step_3_specialNote": "You have to manually find ads setting.",
   "ads_step_4_appname": "Browser",
   "ads_step_4_title": "Mi Browser",
   "ads_step_4_subtitle": "Mi Browser is an app from the category browsing, whose license is free which is available in english",
@@ -125,7 +130,6 @@
   "ads_step_19_detail": "All the ads that appear on the ShareMe app can be disabled by following two simple steps.",
   "ads_step_19_steps": "1. Navigate to ShareMe app\n2. Tap on more icon(top right) \n3. Tap on About button menu\n4. Tap on Help & feedback button\n5. Turn off Personalised ads.",
   "ads_step_19_specialNote": "",
-
   "iap_navigation_title": "Unlock dark theme",
   "iap_title": "Thanks you for installing MIUIAdsHelper",
   "iap_desc": "You can show your appreciation for my work by making a small donation. This will help me to continue work on this app.",
@@ -140,16 +144,13 @@
   "iap_buy": "BUY",
   "iap_purchased_already": "You have already purchased!",
   "iap_purchased_success": "Congratulations, Purchase successful!",
-
   "ads_detail_app_not_available": "Probably this application is not installed on your phone!",
   "ads_detail_desc": "Description",
   "ads_detail_open": "Open",
   "ads_detail_settings": "Settings",
   "ads_detail_steps": "Steps",
-
   "MORE_APP_GITHUB": "Github",
   "MORE_APP_PLAY_STORE": "Play Store",
-
   "ABOUT_CHANGE_LANGUAGE": "Change Language",
   "ABOUT_RATE_APP": "Rate App",
   "ABOUT_MORE_APPS": "More Apps",
@@ -163,13 +164,11 @@
   "ABOUT_APP": "About MIUIAdsHelper",
   "ABOUT_SEND_FEEDBACK": "Send Feedback",
   "ABOUT_SEND_FEEDBACK_DETAIL": "You can send your valuable feedback to Telegram channel or send mail directly.",
-
   "MORE_APPS_TITLE": "More Apps",
   "MORE_APPS_1_TITLE": "MIUI - Ads helper",
   "MORE_APPS_1_DESC": "This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) devices.",
   "MORE_APPS_2_TITLE": "OHM-Client",
   "MORE_APPS_2_DESC": "`OHM-Client` is an unofficial open hardware monitor client app for android and iOS written in react-native. Using this app you can monitor open hardware monitor web server.",
-
   "SETTINGS_TITLE": "Settings",
   "SETTINGS_COMMON_HEADER": "Common Settings",
   "SETTINGS_APPEARANCE_TITLE": "Appearance",
@@ -202,11 +201,8 @@
   "SETTINGS_THEME_OPTION_2": "Dark",
   "SETTINGS_THEME_OPTION_3": "System default",
   "SETTINGS_ACCENT_COLOR_OPTION": "Accent color",
-
   "LIBRARIES_TITLE": "Libraries",
-
   "TRANSLATORS_TITLE": "Translators",
-
   "ABOUT_INFO_TITLE": "About MIUIAdsHelper",
   "ABOUT_INFO_HEADER": "Information",
   "ABOUT_INFO_DESC_TITLE": "This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) devices.",

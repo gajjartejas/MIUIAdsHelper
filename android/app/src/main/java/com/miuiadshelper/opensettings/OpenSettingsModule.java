@@ -1,7 +1,6 @@
-package com.tejasgajjar.miuiadshelper.opensettings;
+package com.miuiadshelper.opensettings;
 
-import static android.icu.text.DisplayContext.LENGTH_SHORT;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.*;
@@ -10,10 +9,18 @@ import android.os.Build;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.WritableMap;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OpenSettingsModule extends ReactContextBaseJavaModule {
 
@@ -63,6 +70,26 @@ public class OpenSettingsModule extends ReactContextBaseJavaModule {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(currentActivity,"test",Toast.LENGTH_SHORT);
         }
+    }
+
+    @ReactMethod
+    public WritableMap readMIVersion(Promise promise) {
+        try {
+            @SuppressLint("PrivateApi") final Class<?> propertyClass = Class.forName("android.os.SystemProperties");
+            final Method method = propertyClass.getMethod("get", String.class);
+            final String versionCode = (String) method.invoke(propertyClass, "ro.miui.ui.version.code");
+            final String versionName = (String) method.invoke(propertyClass, "ro.miui.ui.version.name");
+
+            WritableMap map = Arguments.createMap();
+            map.putString("versionCode", versionCode);
+            map.putString("versionName", versionName);
+
+            promise.resolve(map);
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+        return null;
     }
 
     /* constructor */

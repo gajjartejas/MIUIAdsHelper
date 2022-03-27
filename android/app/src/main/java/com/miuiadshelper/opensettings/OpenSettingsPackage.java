@@ -1,5 +1,5 @@
 
-package com.tejasgajjar.miuiadshelper.opensettings;
+package com.miuiadshelper.opensettings;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

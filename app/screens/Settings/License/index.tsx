@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, InteractionManager, View } from 'react-native';
+import { FlatList, InteractionManager, View, StatusBar } from 'react-native';
 
 //ThirdParty
 import { useTranslation } from 'react-i18next';
@@ -81,6 +81,8 @@ const License = ({ navigation }: Props) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar translucent={false} backgroundColor={colors.background} />
+
       <Appbar.Header style={{ backgroundColor: colors.background }}>
         <Appbar.BackAction onPress={onGoBack} />
         <Appbar.Content title={t('LIBRARIES_TITLE')} subtitle="" />

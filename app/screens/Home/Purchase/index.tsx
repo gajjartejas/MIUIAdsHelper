@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, ScrollView, Text, View } from 'react-native';
+import { Platform, ScrollView, Text, View, StatusBar } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -178,6 +178,7 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
   }
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar translucent={false} backgroundColor={colors.background} />
       <Appbar.Header style={{ backgroundColor: colors.background }}>
         <Appbar.BackAction onPress={onPressBack} />
         <Appbar.Content title={t('iap_navigation_title')} />

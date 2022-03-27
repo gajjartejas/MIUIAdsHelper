@@ -1,12 +1,12 @@
 //ThirdParty
-import { IAdsActivity } from 'app/components/AdsListItem';
+import { IAdsActivity, IAdsActivitySection, IAdsSettingAppType } from 'app/components/AdsListItem';
 import { useTranslation } from 'react-i18next';
 
-const useGetSettingActivities = (): IAdsActivity[] => {
+const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: IAdsActivitySection[] } => {
   //Constants
   const { t } = useTranslation();
 
-  return [
+  let entries: IAdsActivity[] = [
     {
       id: 1,
       appname: t('ads_step_0_appname'),
@@ -29,6 +29,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'music',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 2,
@@ -52,6 +53,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'play-circle',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 3,
@@ -75,6 +77,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'color-lens',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 4,
@@ -98,6 +101,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'folder',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 5,
@@ -117,6 +121,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'globe',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 6,
@@ -140,6 +145,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'download',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 7,
@@ -159,6 +165,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'security',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 8,
@@ -182,6 +189,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'trash',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 9,
@@ -205,6 +213,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'lock',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 10,
@@ -224,6 +233,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'speedometer',
       iconFamily: 'ionicon',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 11,
@@ -243,6 +253,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'apps',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
     {
       id: 12,
@@ -266,6 +277,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'android',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 13,
@@ -285,6 +297,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'adversal',
       iconFamily: 'font-awesome5',
       hideButton: false,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 14,
@@ -304,6 +317,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'apps',
       iconFamily: 'material',
       hideButton: true,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 15,
@@ -323,6 +337,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'clear-all',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 16,
@@ -342,6 +357,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'google',
       iconFamily: 'font-awesome',
       hideButton: false,
+      appType: IAdsSettingAppType.Other,
     },
     {
       id: 17,
@@ -361,6 +377,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'person',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 18,
@@ -380,6 +397,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'screen-lock-portrait',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 19,
@@ -399,6 +417,7 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'widgets',
       iconFamily: 'material',
       hideButton: false,
+      appType: IAdsSettingAppType.System,
     },
     {
       id: 20,
@@ -418,8 +437,23 @@ const useGetSettingActivities = (): IAdsActivity[] => {
       iconName: 'share-alt-square',
       iconFamily: 'font-awesome5',
       hideButton: false,
+      appType: IAdsSettingAppType.Standard,
     },
   ];
+
+  const groupBy = (xs: any, key: string) => {
+    return xs.reduce((rv: any, x: any) => {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+      return rv;
+    }, {});
+  };
+  let res = groupBy(entries, 'appType');
+
+  let groupedEntries = Object.keys(res).map((key, _index) => {
+    return { title: key, data: res[key] } as IAdsActivitySection;
+  });
+
+  return { entries, groupedEntries };
 };
 
 export default useGetSettingActivities;

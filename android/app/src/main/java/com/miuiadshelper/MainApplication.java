@@ -10,7 +10,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.tejasgajjar.miuiadshelper.opensettings.OpenSettingsPackage;
+import com.miuiadshelper.opensettings.OpenSettingsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
