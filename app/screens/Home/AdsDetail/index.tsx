@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, NativeModules, ScrollView, Dimensions } from 'react-native';
+import { Text, View, NativeModules, ScrollView, Dimensions, StatusBar } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -58,9 +58,11 @@ const AdsDetails = ({ route, navigation }: Props) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar translucent={false} backgroundColor={colors.background} />
+
       <Appbar.Header style={{ backgroundColor: colors.background }}>
         <Appbar.BackAction onPress={onPressBack} />
-        <Appbar.Content title={item.appname} />
+        <Appbar.Content title={item.title} />
       </Appbar.Header>
       <ScrollView>
         <View style={[styles.headerContainer, { backgroundColor: `${item.iconBackgroundColor}50` }]}>

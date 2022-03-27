@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, View } from 'react-native';
+import { FlatList, Image, View, StatusBar } from 'react-native';
 
 //ThirdParty
 import { useTranslation } from 'react-i18next';
@@ -96,6 +96,8 @@ const Translators = ({ navigation }: Props) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar translucent={false} backgroundColor={colors.background} />
+
       <Appbar.Header style={{ backgroundColor: colors.background }}>
         <Appbar.BackAction onPress={onGoBack} />
         <Appbar.Content title={t('TRANSLATORS_TITLE')} subtitle="" />

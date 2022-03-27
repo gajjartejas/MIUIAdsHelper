@@ -23,11 +23,23 @@ export interface IAdsActivity {
   iconName: string;
   iconFamily: IconType;
   hideButton: boolean;
+  appType: IAdsSettingAppType;
 }
 
 export interface IAdsSettingPath {
   package: string | null;
   activity: string | null;
+}
+
+export enum IAdsSettingAppType {
+  Standard = 'app_type_standard',
+  System = 'app_type_system',
+  Other = 'app_type_other',
+}
+
+export interface IAdsActivitySection {
+  title: string;
+  data: IAdsActivity[];
 }
 
 //Interface
