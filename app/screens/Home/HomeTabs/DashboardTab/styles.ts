@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 10,
   },
+  whiteSectionHeader: {
+    color: 'white',
+  },
   headerImage: {
     width: '100%',
     height: 250,
@@ -40,7 +43,7 @@ const styles = StyleSheet.create({
   headerDetailText: {
     fontSize: 16,
     fontWeight: '800',
-    color: 'white'
+    color: 'white',
   },
 });
 
