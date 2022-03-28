@@ -80,7 +80,9 @@ const DashboardTab = ({ navigation }: Props) => {
           {groupedEntries.map((section, _sectionIndex) => {
             return (
               <View style={styles.section} key={section.title}>
-                <Text style={styles.sectionHeader}>{t(section.title)}</Text>
+                <Text style={[styles.sectionHeader, _sectionIndex === 0 ? styles.whiteSectionHeader : null]}>
+                  {t(section.title)}
+                </Text>
                 <View style={styles.sectionItem}>
                   {section.data.map((item, index) => {
                     return renderItem({ item, index });

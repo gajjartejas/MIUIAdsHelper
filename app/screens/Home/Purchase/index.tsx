@@ -66,7 +66,10 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
 
       await getItems();
 
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+
       if (Platform.OS === 'android') {
         await RNIap.flushFailedPurchasesCachedAsPendingAndroid();
       }
@@ -151,7 +154,7 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
           setTimeout(() => {
             // @ts-ignore
             navigation.navigate('SelectAppearance', {});
-          }, 1000);
+          }, 2000);
         }
       }
       console.log('purchases', purchases);
