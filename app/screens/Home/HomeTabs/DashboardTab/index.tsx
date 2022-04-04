@@ -7,6 +7,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
+import * as RNIap from 'react-native-iap';
+import { useDispatch } from 'react-redux';
 
 //App modules
 import Components from 'app/components';
@@ -17,6 +19,7 @@ import Utils from 'app/utils';
 import Config from 'app/config';
 import IState from 'app/models/models/appState';
 import { useSelector } from 'react-redux';
+import { updatePurchase } from 'app/store/actions/appConfigActions';
 
 //Params
 type RootStackParamList = {
@@ -36,23 +39,48 @@ const DashboardTab = ({ navigation }: Props) => {
   const { colors } = useTheme();
   const { groupedEntries } = useGetSettingActivities();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   //States
   const [miuiVersion, setMiuiVersion] = useState('');
 
   useEffect(() => {
+    const initPurchase = async () => {
+      await RNIap.initConnection();
+
+      const purchases = await RNIap.getAvailablePurchases();
+      if (purchases && purchases.length > 0) {
+        dispatch(updatePurchase(true));
+      }
+    };
+    initPurchase();
     NativeModules.OpenSettings.readMIVersion().then((v: any) => {
       setMiuiVersion(`MIUI ${v.versionCode}`);
     });
-  });
+  }, [dispatch]);
 
-  const cardTapped = (item: IAdsActivity, _index: number) => {
+  const cardTapped = (item: IAdsActivity, index: number, sectionIndex: number) => {
+    const lockedItem = (index > 5 && !purchased) || (sectionIndex > 0 && !purchased);
+    if (lockedItem) {
+      navigation.navigate('Purchase', {});
+
+      return;
+    }
+
     Utils.rateApp.saveItem(item);
     navigation.navigate('AdsDetail', { item: item });
   };
 
-  const renderItem = ({ item, index }: { item: IAdsActivity; index: number }) => {
-    return <Components.AdsListItem key={item.id} item={item} index={index} onPress={cardTapped} />;
+  const renderItem = ({ item, index, sectionIndex }: { item: IAdsActivity; index: number; sectionIndex: number }) => {
+    return (
+      <Components.AdsListItem
+        key={item.id}
+        item={item}
+        index={index}
+        sectionIndex={sectionIndex}
+        onPress={cardTapped}
+      />
+    );
   };
 
   const onPressMore = () => {
@@ -77,15 +105,15 @@ const DashboardTab = ({ navigation }: Props) => {
         </View>
 
         <View style={styles.listContainer}>
-          {groupedEntries.map((section, _sectionIndex) => {
+          {groupedEntries.map((section, sectionIndex) => {
             return (
               <View style={styles.section} key={section.title}>
-                <Text style={[styles.sectionHeader, _sectionIndex === 0 ? styles.whiteSectionHeader : null]}>
+                <Text style={[styles.sectionHeader, sectionIndex === 0 ? styles.whiteSectionHeader : null]}>
                   {t(section.title)}
                 </Text>
                 <View style={styles.sectionItem}>
                   {section.data.map((item, index) => {
-                    return renderItem({ item, index });
+                    return renderItem({ item, index, sectionIndex });
                   })}
                 </View>
               </View>

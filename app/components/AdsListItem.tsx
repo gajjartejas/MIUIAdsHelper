@@ -5,6 +5,8 @@ import { Dimensions, View, StyleSheet } from 'react-native';
 import { TouchableRipple, useTheme, Text } from 'react-native-paper';
 import Icon from 'react-native-easy-icon';
 import { IconType } from 'react-native-easy-icon/src/Icon';
+import { useSelector } from 'react-redux';
+import IState from 'app/models/models/appState';
 
 //Constants
 const { width } = Dimensions.get('window');
@@ -46,13 +48,17 @@ export interface IAdsActivitySection {
 interface IAdsListItem {
   item: IAdsActivity;
   index: number;
-  onPress: (item: IAdsActivity, index: number) => void;
+  sectionIndex: number;
+  onPress: (item: IAdsActivity, index: number, sectionIndex: number) => void;
 }
 
 const AdsListItem = (props: IAdsListItem) => {
   //Consts
   const { colors } = useTheme();
   const { item, index } = props;
+  const sectionIndex = props.sectionIndex;
+  const purchased = useSelector((state: IState) => state.appConfigReducer.purchased);
+  const lockItem = (index > 5 && !purchased) || (sectionIndex > 0 && !purchased);
 
   return (
     <View
@@ -60,7 +66,7 @@ const AdsListItem = (props: IAdsListItem) => {
       <TouchableRipple
         rippleColor={`${colors.primary}20`}
         style={[styles.touchableButton, { backgroundColor: `${colors.onBackground}20` }]}
-        onPress={() => props.onPress(item, index)}>
+        onPress={() => props.onPress(item, index, sectionIndex)}>
         <>
           <Icon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={24} />
           <Text numberOfLines={1} style={[styles.titleText, { color: colors.text }]}>
@@ -71,6 +77,14 @@ const AdsListItem = (props: IAdsListItem) => {
           </Text>
         </>
       </TouchableRipple>
+      {lockItem && (
+        <TouchableRipple
+          rippleColor={`${colors.primary}20`}
+          onPress={() => props.onPress(item, index, sectionIndex)}
+          style={[styles.disabledButton, { backgroundColor: `${colors.background}cc` }]}>
+          <Icon type={'font-awesome5'} name={'lock'} color={`${colors.onBackground}dd`} size={24} />
+        </TouchableRipple>
+      )}
     </View>
   );
 };
@@ -111,6 +125,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     marginTop: 4,
+  },
+  disabledButton: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
