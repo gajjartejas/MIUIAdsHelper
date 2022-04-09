@@ -69,11 +69,15 @@ const Navigator: React.FC<IProps> = (props: IProps) => {
       }}
       onStateChange={async () => {
         const previousRouteName = routeNameRef.current;
-        const currentRouteName = navigationRef.current.getCurrentRoute().name;
-
+        let currentRoute = navigationRef.current.getCurrentRoute();
+        let currentRouteName = currentRoute.name;
+        let currentScreenName = currentRoute.name;
+        if (currentRouteName === 'AdsDetail') {
+          currentScreenName = currentRoute.params.item.appname;
+        }
         if (previousRouteName !== currentRouteName) {
           await analytics().logScreenView({
-            screen_name: currentRouteName,
+            screen_name: currentScreenName,
             screen_class: currentRouteName,
           });
         }

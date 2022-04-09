@@ -57,8 +57,6 @@ const AdsListItem = (props: IAdsListItem) => {
   const { colors } = useTheme();
   const { item, index } = props;
   const sectionIndex = props.sectionIndex;
-  const purchased = useSelector((state: IState) => state.appConfigReducer.purchased);
-  const lockItem = (index > 5 && !purchased) || (sectionIndex > 0 && !purchased);
 
   return (
     <View
@@ -77,14 +75,12 @@ const AdsListItem = (props: IAdsListItem) => {
           </Text>
         </>
       </TouchableRipple>
-      {lockItem && (
-        <TouchableRipple
-          rippleColor={`${colors.primary}20`}
-          onPress={() => props.onPress(item, index, sectionIndex)}
-          style={[styles.disabledButton, { backgroundColor: `${colors.background}cc` }]}>
-          <Icon type={'font-awesome5'} name={'lock'} color={`${colors.onBackground}dd`} size={24} />
-        </TouchableRipple>
-      )}
+      <TouchableRipple
+        rippleColor={`${colors.primary}20`}
+        onPress={() => props.onPress(item, index, sectionIndex)}
+        style={[styles.disabledButton, { backgroundColor: `${colors.background}cc` }]}>
+        <Icon type={'font-awesome5'} name={'lock'} color={`${colors.onBackground}dd`} size={24} />
+      </TouchableRipple>
     </View>
   );
 };
