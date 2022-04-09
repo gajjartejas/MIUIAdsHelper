@@ -59,14 +59,7 @@ const DashboardTab = ({ navigation }: Props) => {
     });
   }, [dispatch]);
 
-  const cardTapped = (item: IAdsActivity, index: number, sectionIndex: number) => {
-    const lockedItem = (index > 5 && !purchased) || (sectionIndex > 0 && !purchased);
-    if (lockedItem) {
-      navigation.navigate('Purchase', {});
-
-      return;
-    }
-
+  const cardTapped = (item: IAdsActivity, _index: number, _sectionIndex: number) => {
     Utils.rateApp.saveItem(item);
     navigation.navigate('AdsDetail', { item: item });
   };
