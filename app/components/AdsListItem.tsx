@@ -5,8 +5,6 @@ import { Dimensions, View, StyleSheet } from 'react-native';
 import { TouchableRipple, useTheme, Text } from 'react-native-paper';
 import Icon from 'react-native-easy-icon';
 import { IconType } from 'react-native-easy-icon/src/Icon';
-import { useSelector } from 'react-redux';
-import IState from 'app/models/models/appState';
 
 //Constants
 const { width } = Dimensions.get('window');
@@ -74,12 +72,6 @@ const AdsListItem = (props: IAdsListItem) => {
             {item.subtitle}
           </Text>
         </>
-      </TouchableRipple>
-      <TouchableRipple
-        rippleColor={`${colors.primary}20`}
-        onPress={() => props.onPress(item, index, sectionIndex)}
-        style={[styles.disabledButton, { backgroundColor: `${colors.background}cc` }]}>
-        <Icon type={'font-awesome5'} name={'lock'} color={`${colors.onBackground}dd`} size={24} />
       </TouchableRipple>
     </View>
   );
