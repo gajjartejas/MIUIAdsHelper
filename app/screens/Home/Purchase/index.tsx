@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, ScrollView, Text, View, StatusBar } from 'react-native';
+import { Platform, ScrollView, Text, View, StatusBar, Alert } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PurchaseListItem, { IProduct } from 'app/components/PurchaseListItem';
 import { useTranslation } from 'react-i18next';
-import RNIap, { ProductPurchase, purchaseErrorListener, purchaseUpdatedListener } from 'react-native-iap';
+import {
+  endConnection,
+  finishTransaction,
+  flushFailedPurchasesCachedAsPendingAndroid,
+  getAvailablePurchases,
+  getProducts,
+  ProductPurchase,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+  requestPurchase,
+  Sku,
+} from 'react-native-iap';
 import { Appbar, useTheme } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { ActivityIndicator } from 'react-native-paper';
@@ -14,6 +25,8 @@ import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles';
 import useInappPurchases from 'app/config/inapp-purchases';
 import { updatePurchase } from 'app/store/actions/appConfigActions';
+import { LoggedInTabNavigatorParams } from 'app/navigation/types';
+import { AppTheme } from 'app/models/theme';
 
 const itemSkus = [
   'com.tejasgajjar.miuiadshelper.item1',
@@ -24,17 +37,13 @@ const itemSkus = [
 
 let purchaseUpdateSubscription: any = null;
 let purchaseErrorSubscription: any = null;
-//Params
-type RootStackParamList = {
-  PurchaseScreen: { fromTheme: boolean };
-  SelectAppearance: {};
-};
-type Props = NativeStackScreenProps<RootStackParamList, 'PurchaseScreen'>;
 
-const PurchaseScreen = ({ navigation, route }: Props) => {
+type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'Purchase'>;
+
+const Purchase = ({ navigation, route }: Props) => {
   //Const
   const iaps = useInappPurchases();
-  const { colors } = useTheme();
+  const { colors } = useTheme<AppTheme>();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -53,15 +62,13 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
         purchaseErrorSubscription.remove();
         purchaseErrorSubscription = null;
       }
-      RNIap.endConnection();
+      endConnection();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initPurchase = async () => {
     try {
-      await RNIap.initConnection();
-
       await getPurchases();
 
       await getItems();
@@ -71,12 +78,12 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
       }, 1000);
 
       if (Platform.OS === 'android') {
-        await RNIap.flushFailedPurchasesCachedAsPendingAndroid();
+        await flushFailedPurchasesCachedAsPendingAndroid();
       }
     } catch (err: any) {
       console.warn(err.code, err.message);
       // @ts-ignore
-      alert(err.message);
+      Alert.alert(err.message);
     }
 
     purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase: ProductPurchase) => {
@@ -85,16 +92,14 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
       console.info('purchaseUpdatedListener->receipt', receipt);
       if (receipt) {
         try {
-          const ackResult = await RNIap.finishTransaction(purchase, false);
+          const ackResult = await finishTransaction({ purchase, isConsumable: false });
           console.info('purchaseUpdatedListener->ackResult', ackResult);
           dispatch(updatePurchase(true));
-          // @ts-ignore
-          alert(t('iap_puraction.purchasedchased_success'));
+          Alert.alert(t('iap_purchased_success'));
           navigation.pop();
-        } catch (ackErr) {
+        } catch (ackErr: any) {
           console.warn('purchaseUpdatedListener->ackErr', ackErr);
-          // @ts-ignore
-          alert(ackErr.message);
+          Alert.alert(ackErr.message);
         }
       } else {
         console.warn('purchaseUpdatedListener->receipt->not found');
@@ -103,14 +108,13 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
 
     purchaseErrorSubscription = purchaseErrorListener(error => {
       console.log('purchaseErrorListener', error);
-      // @ts-ignore
-      alert(error.message);
+      Alert.alert(error.message);
     });
   };
 
   const getItems = async () => {
     try {
-      const products = await RNIap.getProducts(itemSkus);
+      const products = await getProducts({ skus: itemSkus });
       let mappedEntries: IProduct[] = products.map(anObj1 => ({
         ...iaps.find(anObj2 => anObj1.productId === anObj2.productId)!,
         ...anObj1,
@@ -118,41 +122,36 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
       setEntries(mappedEntries);
     } catch (err: any) {
       console.warn('getItems:', err.code, err.message);
-      // @ts-ignore
-      alert(err.message);
+      Alert.alert(err.message);
     }
   };
 
   // Version 3 apis
-  const requestPurchase = async (sku: string) => {
+  const requestAppPurchase = async (sku: Sku) => {
     try {
-      let purchaseResult = await RNIap.requestPurchase(sku);
+      let purchaseResult = await requestPurchase({ skus: [sku] });
       console.log('purchaseResult', purchaseResult);
     } catch (err: any) {
-      console.warn('requestPurchase:', err.code, err.message);
-      // @ts-ignore
-      alert(err.message);
+      console.warn('requestAppPurchase:', err.code, err.message);
+      Alert.alert(err.message);
     }
   };
 
   const getPurchases = async () => {
     try {
-      const purchases = await RNIap.getAvailablePurchases();
+      const purchases = await getAvailablePurchases();
       if (purchases && purchases.length > 0) {
         dispatch(updatePurchase(true));
         if (!route.params || !route.params.fromTheme) {
           setTimeout(() => {
-            // @ts-ignore
             navigation.pop();
           }, 2000);
 
           setTimeout(() => {
-            // @ts-ignore
-            alert(t('iap_purchased_already'));
+            Alert.alert(t('iap_purchased_already'));
           }, 3000);
         } else {
           setTimeout(() => {
-            // @ts-ignore
             navigation.navigate('SelectAppearance', {});
           }, 2000);
         }
@@ -165,7 +164,7 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
   };
 
   const onPressItem = (item: IProduct, _index: number) => {
-    requestPurchase(item.productId);
+    requestAppPurchase(item.productId);
   };
 
   const onPressBack = () => {
@@ -197,4 +196,4 @@ const PurchaseScreen = ({ navigation, route }: Props) => {
   );
 };
 
-export default PurchaseScreen;
+export default Purchase;

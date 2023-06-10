@@ -41,8 +41,8 @@ public class OpenSettingsModule extends ReactContextBaseJavaModule {
             return;
         }
         try {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setComponent(new ComponentName(pkgName,clsName));
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(pkgName, clsName));
             currentActivity.startActivity(intent);
             cb.invoke(true);
         } catch (Exception e) {

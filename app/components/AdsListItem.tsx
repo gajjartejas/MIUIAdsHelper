@@ -8,6 +8,7 @@ import { IconType } from 'react-native-easy-icon/src/Icon';
 
 //Constants
 const { width } = Dimensions.get('window');
+import { AppTheme } from 'app/models/theme';
 
 //Interface
 export interface IAdsActivity {
@@ -32,9 +33,13 @@ export interface IAdsSettingPath {
 }
 
 export enum IAdsSettingAppType {
-  Standard = 'app_type_standard',
-  System = 'app_type_system',
-  Other = 'app_type_other',
+  AudioVideo = 'home.audio_video',
+  ThemeLockScreen = 'home.theme_lock_screen',
+  Internet = 'home.internet',
+  Utilities = 'home.utilities',
+  Security = 'home.security',
+  System = 'home.type_system',
+  Other = 'home.type_other',
 }
 
 export interface IAdsActivitySection {
@@ -52,23 +57,26 @@ interface IAdsListItem {
 
 const AdsListItem = (props: IAdsListItem) => {
   //Consts
-  const { colors } = useTheme();
+  const { colors } = useTheme<AppTheme>();
   const { item, index } = props;
   const sectionIndex = props.sectionIndex;
 
   return (
     <View
-      style={[styles.container, { backgroundColor: `${colors.background}`, shadowColor: `${colors.onBackground}11` }]}>
+      style={[
+        styles.container,
+        { backgroundColor: `${item.iconBackgroundColor}${colors.opacity}`, shadowColor: `${colors.onBackground}11` },
+      ]}>
       <TouchableRipple
         rippleColor={`${colors.primary}20`}
         style={[styles.touchableButton, { backgroundColor: `${colors.onBackground}20` }]}
         onPress={() => props.onPress(item, index, sectionIndex)}>
         <>
-          <Icon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={24} />
-          <Text numberOfLines={1} style={[styles.titleText, { color: colors.text }]}>
+          <Icon type={item.iconFamily} name={item.iconName} color={colors.white} size={24} />
+          <Text numberOfLines={1} style={[styles.titleText, { color: colors.white }]}>
             {item.title}
           </Text>
-          <Text numberOfLines={2} style={[styles.subtitleText, { color: `${colors.text}60` }]}>
+          <Text numberOfLines={2} style={[styles.subtitleText, { color: `${colors.white}cc` }]}>
             {item.subtitle}
           </Text>
         </>
@@ -81,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
     width: width / 2 - 24,
-    borderRadius: 18,
+    borderRadius: 12,
     shadowRadius: 2,
     shadowOffset: {
       width: 0,

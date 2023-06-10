@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, Text } from 'react-native-paper';
 
 const AppNoInternetConnection = () => {
-  //Consts
+  //Const
   const { t } = useTranslation();
   const { colors } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.error }]}>
-      <Text style={[styles.titleTextStyle, { color: colors.onPrimary }]}>{t('NO_INTERNET')}</Text>
+      <Text style={[styles.titleTextStyle, { color: colors.onPrimary }]}>{t('general.noInternet')}</Text>
     </View>
   );
 };

@@ -21,10 +21,10 @@ function AboutFeedbackDialog(props: IAboutFeedbackDialogProps) {
 
   return (
     <Dialog visible={props.visible} onDismiss={props.onPressHideDialog}>
-      <Dialog.Title style={{ color: colors.onBackground }}>{t('ABOUT_SEND_FEEDBACK')}</Dialog.Title>
+      <Dialog.Title style={{ color: colors.onBackground }}>{t('about.sendFeedback')}</Dialog.Title>
       <Dialog.Content>
         <Paragraph style={[styles.descriptionText, { color: `${colors.onBackground}88` }]}>
-          {t('ABOUT_SEND_FEEDBACK_DETAIL')}
+          {t('about.sendFeedbackDetail')}
         </Paragraph>
       </Dialog.Content>
       <View style={styles.buttonsContainer}>
@@ -43,9 +43,8 @@ function AboutFeedbackDialog(props: IAboutFeedbackDialogProps) {
           <Icon type="ionicon" name="mail" color={`${colors.onBackground}88`} size={24} />
         </TouchableRipple>
       </View>
-
       <Dialog.Actions>
-        <Button onPress={props.onPressHideDialog}>{t('CLOSE')}</Button>
+        <Button onPress={props.onPressHideDialog}>{t('general.close')}</Button>
       </Dialog.Actions>
     </Dialog>
   );

@@ -12,5 +12,14 @@
         "ios/Pods/Headers/Public/Flipper-Folly/folly/lang",
         "ios/Pods/Headers/Public/RCT-Folly/folly/lang"
     ],
-    "i18n-ally.keystyle": "nested"
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.keysInUse": [
+        "home.audio_video",
+        "home.theme_lock_screen",
+        "home.internet",
+        "home.utilities",
+        "home.theme_lock_screen",
+        "home.security",
+        "home.type_system"
+    ]
 }

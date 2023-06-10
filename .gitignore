@@ -90,3 +90,6 @@ node_modules/
 aws-exports.js
 awsconfiguration.json
 
+
+vendor
+ios/MIUIAdsHelper/GoogleService-Info.plist

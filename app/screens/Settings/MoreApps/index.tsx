@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StatusBar } from 'react-native';
+import { View } from 'react-native';
 
 //ThirdParty
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { Appbar, useTheme } from 'react-native-paper';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 //App modules
 import Config from 'app/config';
 import Utils from 'app/utils';
 
 //Modals
-import styles from './styles';
 import Components from 'app/components';
+import styles from './styles';
+import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 
 //Interfaces
 interface IMoreAppItem {
@@ -26,10 +27,7 @@ interface IMoreAppItem {
 }
 
 //Params
-type RootStackParamList = {
-  DeviceLists: {};
-};
-type Props = NativeStackScreenProps<RootStackParamList, 'DeviceLists'>;
+type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'MoreApps'>;
 
 const MoreApps = ({ navigation }: Props) => {
   //Constants
@@ -42,15 +40,15 @@ const MoreApps = ({ navigation }: Props) => {
     {
       id: 0,
       icon: Config.Images.icons.app_icon,
-      title: t('MORE_APPS_1_TITLE'),
-      description: t('MORE_APPS_1_DESC'),
+      title: t('moreApps.apps1Title'),
+      description: t('moreApps.apps1Desc'),
       showLinks: false,
     },
     {
       id: 1,
       icon: Config.Images.icons.ic_more_app_ohmclient,
-      title: t('MORE_APPS_2_TITLE'),
-      description: t('MORE_APPS_2_DESC'),
+      title: t('moreApps.apps2Title'),
+      description: t('moreApps.apps2Desc'),
       showLinks: true,
       github: Config.Constants.MORE_APPS_MIUI_ADS_HELPER_GITHUB,
       playStore: Config.Constants.MORE_APPS_MIUI_ADS_HELPER_PLAY_STORE,
@@ -89,20 +87,18 @@ const MoreApps = ({ navigation }: Props) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar translucent={false} backgroundColor={colors.background} />
-
       <Appbar.Header style={{ backgroundColor: colors.background }}>
         <Appbar.BackAction onPress={onGoBack} />
-        <Appbar.Content title={t('MORE_APPS_TITLE')} subtitle="" />
+        <Appbar.Content title={t('moreApps.appsTitle')} subtitle="" />
       </Appbar.Header>
-      <View style={styles.safeArea}>
-        <ScrollView style={styles.scrollView}>
+      <Components.AppBaseView scroll edges={['bottom', 'left', 'right']} style={styles.safeArea}>
+        <View style={styles.listContainer}>
           {apps.map((item, index) => {
             return (
               <Components.MoreAppCard
+                key={item.id.toString()}
                 style={styles.moreCard}
                 icon={item.icon}
-                key={item.id.toString()}
                 showLinks={item.showLinks}
                 title={item.title}
                 description={item.description}
@@ -111,8 +107,8 @@ const MoreApps = ({ navigation }: Props) => {
               />
             );
           })}
-        </ScrollView>
-      </View>
+        </View>
+      </Components.AppBaseView>
     </View>
   );
 };
