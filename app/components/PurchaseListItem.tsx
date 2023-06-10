@@ -8,6 +8,9 @@ import { Product } from 'react-native-iap';
 import { useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 
+//App Modules
+import { AppTheme } from 'app/models/theme';
+
 //Interface
 export interface IProduct extends Product {
   id: number;
@@ -26,7 +29,7 @@ interface IAdsListItem {
 
 const PurchaseListItem = (props: IAdsListItem) => {
   //Consts
-  const { colors } = useTheme();
+  const { colors } = useTheme<AppTheme>();
   const { item, index } = props;
   const { t } = useTranslation();
 

@@ -35,15 +35,50 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerDetailContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingTop: 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderBottomEndRadius: 50,
+    borderBottomStartRadius: 50,
   },
   headerDetailText: {
     fontSize: 16,
     fontWeight: '800',
     color: 'white',
+  },
+  searchTextInputText: {
+    fontSize: 16,
+    flex: 1,
+  },
+  searchContainer: { flex: 1, height: 50, borderRadius: 25, overflow: 'hidden', flexDirection: 'row' },
+  leftSearchButton: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rightSearchButton: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bannerContainer: {
+    marginTop: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    marginHorizontal: 16,
+    flexDirection: 'row',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bannerText: {
+    fontSize: 12,
+    color: 'white',
+    flex: 1,
+    lineHeight: 16,
   },
 });
 

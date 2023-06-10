@@ -5,6 +5,7 @@ import AboutFeedbackDialog from './AboutFeedbackDialog';
 import SelectThemeDialog from './SelectThemeDialog';
 import SelectAccentDialog from './SelectAccentColorDialog';
 import AdsListItem from './AdsListItem';
+import AppBaseView from 'app/components/AppBaseView';
 
 export default {
   AppNoConnection,
@@ -14,4 +15,5 @@ export default {
   SelectThemeDialog,
   SelectAccentDialog,
   AdsListItem,
+  AppBaseView,
 };

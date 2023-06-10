@@ -9,8 +9,8 @@ import { PersistGate } from 'redux-persist/es/integration/react';
 import configureStore from 'app/store';
 import { enableScreens } from 'react-native-screens';
 import './locales';
-import LoadingScreen from 'app/screens/Auth/Loading';
 import AppManager from 'app/components/AppManager';
+import Navigator from 'app/navigation';
 const { persistor, store } = configureStore();
 
 /**
@@ -23,7 +23,7 @@ const Entrypoint: React.FC = () => {
     <Provider store={store}>
       <PersistGate loading={<ActivityIndicator />} persistor={persistor}>
         <AppManager>
-          <LoadingScreen />
+          <Navigator />
         </AppManager>
       </PersistGate>
     </Provider>

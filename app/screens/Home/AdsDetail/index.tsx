@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View, NativeModules, ScrollView, Dimensions, StatusBar } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Text, View, NativeModules, ScrollView, Dimensions, StatusBar, Alert } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -10,24 +10,37 @@ import Icon from 'react-native-easy-icon';
 //App Modules
 import styles from './styles';
 import { IAdsActivity, IAdsSettingPath } from 'app/components/AdsListItem';
+import { AppTheme } from 'app/models/theme';
+import { LoggedInTabNavigatorParams } from 'app/navigation/types';
+import analytics from '@react-native-firebase/analytics';
+import DeviceInfo from 'react-native-device-info';
 
 //Params
-type RootStackParamList = {
-  AdsDetails: { item: IAdsActivity };
-};
-type Props = NativeStackScreenProps<RootStackParamList, 'AdsDetails'>;
+type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'AdsDetails'>;
 
 const AdsDetails = ({ route, navigation }: Props) => {
+  //Refs
+  const refDeviceInfo = useRef<any | null>(null);
+
   //Constants
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors } = useTheme<AppTheme>();
   const item = route.params.item;
+
+  useEffect(() => {
+    analytics()
+      .logScreenView({
+        screen_name: item.title,
+        screen_class: 'AdsDetail',
+      })
+      .then(_r => {});
+  }, [item.title]);
 
   const openActivity = (packageName: string | null, activityName: string | null) => {
     return new Promise((resolve, _reject) => {
       NativeModules.OpenSettings.openNetworkSettings(packageName, activityName, (data: any) => {
         if (data !== true) {
-          resolve(data);
+          resolve(false);
         } else {
           resolve(true);
         }
@@ -35,21 +48,52 @@ const AdsDetails = ({ route, navigation }: Props) => {
     });
   };
 
-  const openActivities = async (adsSettingPaths: IAdsSettingPath[]) => {
-    let results = [];
-    for (let i = 0; i < adsSettingPaths.length; i++) {
-      const adsSetting = adsSettingPaths[i];
-
-      const result = await openActivity(adsSetting.package, adsSetting.activity);
-      results.push(result);
+  const logEvent = async (adsActivity: IAdsActivity, openBy: IAdsSettingPath | null) => {
+    if (!refDeviceInfo.current) {
+      refDeviceInfo.current = await getDeviceInfo();
     }
-    const isActivityExists = results.filter(value => {
-      return value === true;
+    await analytics().logEvent('open_ads_settings', {
+      id: adsActivity.id,
+      appName: adsActivity.appname,
+      openBy: openBy?.activity,
+      success: openBy !== null,
+      ...refDeviceInfo.current,
     });
-    if (isActivityExists.length < 1) {
-      // @ts-ignore
-      alert(t('ads_detail_app_not_available'));
+  };
+
+  const openActivities = async (adsActivity: IAdsActivity) => {
+    let isActivityExists = false;
+    for (let i = 0; i < adsActivity.adsSettingPaths.length; i++) {
+      const adsSetting = adsActivity.adsSettingPaths[i];
+      const result = await openActivity(adsSetting.package, adsSetting.activity);
+
+      if (result) {
+        isActivityExists = true;
+        logEvent(adsActivity, adsSetting);
+        break;
+      }
     }
+    if (!isActivityExists) {
+      logEvent(adsActivity, null);
+      Alert.alert(t('ads_detail_app_not_available'));
+    }
+  };
+
+  const getDeviceInfo = async () => {
+    let brand = DeviceInfo.getBrand();
+    let buildNumber = DeviceInfo.getBuildNumber();
+    let nickName = await DeviceInfo.getDevice();
+    let appVersion = DeviceInfo.getReadableVersion();
+    let systemVersion = DeviceInfo.getSystemVersion();
+    let buildId = await DeviceInfo.getBuildId();
+    return {
+      brand,
+      buildNumber,
+      nickName,
+      appVersion,
+      systemVersion,
+      buildId,
+    };
   };
 
   const onPressBack = () => {
@@ -78,14 +122,14 @@ const AdsDetails = ({ route, navigation }: Props) => {
           <Text style={[styles.detailText, { color: `${colors.text}60` }]}>{item.detail}</Text>
           <Text style={[styles.stepsText, { color: colors.text }]}>{t('ads_detail_steps')}</Text>
           <Text style={[styles.stepsDescText, { color: `${colors.text}60` }]}>{item.steps}</Text>
-          {item.id > 0 && item.adsSettingPaths && !item.hideButton && (
+          {item.adsSettingPaths && !item.hideButton && (
             <Button
               labelStyle={styles.bottomButtonLabel}
               style={[styles.bottomButton, { backgroundColor: `${item.iconBackgroundColor}aa` }]}
               icon={() => <Icon type={item.iconFamily} name={item.iconName} color={'white'} size={22} />}
-              mode="outlined"
-              onPress={() => openActivities(item.adsSettingPaths)}>
-              {`${t('OPEN')} ${t(item.appname)} ${t('ads_detail_settings')}`}
+              mode="contained"
+              onPress={() => openActivities(item)}>
+              {`${t('ads_detail_open')} ${t(item.appname)}`}
             </Button>
           )}
           <Text style={[styles.specialNoteText, { color: colors.error }]}>{item.specialNote}</Text>
