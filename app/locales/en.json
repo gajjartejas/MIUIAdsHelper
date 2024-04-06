@@ -5,26 +5,33 @@
     "noInternet": "No Internet Connection"
   },
   "about": {
+    "version": "Version: {{version}}",
     "sendFeedback": "Send Feedback",
     "rateApp": "Rate App",
     "moreApps": "More Apps",
     "github": "Contribute on Github",
     "setting": "Settings",
     "app": "About MIUIAdsHelper",
-    "sendFeedbackDetail": "You can send your valuable feedback to Telegram channel or send mail directly."
+    "sendFeedbackDetail": "You can send your valuable feedback to the GitHub issue."
   },
   "moreApps": {
     "appsTitle": "More Apps",
     "apps1Title": "MIUI - Ads helper",
     "apps1Desc": "This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) devices.",
-    "apps2Title": "OHM-Client",
-    "apps2Desc": "`OHM-Client` is an unofficial open hardware monitor client app for android and iOS written in react-native. Using this app you can monitor open hardware monitor web server.",
-    "appsGithub": "Github",
-    "appsPlayStore": "Play Store"
+    "apps2Title": "PiGo",
+    "apps2Desc": "PiGo - Explore Your Pi Servers On the Go",
+    "apps3Title": "OHM-Client",
+    "apps3Desc": "`OHM-Client` is an unofficial open hardware monitor client app for android and iOS written in react-native. Using this app you can monitor open hardware monitor web server.",
+    "apps4Title": "Kano",
+    "apps4Desc": " An interactive way to learn Gujarati kakko, barakhadi and numbers.",
+    "appsGithub": "GitHub",
+    "appsPlayStore": "PlayStore"
   },
   "settings": {
     "title": "Settings",
     "commonHeader": "Common Settings",
+    "languageTitle": "App Language",
+    "languageSubTitle": "{{language}}",
     "appearanceTitle": "Appearance",
     "appearanceSubTitle": "Customization of appearance",
     "infoHeader": "Information",
@@ -60,10 +67,15 @@
     "title": "Libraries"
   },
   "translatorsScreen": {
-    "title": "Translators"
+    "title": "Translators",
+    "emptyList": "Be the pioneer - no contributors found yet!",
+    "emptyListAction": "Click here to contribute"
+  },
+  "changeLanguageScreen": {
+    "title": "Change Language"
   },
   "aboutScreen": {
-    "title": "About Kano",
+    "title": "About MIUIAdsHelper",
     "infoHeader": "Information",
     "infoDescTitle": "This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) devices.",
     "infoAuthorNameTitle": "Tejas Gajjar",
@@ -86,9 +98,9 @@
     "utilities": "Utilities",
     "security": "Security",
     "type_system": "System",
-    "type_other": "Other",
     "search_text": "Search apps",
-    "app_support": "You can support my work by purchasing a dark theme to help me continue developing this app."
+    "app_support": "You can support my work by purchasing a dark theme to help me continue developing this app.",
+    "type_other": "Other"
   },
   "ads_step_0_appname": "Music",
   "ads_step_0_title": "Mi Music App",

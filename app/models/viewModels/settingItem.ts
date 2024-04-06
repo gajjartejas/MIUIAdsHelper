@@ -1,14 +1,17 @@
 //Interfaces
+import { IAppearanceType } from 'app/store/themeConfig';
 import { IconType } from 'react-native-easy-icon/src/Icon';
-import { IAppearanceType } from '../reducers/theme';
 
 export interface ISettingItem {
   id: number;
   iconName: string;
   iconType: IconType;
   title: string;
-  description?: string;
+  description: string;
   route?: any;
+  touchable?: boolean;
+  value?: any;
+  inputType?: 'input' | 'switch';
 }
 
 export interface ISettingSection {

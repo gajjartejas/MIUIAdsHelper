@@ -7,8 +7,8 @@ import Icon from 'react-native-easy-icon';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 //Screens
-import DashboardTab from 'app/screens/Home/HomeTabs/DashboardTab';
-import MoreTab from 'app/screens/Home/HomeTabs/MoreTab';
+import DashboardTab from 'app/screens/Home/DashboardTab';
+import MoreTab from 'app/screens/Home/MoreTab';
 import MoreApps from 'app/screens/Settings/MoreApps';
 import Settings from 'app/screens/Settings/Settings';
 import About from 'app/screens/Settings/About';
@@ -20,25 +20,29 @@ import Purchase from 'app/screens/Home/Purchase';
 
 //App Modules
 import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigation/types';
-import Loading from 'app/screens/Auth/Loading';
+import Loading from 'app/screens/Loading';
 import { AppTheme } from 'app/models/theme';
+import ChangeLanguage from 'app/screens/Settings/ChangeLanguage';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createMaterialBottomTabNavigator<HomeTabsNavigatorParams>();
 
 function HomeTabs() {
   //Constants
   const { colors } = useTheme<AppTheme>();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
+      screenOptions={{}}
       inactiveColor={colors.secondaryContainer}
       activeColor={colors.secondaryContainer}
-      barStyle={{ backgroundColor: colors.background }}>
+      barStyle={{ backgroundColor: colors.background, height: insets.bottom + 60 }}>
       <Tab.Screen
         name="DashboardTab"
         component={DashboardTab}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: '',
           tabBarIcon: ({ focused }) => (
             <Icon
               type="material-community"
@@ -53,7 +57,7 @@ function HomeTabs() {
         name="MoreTab"
         component={MoreTab}
         options={{
-          tabBarLabel: 'More',
+          tabBarLabel: '',
           tabBarIcon: ({ focused }) => (
             <Icon
               type="material-community"
@@ -83,6 +87,7 @@ const LoggedInTabNavigator = () => {
       <LoggedInStack.Screen name="Translators" component={Translators} options={{ headerShown: false }} />
       <LoggedInStack.Screen name="AdsDetails" component={AdsDetail} options={{ headerShown: false }} />
       <LoggedInStack.Screen name="Purchase" component={Purchase} options={{ headerShown: false }} />
+      <LoggedInStack.Screen name="ChangeLanguage" component={ChangeLanguage} options={{ headerShown: false }} />
     </LoggedInStack.Navigator>
   );
 };

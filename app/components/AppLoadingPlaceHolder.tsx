@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 //ThirdParty
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingPlaceHolder;
+export default memo(LoadingPlaceHolder);

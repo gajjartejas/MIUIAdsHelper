@@ -6,6 +6,7 @@ const rateApp = async () => {
   let lastDateAppReviewed = await AsyncStorage.getItem('APP_LAST_REVIEW_DATE');
   if (lastDateAppReviewed !== null) {
     let today = new Date();
+    // @ts-ignore
     const leftTime = Math.abs(today - Date.parse(lastDateAppReviewed));
     let leftDays = Math.ceil(leftTime / (1000 * 60 * 60 * 24));
     if (leftDays > 15) {

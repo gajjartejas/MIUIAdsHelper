@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, ScrollView, Text, View, StatusBar, Alert } from 'react-native';
+import { Platform, ScrollView, Text, View, Alert } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -17,16 +17,17 @@ import {
   requestPurchase,
   Sku,
 } from 'react-native-iap';
-import { Appbar, useTheme } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { useTheme } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native-paper';
 
 //App Modules
 import styles from './styles';
 import useInappPurchases from 'app/config/inapp-purchases';
-import { updatePurchase } from 'app/store/actions/appConfigActions';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 import { AppTheme } from 'app/models/theme';
+import useAppConfigStore from 'app/store/appConfig';
+import AppHeader from 'app/components/AppHeader';
+import Components from 'app/components';
 
 const itemSkus = [
   'com.tejasgajjar.miuiadshelper.item1',
@@ -44,8 +45,8 @@ const Purchase = ({ navigation, route }: Props) => {
   //Const
   const iaps = useInappPurchases();
   const { colors } = useTheme<AppTheme>();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+  const setPurchased = useAppConfigStore(state => state.setPurchased);
 
   //States
   const [loading, setLoading] = useState(true);
@@ -94,7 +95,7 @@ const Purchase = ({ navigation, route }: Props) => {
         try {
           const ackResult = await finishTransaction({ purchase, isConsumable: false });
           console.info('purchaseUpdatedListener->ackResult', ackResult);
-          dispatch(updatePurchase(true));
+          setPurchased(true);
           Alert.alert(t('iap_purchased_success'));
           navigation.pop();
         } catch (ackErr: any) {
@@ -141,7 +142,7 @@ const Purchase = ({ navigation, route }: Props) => {
     try {
       const purchases = await getAvailablePurchases();
       if (purchases && purchases.length > 0) {
-        dispatch(updatePurchase(true));
+        setPurchased(true);
         if (!route.params || !route.params.fromTheme) {
           setTimeout(() => {
             navigation.pop();
@@ -167,7 +168,7 @@ const Purchase = ({ navigation, route }: Props) => {
     requestAppPurchase(item.productId);
   };
 
-  const onPressBack = () => {
+  const onGoBack = () => {
     navigation.pop();
   };
 
@@ -179,12 +180,15 @@ const Purchase = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar translucent={false} backgroundColor={colors.background} />
-      <Appbar.Header style={{ backgroundColor: colors.background }}>
-        <Appbar.BackAction onPress={onPressBack} />
-        <Appbar.Content title={t('iap_navigation_title')} />
-      </Appbar.Header>
+    <Components.AppBaseView
+      edges={['left', 'right', 'top']}
+      style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader
+        showBackButton={true}
+        onPressBackButton={onGoBack}
+        title={t('iap_navigation_title')}
+        style={{ backgroundColor: colors.background }}
+      />
       <ScrollView style={styles.scrollview}>
         <Text style={[styles.titleText, { color: `${colors.text}cc` }]}>{t('iap_title')}</Text>
         <Text style={[styles.descText, { color: `${colors.text}cc` }]}>{t('iap_desc')}</Text>
@@ -192,7 +196,7 @@ const Purchase = ({ navigation, route }: Props) => {
           return <PurchaseListItem onPress={onPressItem} key={item.id} item={item} index={index} />;
         })}
       </ScrollView>
-    </View>
+    </Components.AppBaseView>
   );
 };
 
