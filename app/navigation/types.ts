@@ -8,6 +8,7 @@ export interface LicenseTypes {}
 export interface AboutParams {}
 export interface SelectAppearanceParams {}
 export interface TranslatorsParams {}
+export interface ChangeLanguageParams {}
 export interface DashboardTab {
   userId: string;
 }
@@ -17,6 +18,7 @@ export interface PurchaseScreen {
 export interface AdsDetails {
   item: IAdsActivity;
 }
+export interface ChangeLanguageParams {}
 
 export interface AdsDetails {
   item: IAdsActivity;
@@ -38,6 +40,7 @@ export type LoggedInTabNavigatorParams = {
   Translators: TranslatorsParams;
   AdsDetails: AdsDetails;
   Purchase: PurchaseScreen;
+  ChangeLanguage: ChangeLanguageParams;
 };
 
 export type HomeTabsNavigatorParams = {

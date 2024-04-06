@@ -3,9 +3,10 @@
 const Images = {
   icons: {
     app_icon: require('app/assets/images/appicon.png'),
-    about_bg: require('app/assets/images/about_bg.jpg'),
-    ic_more_app_ohmclient: require('app/assets/images/ic_more_app_ohmclient.png'),
-    home_header: require('app/assets/images/home_header.jpeg'),
+    ic_more_app_miuiadshelper: require('../assets/images/ic_more_app_miuiadshelper.png'),
+    ic_more_app_kano: require('../assets/images/ic_more_app_kano.png'),
+    ic_more_app_ohmc: require('../assets/images/ic_more_app_ohmc.png'),
+    ic_more_app_pigo: require('../assets/images/ic_more_app_pigo.png'),
 
     flag_ar: require('app/assets/images/flags/ar.png'),
     flag_cs: require('app/assets/images/flags/cs.png'),
@@ -36,6 +37,7 @@ const Images = {
     flag_uk: require('app/assets/images/flags/uk.png'),
     flag_vi: require('app/assets/images/flags/vi.png'),
     flag_zh_cn: require('app/assets/images/flags/zh_cn.png'),
+    flag_fr: require('app/assets/images/flags/fr.png'),
   },
 };
 

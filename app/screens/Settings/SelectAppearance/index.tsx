@@ -1,228 +1,212 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-easy-icon';
-import { Appbar, Divider, List, useTheme } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
+import { Divider, List, useTheme } from 'react-native-paper';
 
 //App modules
 import Components from 'app/components';
 import styles from './styles';
 
 //Modals
-import IState from 'app/models/models/appState';
-import { IAppearanceType } from 'app/models/reducers/theme';
 import { ISettingItem, ISettingSection, ISettingThemeOptions } from 'app/models/viewModels/settingItem';
 
 //Redux
-import * as themeActions from 'app/store/actions/themeActions';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
+import useThemeConfigStore, { IAppearanceType } from 'app/store/themeConfig';
+import { SelectAccentDialogColor } from 'app/components/SelectAccentColorDialog';
+import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
+import AppHeader from 'app/components/AppHeader';
+import useAppConfigStore from 'app/store/appConfig';
 
 //Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'SelectAppearance'>;
-
-export interface IAppearanceColor {
-  primary: string;
-  onPrimary: string;
-}
 
 const SelectAppearance = ({ navigation }: Props) => {
   //Constants
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const dispatch = useDispatch();
-  const appearance = useSelector((state: IState) => state.themeReducer.appearance);
-  const purchased = useSelector((state: IState) => state.appConfigReducer.purchased);
+  const resetTheme = useThemeConfigStore(store => store.resetTheme);
+  const setPrimaryColor = useThemeConfigStore(store => store.setPrimaryColor);
+  const setAppearance = useThemeConfigStore(store => store.setAppearance);
+  const appearance = useThemeConfigStore(store => store.appearance);
+  const largeScreenMode = useLargeScreenMode();
+  const purchased = useAppConfigStore(store => store.purchased);
 
   //States
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [apps, setApps] = useState<ISettingSection[]>([
-    {
-      id: 0,
-      title: t('appearanceSettings.interfaceHeader'),
-      items: [
-        {
-          id: 0,
-          iconName: 'wb-sunny',
-          iconType: 'material',
-          title: t('appearanceSettings.themeTitle'),
-          description: t('appearanceSettings.themeSubTitle')!,
-          route: 'SelectAppearance',
-        },
-        {
-          id: 1,
-          iconName: 'app-settings-alt',
-          iconType: 'material',
-          title: t('appearanceSettings.accentColorTitle'),
-          description: t('appearanceSettings.accentColorSubTitle')!,
-          route: '',
-        },
-      ],
-    },
-    {
-      id: 1,
-      title: t('appearanceSettings.otherHeader'),
-      items: [
-        {
-          id: 0,
-          iconName: 'backup-restore',
-          iconType: 'material-community',
-          title: t('appearanceSettings.otherTitle'),
-          description: t('appearanceSettings.otherSubTitle')!,
-          route: 'SelectAppearance',
-        },
-      ],
-    },
-  ]);
+  const apps: ISettingSection[] = useMemo(() => {
+    return [
+      {
+        id: 0,
+        title: t('appearanceSettings.interfaceHeader'),
+        items: [
+          {
+            id: 0,
+            iconName: 'wb-sunny',
+            iconType: 'material',
+            title: t('appearanceSettings.themeTitle'),
+            description: t('appearanceSettings.themeSubTitle')!,
+            route: 'SelectAppearance',
+          },
+          {
+            id: 1,
+            iconName: 'app-settings-alt',
+            iconType: 'material',
+            title: t('appearanceSettings.accentColorTitle'),
+            description: t('appearanceSettings.accentColorSubTitle')!,
+            route: '',
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: t('appearanceSettings.otherHeader'),
+        items: [
+          {
+            id: 0,
+            iconName: 'backup-restore',
+            iconType: 'material-community',
+            title: t('appearanceSettings.otherTitle'),
+            description: t('appearanceSettings.otherSubTitle')!,
+            route: 'SelectAppearance',
+          },
+        ],
+      },
+    ];
+  }, [t]);
 
   //
-  const [themeDialogVisible, setThemeDialogVisible] = React.useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [themeOptions, setThemeOptions] = React.useState<ISettingThemeOptions[]>([
-    {
-      id: 0,
-      title: t('appearanceSettings.themeOption1'),
-      value: IAppearanceType.Light,
-    },
-    {
-      id: 1,
-      title: t('appearanceSettings.themeOption2'),
-      value: IAppearanceType.Dark,
-    },
-    {
-      id: 2,
-      title: t('appearanceSettings.themeOption3'),
-      value: IAppearanceType.Auto,
-    },
-  ]);
+  const [themeDialogVisible, setThemeDialogVisible] = useState(false);
+  const themeOptions: ISettingThemeOptions[] = useMemo(() => {
+    return [
+      {
+        id: 0,
+        title: t('appearanceSettings.themeOption1'),
+        value: IAppearanceType.Light,
+      },
+      {
+        id: 1,
+        title: t('appearanceSettings.themeOption2'),
+        value: IAppearanceType.Dark,
+      },
+      {
+        id: 2,
+        title: t('appearanceSettings.themeOption3'),
+        value: IAppearanceType.Auto,
+      },
+    ];
+  }, [t]);
 
   //
-  const [accentColorDialogVisible, setAccentColorDialogVisible] = React.useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [accentColorOptions, setAccentColorOptions] = React.useState<IAppearanceColor[]>([
-    { primary: '#008b00', onPrimary: '#ffffff' },
-    { primary: '#61d800', onPrimary: '#ffffff' },
-    { primary: '#90ee02', onPrimary: '#000000' },
-    { primary: '#c6f68d', onPrimary: '#000000' },
-    { primary: '#defabb', onPrimary: '#000000' },
+  const [accentColorDialogVisible, setAccentColorDialogVisible] = useState(false);
 
-    { primary: '#880061', onPrimary: '#ffffff' },
-    { primary: '#dd0074', onPrimary: '#ffffff' },
-    { primary: '#ee0290', onPrimary: '#000000' },
-    { primary: '#f186c0', onPrimary: '#000000' },
-    { primary: '#f5b6da', onPrimary: '#000000' },
-
-    { primary: '#e44304', onPrimary: '#ffffff' },
-    { primary: '#ee6002', onPrimary: '#ffffff' },
-    { primary: '#ff9e22', onPrimary: '#000000' },
-    { primary: '#ffc77d', onPrimary: '#000000' },
-    { primary: '#ffddb0', onPrimary: '#000000' },
-
-    { primary: '#0000d6', onPrimary: '#ffffff' },
-    { primary: '#5300e8', onPrimary: '#ffffff' },
-    { primary: '#7e3ff2', onPrimary: '#000000' },
-    { primary: '#9965f4', onPrimary: '#000000' },
-    { primary: '#b794f6', onPrimary: '#000000' },
-
-    { primary: '#5c00d2', onPrimary: '#ffffff' },
-    { primary: '#8b00dc', onPrimary: '#ffffff' },
-    { primary: '#a100e0', onPrimary: '#000000' },
-    { primary: '#ba00e5', onPrimary: '#000000' },
-    { primary: '#cc00e9', onPrimary: '#000000' },
-  ]);
-
-  const onGoBack = () => {
+  const onGoBack = useCallback(() => {
     navigation.pop();
-  };
+  }, [navigation]);
 
-  //
-  const onPressAppearanceOption = (item: ISettingSection, index: number, subItem: ISettingItem, subIndex: number) => {
-    if (!purchased) {
-      navigation.navigate('Purchase', { fromTheme: true });
-      return;
-    }
+  const onPressRestoreDefaultTheme = useCallback(() => {
+    resetTheme();
+  }, [resetTheme]);
 
-    switch (true) {
-      case index === 0 && subIndex === 0:
-        onPressShowThemeDialog();
-        break;
-      case index === 0 && subIndex === 1:
-        onPressShowAccentColorDialog();
-        break;
-      case index === 1 && subIndex === 0:
-        onPressRestoreDefaultTheme();
-        break;
-      default:
-    }
-  };
+  const onPressShowThemeDialog = useCallback(() => setThemeDialogVisible(true), []);
+  const onPressHideThemeDialog = useCallback(() => setThemeDialogVisible(false), []);
 
-  //
-  const onPressShowThemeDialog = () => setThemeDialogVisible(true);
-  const onPressHideThemeDialog = () => setThemeDialogVisible(false);
+  const onPressShowAccentColorDialog = useCallback(() => setAccentColorDialogVisible(true), []);
+  const onPressHideAccentColorDialog = useCallback(() => setAccentColorDialogVisible(false), []);
 
-  const onSelectTheme = (item: ISettingThemeOptions, _index: number) => {
-    onPressHideThemeDialog();
+  const onPressPrimaryColor = useCallback(
+    (item: SelectAccentDialogColor) => {
+      if (!purchased) {
+        navigation.navigate('Purchase', { fromTheme: true });
+        return;
+      }
+      onPressHideAccentColorDialog();
+      setTimeout(() => {
+        setPrimaryColor(item.primary, item.onPrimary);
+      }, 100);
+    },
+    [navigation, onPressHideAccentColorDialog, purchased, setPrimaryColor],
+  );
 
-    setTimeout(() => {
-      dispatch(themeActions.setAppearance(item.value));
-    }, 100);
-  };
+  const onPressAppearanceOption = useCallback(
+    (item: ISettingSection, index: number, subItem: ISettingItem, subIndex: number) => {
+      if (!purchased) {
+        navigation.navigate('Purchase', { fromTheme: true });
+        return;
+      }
+      switch (true) {
+        case index === 0 && subIndex === 0:
+          onPressShowThemeDialog();
+          break;
+        case index === 0 && subIndex === 1:
+          onPressShowAccentColorDialog();
+          break;
+        case index === 1 && subIndex === 0:
+          onPressRestoreDefaultTheme();
+          break;
+        default:
+      }
+    },
+    [navigation, onPressRestoreDefaultTheme, onPressShowAccentColorDialog, onPressShowThemeDialog, purchased],
+  );
 
-  //
-  const onPressShowAccentColorDialog = () => setAccentColorDialogVisible(true);
-  const onPressHideAccentColorDialog = () => setAccentColorDialogVisible(false);
+  const onSelectTheme = useCallback(
+    (item: ISettingThemeOptions, _index: number) => {
+      setThemeDialogVisible(false);
 
-  const onPressPrimaryColor = (item: IAppearanceColor, _index: number) => {
-    onPressHideAccentColorDialog();
-    setTimeout(() => {
-      dispatch(themeActions.setPrimaryColor(item.primary, item.onPrimary));
-    }, 100);
-  };
-
-  //
-  const onPressRestoreDefaultTheme = () => {
-    dispatch(themeActions.resetTheme());
-  };
+      setTimeout(() => {
+        setAppearance(item.value);
+      }, 100);
+    },
+    [setAppearance],
+  );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Appbar.Header style={{ backgroundColor: colors.background }}>
-        <Appbar.BackAction onPress={onGoBack} />
-        <Appbar.Content title={t('appearanceSettings.title')} subtitle="" />
-      </Appbar.Header>
+    <Components.AppBaseView
+      edges={['left', 'right', 'top']}
+      style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader
+        showBackButton={true}
+        onPressBackButton={onGoBack}
+        title={t('appearanceSettings.title')}
+        style={{ backgroundColor: colors.background }}
+      />
+
       <Components.AppBaseView scroll edges={['bottom', 'left', 'right']} style={styles.safeArea}>
-        {apps.map((item, index) => {
-          return (
-            <View key={item.id.toString()}>
-              <List.Subheader style={[styles.listSubHeader, { color: colors.primary }]}>{item.title}</List.Subheader>
-              {item.items.map((subItem, subIndex) => {
-                return (
-                  <List.Item
-                    key={subItem.id.toString()}
-                    titleStyle={{ color: colors.onSurface }}
-                    descriptionStyle={{ color: `${colors.onSurface}88` }}
-                    onPress={() => onPressAppearanceOption(item, index, subItem, subIndex)}
-                    title={subItem.title}
-                    description={subItem.description}
-                    left={() => (
-                      <Icon
-                        style={styles.listItemIcon}
-                        type={subItem.iconType}
-                        name={subItem.iconName}
-                        color={`${colors.onSurface}88`}
-                        size={24}
-                      />
-                    )}
-                  />
-                );
-              })}
-              <Divider />
-            </View>
-          );
-        })}
+        <View style={[styles.listContainer, largeScreenMode && styles.cardTablet]}>
+          {apps.map((item, index) => {
+            return (
+              <View key={item.id.toString()}>
+                <List.Subheader style={[styles.listSubHeader, { color: colors.primary }]}>{item.title}</List.Subheader>
+                {item.items.map((subItem, subIndex) => {
+                  return (
+                    <List.Item
+                      key={subItem.id.toString()}
+                      titleStyle={{ color: colors.onSurface }}
+                      descriptionStyle={{ color: `${colors.onSurface}88` }}
+                      onPress={() => onPressAppearanceOption(item, index, subItem, subIndex)}
+                      title={subItem.title}
+                      description={subItem.description}
+                      left={() => (
+                        <Icon
+                          style={styles.listItemIcon}
+                          type={subItem.iconType}
+                          name={subItem.iconName}
+                          color={`${colors.onSurface}88`}
+                          size={24}
+                        />
+                      )}
+                    />
+                  );
+                })}
+                <Divider />
+              </View>
+            );
+          })}
+        </View>
       </Components.AppBaseView>
 
       <Components.SelectThemeDialog
@@ -235,12 +219,10 @@ const SelectAppearance = ({ navigation }: Props) => {
 
       <Components.SelectAccentDialog
         visible={accentColorDialogVisible}
-        appearance={appearance}
-        accentColorOptions={accentColorOptions}
         onSelect={onPressPrimaryColor}
-        onPressHideDialog={onPressHideAccentColorDialog}
+        onDismiss={onPressHideAccentColorDialog}
       />
-    </View>
+    </Components.AppBaseView>
   );
 };
 

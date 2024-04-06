@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { Text, View, NativeModules, ScrollView, Dimensions, StatusBar, Alert } from 'react-native';
+import { Text, View, NativeModules, ScrollView, Dimensions, Alert } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Appbar, Button, useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-easy-icon';
 
@@ -14,6 +14,8 @@ import { AppTheme } from 'app/models/theme';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 import analytics from '@react-native-firebase/analytics';
 import DeviceInfo from 'react-native-device-info';
+import AppHeader from 'app/components/AppHeader';
+import Components from 'app/components';
 
 //Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'AdsDetails'>;
@@ -96,18 +98,21 @@ const AdsDetails = ({ route, navigation }: Props) => {
     };
   };
 
-  const onPressBack = () => {
+  const onGoBack = () => {
     navigation.pop();
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar translucent={false} backgroundColor={colors.background} />
+    <Components.AppBaseView
+      edges={['left', 'right', 'top']}
+      style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader
+        showBackButton={true}
+        onPressBackButton={onGoBack}
+        title={item.title}
+        style={{ backgroundColor: colors.background }}
+      />
 
-      <Appbar.Header style={{ backgroundColor: colors.background }}>
-        <Appbar.BackAction onPress={onPressBack} />
-        <Appbar.Content title={item.title} />
-      </Appbar.Header>
       <ScrollView>
         <View style={[styles.headerContainer, { backgroundColor: `${item.iconBackgroundColor}50` }]}>
           <Icon
@@ -125,7 +130,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
           {item.adsSettingPaths && !item.hideButton && (
             <Button
               labelStyle={styles.bottomButtonLabel}
-              style={[styles.bottomButton, { backgroundColor: `${item.iconBackgroundColor}aa` }]}
+              style={[styles.bottomButton, { backgroundColor: `${item.iconBackgroundColor}` }]}
               icon={() => <Icon type={item.iconFamily} name={item.iconName} color={'white'} size={22} />}
               mode="contained"
               onPress={() => openActivities(item)}>
@@ -135,7 +140,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
           <Text style={[styles.specialNoteText, { color: colors.error }]}>{item.specialNote}</Text>
         </View>
       </ScrollView>
-    </View>
+    </Components.AppBaseView>
   );
 };
 

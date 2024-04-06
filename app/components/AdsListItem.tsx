@@ -9,6 +9,7 @@ import { IconType } from 'react-native-easy-icon/src/Icon';
 //Constants
 const { width } = Dimensions.get('window');
 import { AppTheme } from 'app/models/theme';
+import useThemeConfigStore from 'app/store/themeConfig';
 
 //Interface
 export interface IAdsActivity {
@@ -61,11 +62,16 @@ const AdsListItem = (props: IAdsListItem) => {
   const { item, index } = props;
   const sectionIndex = props.sectionIndex;
 
+  const isDark = useThemeConfigStore(store => store.isDark);
+
   return (
     <View
       style={[
         styles.container,
-        { backgroundColor: `${item.iconBackgroundColor}${colors.opacity}`, shadowColor: `${colors.onBackground}11` },
+        {
+          backgroundColor: `${item.iconBackgroundColor}${isDark ? colors.opacity : ''}`,
+          shadowColor: `${colors.onBackground}11`,
+        },
       ]}>
       <TouchableRipple
         rippleColor={`${colors.primary}20`}

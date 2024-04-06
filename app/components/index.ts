@@ -1,13 +1,14 @@
-import AppNoConnection from 'app/components/AppNoConnection';
-import AppLoadingPlaceHolder from 'app/components/AppLoadingPlaceHolder';
-import MoreAppCard from 'app/components/MoreAppCard';
+import AppNoConnection from './AppNoConnection';
+import AppLoadingPlaceHolder from './AppLoadingPlaceHolder';
+import MoreAppCard from './MoreAppCard';
 import AboutFeedbackDialog from './AboutFeedbackDialog';
 import SelectThemeDialog from './SelectThemeDialog';
 import SelectAccentDialog from './SelectAccentColorDialog';
 import AdsListItem from './AdsListItem';
-import AppBaseView from 'app/components/AppBaseView';
+import AppBaseView from './AppBaseView';
+import AppHeader from 'app/components/AppHeader';
 
-export default {
+const Components = {
   AppNoConnection,
   AppLoadingPlaceHolder,
   MoreAppCard,
@@ -16,4 +17,7 @@ export default {
   SelectAccentDialog,
   AdsListItem,
   AppBaseView,
+  AppHeader,
 };
+
+export default Components;

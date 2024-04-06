@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
-import { Appbar, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 
 //App modules
 import Config from 'app/config';
@@ -14,6 +14,8 @@ import Utils from 'app/utils';
 import Components from 'app/components';
 import styles from './styles';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
+import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
+import AppHeader from 'app/components/AppHeader';
 
 //Interfaces
 interface IMoreAppItem {
@@ -33,66 +35,79 @@ const MoreApps = ({ navigation }: Props) => {
   //Constants
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const largeScreenMode = useLargeScreenMode();
 
   //States
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [apps, setApps] = useState<IMoreAppItem[]>([
-    {
-      id: 0,
-      icon: Config.Images.icons.app_icon,
-      title: t('moreApps.apps1Title'),
-      description: t('moreApps.apps1Desc'),
-      showLinks: false,
-    },
-    {
-      id: 1,
-      icon: Config.Images.icons.ic_more_app_ohmclient,
-      title: t('moreApps.apps2Title'),
-      description: t('moreApps.apps2Desc'),
-      showLinks: true,
-      github: Config.Constants.MORE_APPS_MIUI_ADS_HELPER_GITHUB,
-      playStore: Config.Constants.MORE_APPS_MIUI_ADS_HELPER_PLAY_STORE,
-    },
-  ]);
+  const apps: IMoreAppItem[] = useMemo(() => {
+    return [
+      {
+        id: 0,
+        icon: Config.Images.icons.app_icon,
+        title: t('moreApps.apps1Title'),
+        description: t('moreApps.apps1Desc'),
+        showLinks: true,
+        github: Config.Constants.REPO_URL,
+        playStore: Config.Constants.PLAY_STORE_URL,
+      },
+      {
+        id: 2,
+        icon: Config.Images.icons.ic_more_app_pigo,
+        title: t('moreApps.apps2Title'),
+        description: t('moreApps.apps2Desc'),
+        showLinks: true,
+        github: Config.Constants.MORE_APPS_PIGO_GITHUB,
+        playStore: Config.Constants.MORE_APPS_PIGO_PLAY_STORE,
+      },
+      {
+        id: 3,
+        icon: Config.Images.icons.ic_more_app_ohmc,
+        title: t('moreApps.apps3Title'),
+        description: t('moreApps.apps3Desc'),
+        showLinks: true,
+        github: Config.Constants.MORE_APPS_OHMCLIENT_GITHUB,
+        playStore: Config.Constants.MORE_APPS_OHMCLIENT_PLAY_STORE,
+      },
+      {
+        id: 4,
+        icon: Config.Images.icons.ic_more_app_kano,
+        title: t('moreApps.apps4Title'),
+        description: t('moreApps.apps4Desc'),
+        showLinks: true,
+        github: Config.Constants.MORE_APPS_KANO_GITHUB,
+        playStore: Config.Constants.MORE_APPS_KANO_PLAY_STORE,
+      },
+    ];
+  }, [t]);
 
-  const onGoBack = () => {
+  const onGoBack = useCallback(() => {
     navigation.pop();
-  };
+  }, [navigation]);
 
-  const onPressGithub = (item: IMoreAppItem, _index: number) => {
-    switch (item.id) {
-      case 0:
-        break;
-      case 1:
-        if (item.github != null) {
-          Utils.openInAppBrowser(item.github);
-        }
-        break;
+  const onPressGithub = useCallback(async (item: IMoreAppItem, _index: number) => {
+    if (item.github != null) {
+      await Utils.openInAppBrowser(item.github);
     }
-  };
+  }, []);
 
-  const onPressPlayStore = (item: IMoreAppItem, _index: number) => {
-    switch (item.id) {
-      case 0:
-        break;
-      case 1:
-        if (item.github != null) {
-          if (item.playStore != null) {
-            Utils.openInAppBrowser(item.playStore);
-          }
-        }
-        break;
+  const onPressPlayStore = useCallback(async (item: IMoreAppItem, _index: number) => {
+    if (item.playStore != null) {
+      await Utils.openBrowser(item.playStore);
     }
-  };
+  }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Appbar.Header style={{ backgroundColor: colors.background }}>
-        <Appbar.BackAction onPress={onGoBack} />
-        <Appbar.Content title={t('moreApps.appsTitle')} subtitle="" />
-      </Appbar.Header>
+    <Components.AppBaseView
+      edges={['left', 'right', 'top']}
+      style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader
+        showBackButton={true}
+        onPressBackButton={onGoBack}
+        title={t('moreApps.appsTitle')}
+        style={{ backgroundColor: colors.background }}
+      />
+
       <Components.AppBaseView scroll edges={['bottom', 'left', 'right']} style={styles.safeArea}>
-        <View style={styles.listContainer}>
+        <View style={[styles.listContainer, largeScreenMode && styles.cardTablet]}>
           {apps.map((item, index) => {
             return (
               <Components.MoreAppCard
@@ -109,7 +124,7 @@ const MoreApps = ({ navigation }: Props) => {
           })}
         </View>
       </Components.AppBaseView>
-    </View>
+    </Components.AppBaseView>
   );
 };
 
