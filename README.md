@@ -3,7 +3,7 @@
 
 # Introduction
 
-This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) device with its simple and awesome card UI. There are a wide set of apps where you can able to enable or disable ads/recommendations. It's free and available to every Xiaomi's MIUI device.
+This application allows you to enable/disable ads or recommendations for various apps in Xiaomi (MIUI) devices with its simple and awesome card UI. There is a wide set of apps where you can able to enable or disable ads/recommendations. It's free and available to every Xiaomi's MIUI device.
 
 ## Installation
 
@@ -11,21 +11,25 @@ This application allows you to enable/disable ads or recommendations for various
   <img alt="Android app on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
 </a>
 
-### Screeshots
+### Screenshots
 
-|                      Home                       |                        Home                         |                  Detail - 1                  |                  Detail - 2                  |                  Detail - 3                  |
-| :---------------------------------------------: | :-------------------------------------------------: | :------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-| ![Accounts List](docs/images/v2.0.0/home-1.png) | ![Transactions List](docs/images/v2.0.0/home-2.png) | ![Reports](docs/images/v2.0.0/details-1.png) | ![Reports](docs/images/v2.0.0/details-2.png) | ![Reports](docs/images/v2.0.0/details-3.png) |
+|                                                 |                                                     |                                              |                                              |                                         |
+| :---------------------------------------------: | :-------------------------------------------------: | :------------------------------------------: | :------------------------------------------: | :-------------------------------------: |
+| ![Accounts List](docs/images/v2.1.0/home-1.png) | ![Transactions List](docs/images/v2.1.0/home-2.png) | ![Reports](docs/images/v2.1.0/details-1.png) | ![Reports](docs/images/v2.1.0/details-2.png) | ![Reports](docs/images/v2.1.0/more.png) |
+
+|                                                   |                                                       |                                               |                                              |                                          |
+| :-----------------------------------------------: | :---------------------------------------------------: | :-------------------------------------------: | :------------------------------------------: | :--------------------------------------: |
+| ![Accounts List](docs/images/v2.1.0/settings.png) | ![Transactions List](docs/images/v2.1.0/settings.png) | ![Reports](docs/images/v2.1.0/appereance.png) | ![Reports](docs/images/v2.1.0/more-apps.png) | ![Reports](docs/images/v2.1.0/about.png) |
 
 The application supports Android 6.0 (API 23) and above.
 
 ## Features include:
 
-- Wide sets of MIUI apps supported.(MIUI 14, MIUI 13 and MIUI 12 and MIUI 11 Supported.)
-- Simple card UI and simple navigations.
-- Supports easily navigate to ads or recommendations setting for some apps.
+- Wide sets of MIUI apps supported. (MIUI 14, MIUI 13, MIUI 12 and MIUI 11 Supported.)
+- Simple card UI and simple navigation.
+- Supports easily navigating to ads or recommendations settings for some apps.
 - Ads setting is easily reversible.
-- English and Russian language supported and multi-language support will be added in the future.
+- Multi-language supported.
 - Dark theme support.
 
 ## Building
@@ -42,7 +46,7 @@ If you want to build from source, just do
 ### With Android Studio
 
 1. Clone repo `git clone https://github.com/gajjartejas/MIUIAdsHelper.git`
-2. In Android Studio selection "Open an existing Android Studio Project"
+2. In Android Studio select "Open an existing Android Studio Project"
 3. Wait for Gradel to sync and then run or build.
 
 ## Contributing
