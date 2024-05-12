@@ -65,7 +65,28 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginHorizontal: 36,
   },
-  bottomButtonLabel: { color: 'white' },
+  bottomButtonLabel: {
+    color: 'white',
+  },
+  bannerContainer: {
+    paddingLeft: 16,
+    paddingVertical: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bannerContainer1: {
+
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bannerText: {
+    fontSize: 12,
+    color: 'white',
+    flex: 1,
+    lineHeight: 16,
+  },
 });
 
 export default styles;
