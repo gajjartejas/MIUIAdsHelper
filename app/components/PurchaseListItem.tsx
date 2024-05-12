@@ -34,7 +34,12 @@ const PurchaseListItem = (props: IAdsListItem) => {
   const { t } = useTranslation();
 
   return (
-    <View style={[styles.container, { backgroundColor: `${colors.onBackground}20`, shadowColor: colors.background }]}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        props.onPress(item, index);
+      }}
+      style={[styles.container, { backgroundColor: `${colors.onBackground}20`, shadowColor: colors.background }]}>
       <Icon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={24} />
       <View style={styles.textContainer}>
         <Text numberOfLines={1} style={[styles.titleText, { color: colors.text }]}>
@@ -54,7 +59,7 @@ const PurchaseListItem = (props: IAdsListItem) => {
         style={styles.buyButton}>
         <Text style={[styles.buyTextButton, { color: colors.primary }]}>{t('iap_buy')}</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
