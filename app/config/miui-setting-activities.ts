@@ -437,7 +437,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           activity: 'com.miui.securityscan.MainActivity',
         },
       ],
-      iconBackgroundColor: '#f0e449',
+      iconBackgroundColor: '#FF5722',
       iconName: 'screen-lock-portrait',
       iconFamily: 'material',
       hideButton: false,

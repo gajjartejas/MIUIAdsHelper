@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Text, View, NativeModules, ScrollView, Dimensions, Alert } from 'react-native';
 
 //ThirdParty
@@ -17,6 +17,7 @@ import DeviceInfo from 'react-native-device-info';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
 import useAppConfigStore from 'app/store/appConfig';
+import ParsedText from 'react-native-parsed-text';
 
 //Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'AdsDetails'>;
@@ -107,7 +108,29 @@ const AdsDetails = ({ route, navigation }: Props) => {
   const onPressMore = () => {
     navigation.navigate('Purchase', { fromTheme: false });
   };
+  const regex = useMemo(() => {
+    return /\*\*(.*?)\*\*/g;
+  }, []);
 
+  const extractTextBetweenStars = useCallback(
+    (text: string) => {
+      const matches = [];
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        matches.push(match[1]);
+      }
+      return matches;
+    },
+    [regex],
+  );
+
+  const renderText = useCallback(
+    (matchingString: string, _matches: any) => {
+      let match = matchingString.match(regex);
+      return `${extractTextBetweenStars(match ? match[0] : '')}`;
+    },
+    [extractTextBetweenStars, regex],
+  );
   return (
     <Components.AppBaseView
       edges={['left', 'right', 'top']}
@@ -119,7 +142,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
         style={{ backgroundColor: colors.background }}
       />
 
-      <ScrollView stickyHeaderIndices={[0]}>
+      <ScrollView stickyHeaderIndices={purchased ? [] : [0]}>
         {!purchased && (
           <TouchableRipple onPress={onPressMore} style={[styles.bannerContainer, { backgroundColor: colors.primary }]}>
             <View style={styles.bannerContainer1}>
@@ -141,7 +164,12 @@ const AdsDetails = ({ route, navigation }: Props) => {
           <Text style={[styles.adsDetailDescText, { color: colors.text }]}>{t('ads_detail_desc')}</Text>
           <Text style={[styles.detailText, { color: `${colors.text}60` }]}>{item.detail}</Text>
           <Text style={[styles.stepsText, { color: colors.text }]}>{t('ads_detail_steps')}</Text>
-          <Text style={[styles.stepsDescText, { color: `${colors.text}60` }]}>{item.steps}</Text>
+          <ParsedText
+            parse={[{ pattern: regex, style: styles.bold, renderText: renderText }]}
+            childrenProps={{ allowFontScaling: false }}
+            style={[styles.stepsDescText, { color: `${colors.text}60` }]}>
+            {item.steps}
+          </ParsedText>
           {item.adsSettingPaths && !item.hideButton && (
             <Button
               labelStyle={styles.bottomButtonLabel}

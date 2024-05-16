@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bannerContainer1: {
-
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -86,6 +85,9 @@ const styles = StyleSheet.create({
     color: 'white',
     flex: 1,
     lineHeight: 16,
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 });
 
