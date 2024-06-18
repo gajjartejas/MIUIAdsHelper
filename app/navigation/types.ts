@@ -13,7 +13,8 @@ export interface DashboardTab {
   userId: string;
 }
 export interface PurchaseScreen {
-  fromTheme: boolean;
+  route: any;
+  params: any;
 }
 export interface AdsDetails {
   item: IAdsActivity;

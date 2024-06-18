@@ -19,7 +19,7 @@ const useAppConfigStore = create<IAppConfigState & IAppConfigActions>()(
     persist(
       set => ({
         ...initialState,
-        setPurchased: (s: boolean) => set(_state => ({ purchased: s })),
+        setPurchased: (p: boolean) => set(_state => ({ purchased: p })),
       }),
       {
         name: 'app-config-storage',

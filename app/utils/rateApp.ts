@@ -22,7 +22,7 @@ const rateApp = async () => {
 const rateAppIfNeeded = async () => {
   let appItemsViews = await getItems();
   let appItemsViewsCount = appItemsViews.length;
-  if (appItemsViewsCount >= 2) {
+  if (appItemsViewsCount >= 15) {
     rateApp();
   }
 };

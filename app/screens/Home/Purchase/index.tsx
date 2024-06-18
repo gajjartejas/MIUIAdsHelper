@@ -143,19 +143,9 @@ const Purchase = ({ navigation, route }: Props) => {
       const purchases = await getAvailablePurchases();
       if (purchases && purchases.length > 0) {
         setPurchased(true);
-        if (!route.params || !route.params.fromTheme) {
-          setTimeout(() => {
-            navigation.pop();
-          }, 2000);
-
-          setTimeout(() => {
-            Alert.alert(t('iap_purchased_already'));
-          }, 3000);
-        } else {
-          setTimeout(() => {
-            navigation.navigate('SelectAppearance', {});
-          }, 2000);
-        }
+        setTimeout(() => {
+          navigation.replace(route.params.route, route.params.params);
+        }, 1000);
       }
       console.log('purchases', purchases);
     } catch (err: any) {

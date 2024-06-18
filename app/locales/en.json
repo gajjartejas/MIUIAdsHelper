@@ -246,9 +246,9 @@
   "ads_step_23_detail": "Mi Store helps you to discover Mi and Redmi mobiles, accessories, ecosystem products and many more.",
   "ads_step_23_steps": "1. Open **Mi Store** app.\n2. Tap on **Account** tab\n3. Tap on the **Settings** icon in the **top right** corner.\n4. Tap on **Notification Preferences**\n5. Turn off Personalized Recommendations.",
   "ads_step_23_specialNote": "You have to manually find ads setting.",
-  "iap_navigation_title": "Unlock dark theme",
+  "iap_navigation_title": "Unlock More Options",
   "iap_title": "Thanks you for installing MIUIAdsHelper",
-  "iap_desc": "You can show your appreciation for my work by making a small donation. This will help me to continue work on this app.",
+  "iap_desc": "To unlock more options you need to make a purchase. Simply choose one of the available purchase options to proceed. If you would like a free coupon, please contact me and I will provide one.",
   "iap_item_1": "Cup of Tea",
   "iap_item_1_desc": "Buy me a cup of tea",
   "iap_item_2": "Pizza",
@@ -263,5 +263,6 @@
   "ads_detail_app_not_available": "Probably this application is not installed on your phone!",
   "ads_detail_desc": "Description",
   "ads_detail_steps": "Steps",
-  "ads_detail_open": "Open"
+  "ads_detail_open": "Open",
+  "ads_detail_purchase_to_unlock": "Purchase to Unlock"
 }

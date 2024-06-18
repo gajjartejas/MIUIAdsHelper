@@ -3,7 +3,7 @@ import { Text, View, NativeModules, ScrollView, Dimensions, Alert } from 'react-
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button, IconButton, TouchableRipple, useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-easy-icon';
 
@@ -16,7 +16,6 @@ import analytics from '@react-native-firebase/analytics';
 import DeviceInfo from 'react-native-device-info';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
-import useAppConfigStore from 'app/store/appConfig';
 import ParsedText from 'react-native-parsed-text';
 
 //Params
@@ -30,7 +29,6 @@ const AdsDetails = ({ route, navigation }: Props) => {
   const { t } = useTranslation();
   const { colors } = useTheme<AppTheme>();
   const item = route.params.item;
-  const purchased = useAppConfigStore(state => state.purchased);
 
   useEffect(() => {
     analytics()
@@ -105,9 +103,6 @@ const AdsDetails = ({ route, navigation }: Props) => {
     navigation.pop();
   };
 
-  const onPressMore = () => {
-    navigation.navigate('Purchase', { fromTheme: false });
-  };
   const regex = useMemo(() => {
     return /\*\*(.*?)\*\*/g;
   }, []);
@@ -142,16 +137,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
         style={{ backgroundColor: colors.background }}
       />
 
-      <ScrollView stickyHeaderIndices={purchased ? [] : [0]}>
-        {!purchased && (
-          <TouchableRipple onPress={onPressMore} style={[styles.bannerContainer, { backgroundColor: colors.primary }]}>
-            <View style={styles.bannerContainer1}>
-              <Text style={[styles.bannerText]}>{t('home.app_support')}</Text>
-              <IconButton icon={'arrow-right'} iconColor={`${colors.onPrimary}`} size={22} onPress={onPressMore} />
-            </View>
-          </TouchableRipple>
-        )}
-
+      <ScrollView>
         <View style={[styles.headerContainer, { backgroundColor: `${item.iconBackgroundColor}50` }]}>
           <Icon
             type={item.iconFamily}

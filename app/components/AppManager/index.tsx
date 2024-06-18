@@ -27,7 +27,7 @@ const AppManager = ({ children }: Props) => {
       await initConnection();
       const purchases = await getAvailablePurchases();
       if (purchases && purchases.length > 0) {
-        setPurchased(!__DEV__); //For testing
+        setPurchased(true); //For testing
       }
     })();
   }, [setPurchased]);
