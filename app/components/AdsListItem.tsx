@@ -54,12 +54,13 @@ interface IAdsListItem {
   index: number;
   sectionIndex: number;
   onPress: (item: IAdsActivity, index: number, sectionIndex: number) => void;
+  locked: boolean;
 }
 
 const AdsListItem = (props: IAdsListItem) => {
   //Consts
   const { colors } = useTheme<AppTheme>();
-  const { item, index } = props;
+  const { item, index, locked } = props;
   const sectionIndex = props.sectionIndex;
 
   const isDark = useThemeConfigStore(store => store.isDark);
@@ -78,7 +79,10 @@ const AdsListItem = (props: IAdsListItem) => {
         style={[styles.touchableButton, { backgroundColor: `${colors.onBackground}20` }]}
         onPress={() => props.onPress(item, index, sectionIndex)}>
         <>
-          <Icon type={item.iconFamily} name={item.iconName} color={colors.white} size={24} />
+          <View style={styles.iconContainerView}>
+            <Icon type={item.iconFamily} name={item.iconName} color={colors.white} size={24} />
+            {locked && <Icon type={'font-awesome'} name={'lock'} color={colors.white} size={24} />}
+          </View>
           <Text numberOfLines={1} style={[styles.titleText, { color: colors.white }]}>
             {item.title}
           </Text>
@@ -111,12 +115,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   iconContainerView: {
-    backgroundColor: 'red',
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 22,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   titleText: {
     fontWeight: 'bold',

@@ -20,7 +20,6 @@ import useThemeConfigStore, { IAppearanceType } from 'app/store/themeConfig';
 import { SelectAccentDialogColor } from 'app/components/SelectAccentColorDialog';
 import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
 import AppHeader from 'app/components/AppHeader';
-import useAppConfigStore from 'app/store/appConfig';
 
 //Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'SelectAppearance'>;
@@ -34,7 +33,6 @@ const SelectAppearance = ({ navigation }: Props) => {
   const setAppearance = useThemeConfigStore(store => store.setAppearance);
   const appearance = useThemeConfigStore(store => store.appearance);
   const largeScreenMode = useLargeScreenMode();
-  const purchased = useAppConfigStore(store => store.purchased);
 
   //States
   const apps: ISettingSection[] = useMemo(() => {
@@ -119,24 +117,16 @@ const SelectAppearance = ({ navigation }: Props) => {
 
   const onPressPrimaryColor = useCallback(
     (item: SelectAccentDialogColor) => {
-      if (!purchased) {
-        navigation.navigate('Purchase', { fromTheme: true });
-        return;
-      }
       onPressHideAccentColorDialog();
       setTimeout(() => {
         setPrimaryColor(item.primary, item.onPrimary);
       }, 100);
     },
-    [navigation, onPressHideAccentColorDialog, purchased, setPrimaryColor],
+    [onPressHideAccentColorDialog, setPrimaryColor],
   );
 
   const onPressAppearanceOption = useCallback(
     (item: ISettingSection, index: number, subItem: ISettingItem, subIndex: number) => {
-      if (!purchased) {
-        navigation.navigate('Purchase', { fromTheme: true });
-        return;
-      }
       switch (true) {
         case index === 0 && subIndex === 0:
           onPressShowThemeDialog();
@@ -150,7 +140,7 @@ const SelectAppearance = ({ navigation }: Props) => {
         default:
       }
     },
-    [navigation, onPressRestoreDefaultTheme, onPressShowAccentColorDialog, onPressShowThemeDialog, purchased],
+    [onPressRestoreDefaultTheme, onPressShowAccentColorDialog, onPressShowThemeDialog],
   );
 
   const onSelectTheme = useCallback(
