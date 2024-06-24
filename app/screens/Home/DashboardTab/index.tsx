@@ -65,7 +65,8 @@ const DashboardTab = ({}: any) => {
       item.appType === IAdsSettingAppType.AudioVideo ||
       item.appType === IAdsSettingAppType.ThemeLockScreen ||
       item.appType === IAdsSettingAppType.Utilities ||
-      item.appType === IAdsSettingAppType.Internet;
+      item.appType === IAdsSettingAppType.Internet ||
+      item.appType === IAdsSettingAppType.Security;
 
     if (!freeUnlockForCategories && !purchased) {
       navigation.navigate('Purchase', { route: 'AdsDetails', params: { item: item } });
@@ -80,7 +81,8 @@ const DashboardTab = ({}: any) => {
       item.appType === IAdsSettingAppType.AudioVideo ||
       item.appType === IAdsSettingAppType.ThemeLockScreen ||
       item.appType === IAdsSettingAppType.Utilities ||
-      item.appType === IAdsSettingAppType.Internet;
+      item.appType === IAdsSettingAppType.Internet ||
+      item.appType === IAdsSettingAppType.Security;
     return (
       <Components.AdsListItem
         key={item.id}
