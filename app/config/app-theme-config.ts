@@ -33,6 +33,8 @@ export const PaperThemeDefault = {
 
     white: '#ffffff',
     black: '#000000',
+
+    text: '#000000',
   },
 };
 
@@ -65,5 +67,7 @@ export const PaperThemeDark = {
 
     white: '#ffffff',
     black: '#000000',
+
+    text: '#FFFFFF',
   },
 };
