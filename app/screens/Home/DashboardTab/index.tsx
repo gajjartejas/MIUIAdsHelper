@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 
 //ThirdParty
-import { IconButton, Text, useTheme } from 'react-native-paper';
+import { IconButton, Text, TouchableRipple, useTheme } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
 import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
@@ -15,7 +15,7 @@ import Utils from 'app/utils';
 import useGetSettingActivities from 'app/config/miui-setting-activities';
 import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigation/types';
 import { AppTheme } from 'app/models/theme';
-import { IAdsActivity, IAdsActivitySection, IAdsSettingAppType } from 'app/components/AdsListItem';
+import { IAdsActivity, IAdsActivitySection } from 'app/components/AdsListItem';
 import useAppConfigStore from 'app/store/appConfig';
 
 //Params
@@ -61,28 +61,11 @@ const DashboardTab = ({}: any) => {
   const filteredArray = useSearch(allEntries, searchText);
 
   const cardTapped = (item: IAdsActivity, _index: number, _sectionIndex: number) => {
-    const freeUnlockForCategories =
-      item.appType === IAdsSettingAppType.AudioVideo ||
-      item.appType === IAdsSettingAppType.ThemeLockScreen ||
-      item.appType === IAdsSettingAppType.Utilities ||
-      item.appType === IAdsSettingAppType.Internet ||
-      item.appType === IAdsSettingAppType.Security;
-
-    if (!freeUnlockForCategories && !purchased) {
-      navigation.navigate('Purchase', { route: 'AdsDetails', params: { item: item } });
-      return;
-    }
     Utils.rateApp.saveItem(item);
     navigation.navigate('AdsDetails', { item: item });
   };
 
   const renderItem = ({ item, index, sectionIndex }: { item: IAdsActivity; index: number; sectionIndex: number }) => {
-    const freeUnlockForCategories =
-      item.appType === IAdsSettingAppType.AudioVideo ||
-      item.appType === IAdsSettingAppType.ThemeLockScreen ||
-      item.appType === IAdsSettingAppType.Utilities ||
-      item.appType === IAdsSettingAppType.Internet ||
-      item.appType === IAdsSettingAppType.Security;
     return (
       <Components.AdsListItem
         key={item.id}
@@ -90,13 +73,12 @@ const DashboardTab = ({}: any) => {
         index={index}
         sectionIndex={sectionIndex}
         onPress={cardTapped}
-        locked={!freeUnlockForCategories && !purchased}
       />
     );
   };
 
-  const onClearSearch = () => {
-    setSearchText('');
+  const onPressMore = () => {
+    navigation.navigate('Purchase', { fromTheme: false });
   };
 
   return (
@@ -116,13 +98,25 @@ const DashboardTab = ({}: any) => {
               placeholderTextColor={`${colors.text}`}
               style={[styles.searchTextInputText, { color: `${colors.onBackground}20` }]}
             />
-            {!!searchText && searchText.length > 0 && (
-              <View style={[styles.rightSearchButton]}>
-                <IconButton icon={'close'} iconColor={`${colors.text}`} size={22} onPress={onClearSearch} />
-              </View>
-            )}
+            <View style={[styles.rightSearchButton]}>
+              <IconButton
+                icon={purchased ? 'emoticon-happy' : 'lock'}
+                iconColor={`${colors.text}`}
+                size={22}
+                onPress={onPressMore}
+              />
+            </View>
           </View>
         </View>
+
+        {!purchased && (
+          <TouchableRipple onPress={onPressMore} style={[styles.bannerContainer, { backgroundColor: colors.primary }]}>
+            <>
+              <Text style={[styles.bannerText]}>{t('home.app_support')}</Text>
+              <IconButton icon={'arrow-right'} iconColor={`${colors.onPrimary}`} size={22} onPress={onPressMore} />
+            </>
+          </TouchableRipple>
+        )}
 
         <View style={styles.listContainer}>
           {filteredArray.map((section, sectionIndex) => {
