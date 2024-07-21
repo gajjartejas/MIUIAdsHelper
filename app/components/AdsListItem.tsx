@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Dimensions, View, StyleSheet } from 'react-native';
 
 //Third Party
@@ -57,7 +57,7 @@ interface IAdsListItem {
 }
 
 const AdsListItem = (props: IAdsListItem) => {
-  //Consts
+  //Const
   const { colors } = useTheme<AppTheme>();
   const { item, index } = props;
   const sectionIndex = props.sectionIndex;
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AdsListItem;
+export default memo(AdsListItem);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Platform, ScrollView, Text, View, Alert } from 'react-native';
 
 //ThirdParty
@@ -6,7 +6,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PurchaseListItem, { IProduct } from 'app/components/PurchaseListItem';
 import { useTranslation } from 'react-i18next';
 import {
-  endConnection,
   finishTransaction,
   flushFailedPurchasesCachedAsPendingAndroid,
   getAvailablePurchases,
@@ -63,12 +62,51 @@ const Purchase = ({ navigation, route }: Props) => {
         purchaseErrorSubscription.remove();
         purchaseErrorSubscription = null;
       }
-      endConnection();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initPurchase = async () => {
+  const getPurchases = useCallback(async () => {
+    try {
+      const purchases = await getAvailablePurchases();
+      if (purchases && purchases.length > 0) {
+        setPurchased(true);
+        if (!route.params || !route.params.fromTheme) {
+          setTimeout(() => {
+            navigation.pop();
+          }, 2000);
+
+          setTimeout(() => {
+            Alert.alert(t('iap_purchased_already'));
+          }, 3000);
+        } else {
+          setTimeout(() => {
+            navigation.navigate('SelectAppearance', {});
+          }, 2000);
+        }
+      }
+      console.log('purchases', purchases);
+    } catch (err: any) {
+      console.warn(err);
+      console.warn('getPurchases:', err.code, err.message);
+    }
+  }, [navigation, route.params, setPurchased, t]);
+
+  const getItems = useCallback(async () => {
+    try {
+      const products = await getProducts({ skus: itemSkus });
+      const mappedEntries: IProduct[] = products.map(anObj1 => ({
+        ...iaps.find(anObj2 => anObj1.productId === anObj2.productId)!,
+        ...anObj1,
+      }));
+      setEntries(mappedEntries);
+    } catch (err: any) {
+      console.warn('getItems:', err.code, err.message);
+      Alert.alert(err.message);
+    }
+  }, [iaps]);
+
+  const initPurchase = useCallback(async () => {
     try {
       await getPurchases();
 
@@ -111,24 +149,10 @@ const Purchase = ({ navigation, route }: Props) => {
       console.log('purchaseErrorListener', error);
       Alert.alert(error.message);
     });
-  };
-
-  const getItems = async () => {
-    try {
-      const products = await getProducts({ skus: itemSkus });
-      let mappedEntries: IProduct[] = products.map(anObj1 => ({
-        ...iaps.find(anObj2 => anObj1.productId === anObj2.productId)!,
-        ...anObj1,
-      }));
-      setEntries(mappedEntries);
-    } catch (err: any) {
-      console.warn('getItems:', err.code, err.message);
-      Alert.alert(err.message);
-    }
-  };
+  }, [getItems, getPurchases, navigation, setPurchased, t]);
 
   // Version 3 apis
-  const requestAppPurchase = async (sku: Sku) => {
+  const requestAppPurchase = useCallback(async (sku: Sku) => {
     try {
       let purchaseResult = await requestPurchase({ skus: [sku] });
       console.log('purchaseResult', purchaseResult);
@@ -136,41 +160,18 @@ const Purchase = ({ navigation, route }: Props) => {
       console.warn('requestAppPurchase:', err.code, err.message);
       Alert.alert(err.message);
     }
-  };
+  }, []);
 
-  const getPurchases = async () => {
-    try {
-      const purchases = await getAvailablePurchases();
-      if (purchases && purchases.length > 0) {
-        setPurchased(true);
-        if (!route.params || !route.params.fromTheme) {
-          setTimeout(() => {
-            navigation.pop();
-          }, 2000);
+  const onPressItem = useCallback(
+    (item: IProduct, _index: number) => {
+      requestAppPurchase(item.productId);
+    },
+    [requestAppPurchase],
+  );
 
-          setTimeout(() => {
-            Alert.alert(t('iap_purchased_already'));
-          }, 3000);
-        } else {
-          setTimeout(() => {
-            navigation.navigate('SelectAppearance', {});
-          }, 2000);
-        }
-      }
-      console.log('purchases', purchases);
-    } catch (err: any) {
-      console.warn(err);
-      console.warn('getPurchases:', err.code, err.message);
-    }
-  };
-
-  const onPressItem = (item: IProduct, _index: number) => {
-    requestAppPurchase(item.productId);
-  };
-
-  const onGoBack = () => {
+  const onGoBack = useCallback(() => {
     navigation.pop();
-  };
+  }, [navigation]);
 
   if (loading) {
     return (
@@ -181,7 +182,7 @@ const Purchase = ({ navigation, route }: Props) => {
   }
   return (
     <Components.AppBaseView
-      edges={['left', 'right', 'top']}
+      edges={['bottom', 'left', 'right']}
       style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader
         showBackButton={true}
