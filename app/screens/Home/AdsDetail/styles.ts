@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   headerContainer: {
-    height: Dimensions.get('screen').height * 0.3,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

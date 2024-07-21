@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
 //Third Party
@@ -28,7 +28,7 @@ interface IAdsListItem {
 }
 
 const PurchaseListItem = (props: IAdsListItem) => {
-  //Consts
+  //Const
   const { colors } = useTheme<AppTheme>();
   const { item, index } = props;
   const { t } = useTranslation();
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PurchaseListItem;
+export default memo(PurchaseListItem);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 
 //ThirdParty
@@ -60,32 +60,46 @@ const DashboardTab = ({}: any) => {
 
   const filteredArray = useSearch(allEntries, searchText);
 
-  const cardTapped = (item: IAdsActivity, _index: number, _sectionIndex: number) => {
-    Utils.rateApp.saveItem(item);
-    navigation.navigate('AdsDetails', { item: item });
-  };
+  const cardTapped = useCallback(
+    (item: IAdsActivity, _index: number, _sectionIndex: number) => {
+      Utils.rateApp.saveItem(item);
+      navigation.navigate('AdsDetails', { item: item });
+    },
+    [navigation],
+  );
 
-  const renderItem = ({ item, index, sectionIndex }: { item: IAdsActivity; index: number; sectionIndex: number }) => {
-    return (
-      <Components.AdsListItem
-        key={item.id}
-        item={item}
-        index={index}
-        sectionIndex={sectionIndex}
-        onPress={cardTapped}
-      />
-    );
-  };
+  const renderItem = useCallback(
+    ({ item, index, sectionIndex }: { item: IAdsActivity; index: number; sectionIndex: number }) => {
+      return (
+        <Components.AdsListItem
+          key={item.id}
+          item={item}
+          index={index}
+          sectionIndex={sectionIndex}
+          onPress={cardTapped}
+        />
+      );
+    },
+    [cardTapped],
+  );
 
   const onPressMore = () => {
     navigation.navigate('Purchase', { fromTheme: false });
   };
 
+  const onClearSearch = useCallback(() => {
+    setSearchText('');
+  }, []);
+
   return (
     <Components.AppBaseView
-      edges={['left', 'right', 'top']}
+      edges={['top', 'left', 'right']}
       style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false} style={styles.carouselContainer}>
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        stickyHeaderIndices={[0]}
+        showsVerticalScrollIndicator={false}
+        style={styles.carouselContainer}>
         <View style={[styles.headerDetailContainer, { backgroundColor: `${colors.background}DD` }]}>
           <View style={[styles.searchContainer, { backgroundColor: `${colors.onBackground}20` }]}>
             <View style={[styles.leftSearchButton]}>
@@ -96,16 +110,13 @@ const DashboardTab = ({}: any) => {
               onChangeText={v => setSearchText(v)}
               placeholder={t('home.search_text')!}
               placeholderTextColor={`${colors.text}`}
-              style={[styles.searchTextInputText, { color: `${colors.onBackground}20` }]}
+              style={[styles.searchTextInputText, { color: `${colors.onBackground}cc` }]}
             />
-            <View style={[styles.rightSearchButton]}>
-              <IconButton
-                icon={purchased ? 'emoticon-happy' : 'lock'}
-                iconColor={`${colors.text}`}
-                size={22}
-                onPress={onPressMore}
-              />
-            </View>
+            {!!searchText && searchText.length > 0 && (
+              <View style={[styles.rightSearchButton]}>
+                <IconButton icon={'close'} iconColor={`${colors.text}`} size={22} onPress={onClearSearch} />
+              </View>
+            )}
           </View>
         </View>
 

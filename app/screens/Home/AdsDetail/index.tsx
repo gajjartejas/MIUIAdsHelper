@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Text, View, NativeModules, ScrollView, Dimensions, Alert } from 'react-native';
+import { Text, View, NativeModules, ScrollView, Alert, useWindowDimensions } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -31,6 +31,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
   const { colors } = useTheme<AppTheme>();
   const item = route.params.item;
   const purchased = useAppConfigStore(state => state.purchased);
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     analytics()
@@ -41,7 +42,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
       .then(_r => {});
   }, [item.title]);
 
-  const openActivity = (packageName: string | null, activityName: string | null) => {
+  const openActivity = useCallback((packageName: string | null, activityName: string | null) => {
     return new Promise((resolve, _reject) => {
       NativeModules.OpenSettings.openNetworkSettings(packageName, activityName, (data: any) => {
         if (data !== true) {
@@ -51,40 +52,9 @@ const AdsDetails = ({ route, navigation }: Props) => {
         }
       });
     });
-  };
+  }, []);
 
-  const logEvent = async (adsActivity: IAdsActivity, openBy: IAdsSettingPath | null) => {
-    if (!refDeviceInfo.current) {
-      refDeviceInfo.current = await getDeviceInfo();
-    }
-    await analytics().logEvent('open_ads_settings', {
-      id: adsActivity.id,
-      appName: adsActivity.appname,
-      openBy: openBy?.activity,
-      success: openBy !== null,
-      ...refDeviceInfo.current,
-    });
-  };
-
-  const openActivities = async (adsActivity: IAdsActivity) => {
-    let isActivityExists = false;
-    for (let i = 0; i < adsActivity.adsSettingPaths.length; i++) {
-      const adsSetting = adsActivity.adsSettingPaths[i];
-      const result = await openActivity(adsSetting.package, adsSetting.activity);
-
-      if (result) {
-        isActivityExists = true;
-        logEvent(adsActivity, adsSetting);
-        break;
-      }
-    }
-    if (!isActivityExists) {
-      logEvent(adsActivity, null);
-      Alert.alert(t('ads_detail_app_not_available'));
-    }
-  };
-
-  const getDeviceInfo = async () => {
+  const getDeviceInfo = useCallback(async () => {
     let brand = DeviceInfo.getBrand();
     let buildNumber = DeviceInfo.getBuildNumber();
     let nickName = await DeviceInfo.getDevice();
@@ -99,15 +69,53 @@ const AdsDetails = ({ route, navigation }: Props) => {
       systemVersion,
       buildId,
     };
-  };
+  }, []);
 
-  const onGoBack = () => {
+  const logEvent = useCallback(
+    async (adsActivity: IAdsActivity, openBy: IAdsSettingPath | null) => {
+      if (!refDeviceInfo.current) {
+        refDeviceInfo.current = await getDeviceInfo();
+      }
+      await analytics().logEvent('open_ads_settings', {
+        id: adsActivity.id,
+        appName: adsActivity.appname,
+        openBy: openBy?.activity,
+        success: openBy !== null,
+        ...refDeviceInfo.current,
+      });
+    },
+    [getDeviceInfo],
+  );
+
+  const openActivities = useCallback(
+    async (adsActivity: IAdsActivity) => {
+      let isActivityExists = false;
+      for (let i = 0; i < adsActivity.adsSettingPaths.length; i++) {
+        const adsSetting = adsActivity.adsSettingPaths[i];
+        const result = await openActivity(adsSetting.package, adsSetting.activity);
+
+        if (result) {
+          isActivityExists = true;
+          logEvent(adsActivity, adsSetting);
+          break;
+        }
+      }
+      if (!isActivityExists) {
+        logEvent(adsActivity, null);
+        Alert.alert(t('ads_detail_app_not_available'));
+      }
+    },
+    [logEvent, openActivity, t],
+  );
+
+  const onGoBack = useCallback(() => {
     navigation.pop();
-  };
+  }, [navigation]);
 
-  const onPressMore = () => {
+  const onPressMore = useCallback(() => {
     navigation.navigate('Purchase', { fromTheme: false });
-  };
+  }, [navigation]);
+
   const regex = useMemo(() => {
     return /\*\*(.*?)\*\*/g;
   }, []);
@@ -133,13 +141,13 @@ const AdsDetails = ({ route, navigation }: Props) => {
   );
   return (
     <Components.AppBaseView
-      edges={['left', 'right', 'top']}
+      edges={['bottom', 'left', 'right']}
       style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader
         showBackButton={true}
         onPressBackButton={onGoBack}
         title={item.title}
-        style={{ backgroundColor: colors.background }}
+        style={{ backgroundColor: `${item.iconBackgroundColor}50` }}
       />
 
       <ScrollView stickyHeaderIndices={purchased ? [] : [0]}>
@@ -152,13 +160,9 @@ const AdsDetails = ({ route, navigation }: Props) => {
           </TouchableRipple>
         )}
 
-        <View style={[styles.headerContainer, { backgroundColor: `${item.iconBackgroundColor}50` }]}>
-          <Icon
-            type={item.iconFamily}
-            name={item.iconName}
-            color={item.iconBackgroundColor}
-            size={Dimensions.get('screen').height * 0.1}
-          />
+        <View
+          style={[styles.headerContainer, { height: height * 0.25, backgroundColor: `${item.iconBackgroundColor}50` }]}>
+          <Icon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={height * 0.1} />
         </View>
         <View style={styles.parallexContainerView}>
           <Text style={[styles.adsDetailDescText, { color: colors.text }]}>{t('ads_detail_desc')}</Text>
