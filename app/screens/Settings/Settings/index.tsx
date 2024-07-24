@@ -43,7 +43,7 @@ const Settings = ({ navigation }: Props) => {
             iconType: 'material',
             title: t('settings.languageTitle'),
             description: t('settings.languageSubTitle', {
-              language: selectedLanguageName,
+              id10001: selectedLanguageName,
             })!,
             route: 'ChangeLanguage',
           },
