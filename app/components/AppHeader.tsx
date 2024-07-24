@@ -34,7 +34,7 @@ const AppHeader = (props: AppHeaderProps) => {
   //Const
   const insets = useSafeAreaInsets();
   const statusBarHeight = props.statusBarHeight === undefined ? insets.top : props.statusBarHeight;
-  const backButtonPaddingForTitle = !props.showBackButton ? { marginLeft: 0 } : { marginLeft: 60, marginRight: 60 };
+  const backButtonPaddingForTitle = !props.showBackButton ? { marginLeft: 0 } : { marginLeft: 0, marginRight: 0 };
   const tintColor = props.tintColor === undefined ? colors.onBackground : props.tintColor;
   const textStyle = props.textStyle === undefined ? {} : props.textStyle;
   const LeftViewComponent = props.RightViewComponent === undefined ? <></> : props.LeftViewComponent;
