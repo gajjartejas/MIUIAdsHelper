@@ -81,8 +81,8 @@ android {
         applicationId "com.tejasgajjar.miuiadshelper"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 28
-        versionName "2.2.5"
+        versionCode 29
+        versionName "2.2.6"
         missingDimensionStrategy "store", "play"
     }
     signingConfigs {
