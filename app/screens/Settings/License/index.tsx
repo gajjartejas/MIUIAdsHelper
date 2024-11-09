@@ -90,7 +90,7 @@ const License = ({ navigation }: Props) => {
         title={t('librariesScreen.title')}
         style={{ backgroundColor: colors.background }}
       />
-      <Components.AppBaseView edges={['bottom', 'left', 'right']} style={styles.subView}>
+      <Components.AppBaseView edges={[]} style={styles.subView}>
         <FlatList
           contentContainerStyle={[largeScreenMode && styles.cardTablet]}
           data={finalLicense}

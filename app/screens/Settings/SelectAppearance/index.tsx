@@ -78,7 +78,6 @@ const SelectAppearance = ({ navigation }: Props) => {
     ];
   }, [t]);
 
-  //
   const [themeDialogVisible, setThemeDialogVisible] = useState(false);
   const themeOptions: ISettingThemeOptions[] = useMemo(() => {
     return [
@@ -100,7 +99,6 @@ const SelectAppearance = ({ navigation }: Props) => {
     ];
   }, [t]);
 
-  //
   const [accentColorDialogVisible, setAccentColorDialogVisible] = useState(false);
 
   const onGoBack = useCallback(() => {
@@ -175,7 +173,7 @@ const SelectAppearance = ({ navigation }: Props) => {
         style={{ backgroundColor: colors.background }}
       />
 
-      <Components.AppBaseView scroll edges={[]} style={styles.safeArea}>
+      <Components.AppBaseView edges={[]} scroll={true} style={styles.safeArea}>
         <View style={[styles.listContainer, largeScreenMode && styles.cardTablet]}>
           {apps.map((item, index) => {
             return (

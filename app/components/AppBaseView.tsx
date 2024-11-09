@@ -11,7 +11,6 @@ interface IAppBaseViewProps extends ViewProps {
 
 const AppBaseView = (props: IAppBaseViewProps) => {
   const { children, style, edges, scroll, ...other } = props;
-
   return (
     <SafeAreaView edges={edges} style={style} {...other}>
       {scroll ? <ScrollView>{children}</ScrollView> : children}

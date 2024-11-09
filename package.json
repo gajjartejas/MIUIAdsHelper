@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "npx patch-package && node ./post-install.js",
+    "postinstall": "npx patch-package",
     "license-crawler": "npx npm-license-crawler -onlyDirectDependencies -json licenses.json"
   },
   "dependencies": {

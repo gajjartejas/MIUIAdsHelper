@@ -32,10 +32,10 @@ const Translators = ({ navigation }: Props) => {
   const { colors } = useTheme<AppTheme>();
 
   //States
-  const [finalLicense, setFinalLicense] = useState<ITranslator[]>([]);
+  let [finalLicense, setFinalLicense] = useState<ITranslator[]>([]);
 
-  const languages = useMemo(() => {
-    return [
+  useEffect(() => {
+    const languages = [
       { id: 0, icon: Config.Images.icons.flag_ar, translators: [], language: 'العربية' },
       { id: 1, icon: Config.Images.icons.flag_cs, translators: [], language: 'čeština' },
       { id: 2, icon: Config.Images.icons.flag_da, translators: [], language: 'dansk' },
@@ -64,12 +64,10 @@ const Translators = ({ navigation }: Props) => {
       { id: 26, icon: Config.Images.icons.flag_uk, translators: [], language: 'Українська' },
       { id: 27, icon: Config.Images.icons.flag_vi, translators: [], language: 'Tiếng Việt' },
       { id: 28, icon: Config.Images.icons.flag_zh_cn, translators: [], language: '中文' },
-    ];
-  }, []);
+    ].filter(v => v.translators.length > 0);
 
-  useEffect(() => {
-    setFinalLicense(languages.filter(v => v.translators.length > 0));
-  }, [languages]);
+    setFinalLicense(languages);
+  }, []);
 
   const onGoBack = useCallback(() => {
     navigation.pop();
@@ -119,7 +117,7 @@ const Translators = ({ navigation }: Props) => {
         style={{ backgroundColor: colors.background }}
       />
 
-      <View style={styles.safeArea}>
+      <Components.AppBaseView edges={[]} style={styles.safeArea}>
         <FlatList
           contentContainerStyle={styles.cardTablet}
           style={styles.flatlist}
@@ -129,7 +127,7 @@ const Translators = ({ navigation }: Props) => {
           keyExtractor={(item, _index) => item.id.toString()}
           ListEmptyComponent={EmptyListComponent}
         />
-      </View>
+      </Components.AppBaseView>
     </Components.AppBaseView>
   );
 };
