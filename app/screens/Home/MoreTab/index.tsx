@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Image, Platform, ScrollView, View } from 'react-native';
+import { Image, Platform, View } from 'react-native';
 
 //ThirdParty
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,7 @@ import styles from './styles';
 import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigation/types';
 import { AppTheme } from 'app/models/theme';
 import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
+import getSystemInfo from 'app/utils/getSystemInfo';
 
 //Interfaces
 interface IMoreItem {
@@ -142,26 +143,28 @@ const MoreTab = () => {
   );
 
   const onPressGithub = useCallback(async () => {
-    await Utils.openInAppBrowser(Config.Constants.ABOUT_NEW_GITHUB_ISSUE);
+    const { title, body } = getSystemInfo();
+    await Utils.openInAppBrowser(`${Config.Constants.ABOUT_NEW_GITHUB_ISSUE}?title=${title}&body=${body}`);
+    setTimeout(() => {
+      setVisible(false);
+    }, 200);
   }, []);
 
-  const onPressEmail = useCallback(async () => {
-    const email = Config.Constants.ABOUT_SUPPORT_EMAIL;
-    const subject = `${t('general.appname')} feedback`;
-    const osType = Platform.OS;
-    const systemVersion = DeviceInfo.getSystemVersion();
-    const brand = DeviceInfo.getBrand();
-    const model = DeviceInfo.getModel();
-    const readableVersion = DeviceInfo.getReadableVersion();
-    const body = `OS: ${osType} (${systemVersion})\nBrand: ${brand} (${model})\nApp Version: ${readableVersion}`;
-    await Utils.openBrowser(`mailto:${email}?subject=${subject}&body=${body}`);
-  }, [t]);
+  const onPressGithubDiscussion = useCallback(async () => {
+    const { title, body } = getSystemInfo();
+    await Utils.openInAppBrowser(
+      `${Config.Constants.ABOUT_GITHUB_DISCUSSION}?category=q-a&title=${title}&body=${body}`,
+    );
+    setTimeout(() => {
+      setVisible(false);
+    }, 200);
+  }, []);
 
   return (
     <Components.AppBaseView
-      edges={['left', 'right', 'top']}
+      edges={['bottom', 'left', 'right']}
       style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView style={styles.scrollView}>
+      <Components.AppBaseView edges={['top']} scroll={true} style={styles.scrollView}>
         <View style={styles.subView}>
           <View style={[styles.imageBackground, largeScreenMode && styles.cardTablet]}>
             <Image source={Config.Images.icons.app_icon} resizeMode="contain" style={styles.appIcon} />
@@ -197,12 +200,12 @@ const MoreTab = () => {
             })}
           </View>
         </View>
-      </ScrollView>
+      </Components.AppBaseView>
 
       <Components.AboutFeedbackDialog
         visible={visible}
         onPressGithub={onPressGithub}
-        onPressEmail={onPressEmail}
+        onPressGithubDiscussion={onPressGithubDiscussion}
         onPressHideDialog={onPressHideDialog}
       />
     </Components.AppBaseView>

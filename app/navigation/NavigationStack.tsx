@@ -56,7 +56,7 @@ const RootNavigation: React.FC = () => {
     <PaperProvider theme={theme}>
       <NavigationContainer ref={navigationRef} theme={theme}>
         <StatusBar
-          backgroundColor={'#FFFFFF01'}
+          backgroundColor={'#FFFFFF00'}
           barStyle={isDark ? 'light-content' : 'dark-content'}
           translucent={true}
         />

@@ -17,9 +17,9 @@ This application allows you to enable/disable ads or recommendations for various
 | :---------------------------------------------: | :-------------------------------------------------: | :------------------------------------------: | :------------------------------------------: | :-------------------------------------: |
 | ![Accounts List](docs/images/v2.1.0/home-1.png) | ![Transactions List](docs/images/v2.1.0/home-2.png) | ![Reports](docs/images/v2.1.0/details-1.png) | ![Reports](docs/images/v2.1.0/details-2.png) | ![Reports](docs/images/v2.1.0/more.png) |
 
-|                                                   |                                                       |                                               |                                              |                                          |
-| :-----------------------------------------------: | :---------------------------------------------------: | :-------------------------------------------: | :------------------------------------------: | :--------------------------------------: |
-| ![Accounts List](docs/images/v2.1.0/settings.png) | ![Transactions List](docs/images/v2.1.0/settings.png) | ![Reports](docs/images/v2.1.0/appereance.png) | ![Reports](docs/images/v2.1.0/more-apps.png) | ![Reports](docs/images/v2.1.0/about.png) |
+|                                                   |                                                         |                                               |                                              |                                          |
+| :-----------------------------------------------: |:-------------------------------------------------------:| :-------------------------------------------: | :------------------------------------------: | :--------------------------------------: |
+| ![Accounts List](docs/images/v2.1.0/settings.png) | ![Transactions List](docs/images/v2.1.0/change-language.png) | ![Reports](docs/images/v2.1.0/appereance.png) | ![Reports](docs/images/v2.1.0/more-apps.png) | ![Reports](docs/images/v2.1.0/about.png) |
 
 The application supports Android 6.0 (API 23) and above.
 

@@ -21,6 +21,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 xcshareddata
+*.GoogleService-Info.plist
 
 # Android/IntelliJ
 #
@@ -73,6 +74,8 @@ android/app/build/*
 android/build/*
 android/app/release/*
 android/app/releaseStaging/*
+output-metadata.json
+
 
 *.apk
 *.aab
@@ -90,8 +93,15 @@ node_modules/
 aws-exports.js
 awsconfiguration.json
 
-
 vendor
-ios/MIUIAdsHelper/GoogleService-Info.plist
 
-.yarn
+# testing
+/coverage
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

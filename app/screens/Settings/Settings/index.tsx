@@ -156,7 +156,7 @@ const Settings = ({ navigation }: Props) => {
         style={{ backgroundColor: colors.background }}
       />
 
-      <Components.AppBaseView scroll edges={['bottom', 'left', 'right']} style={styles.safeArea}>
+      <Components.AppBaseView scroll edges={[]} style={styles.safeArea}>
         <View style={[styles.listContainer, largeScreenMode && styles.cardTablet]}>
           {apps.map(item => {
             return (
