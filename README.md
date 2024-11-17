@@ -33,6 +33,7 @@ The application supports Android 6.0 (API 23) and above.
 - Dark theme support.
 
 ## Building
+>  Note: You can't Publish any Source code without permission.
 
 ### With Gradle
 
