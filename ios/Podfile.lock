@@ -1329,7 +1329,7 @@ PODS:
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
-  - RNIap (12.15.1):
+  - RNIap (12.16.2):
     - React-Core
   - RNInAppBrowser (3.7.0):
     - React-Core
@@ -1665,7 +1665,7 @@ SPEC CHECKSUMS:
   RNFBAnalytics: 3f336502732e51de9f5a5be8b5e3df879bf2eca7
   RNFBApp: 9acbe359ef3559d6f8ca5c350db471f2b352f98a
   RNFBCrashlytics: a4a66785997e629313ec8005a0811765738239fd
-  RNIap: 17583f958d35788a87948e94072ff6edd3580497
+  RNIap: 2fba6c91f79fb7c71fcc44465f606061653caf01
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNLocalize: b77875884750cb6a58cd6865863fe2ba2729b72b
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
@@ -1674,4 +1674,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 471b30df133a6535ede0f285b43b4261098fab34
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
