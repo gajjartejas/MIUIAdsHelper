@@ -34,7 +34,7 @@ const Constant = {
   TERMS_OF_SERVICE: `${GITHUB_PROJECT_LINK}/blob/main/docs/terms.md`,
 
   ABOUT_HELP: `${GITHUB_PROJECT_LINK}/blob/main/docs/help.md#help`,
-  ABOUT_PORTFOLIO: 'https://www.gajjartejas.me',
+  ABOUT_PORTFOLIO: 'https://903381.xyz',
   ABOUT_INSTAGRAM: 'https://www.instagram.com/gajjartejas',
   ABOUT_JOIN_TELEGRAM: 'https://t.me/tejasapps',
   ABOUT_GITHUB: GITHUB_PROFILE,

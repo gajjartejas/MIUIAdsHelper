@@ -4,27 +4,28 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 //Third Party
 import Icon from 'react-native-easy-icon';
 import { IconType } from 'react-native-easy-icon/src/Icon';
-import { Product } from 'react-native-iap';
 import { useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 
 //App Modules
 import { AppTheme } from 'app/models/theme';
+import { PurchasesPackage } from 'react-native-purchases';
 
 //Interface
-export interface IProduct extends Product {
+export interface IProduct {
   id: number;
   iconBackgroundColor: string;
   iconName: string;
   iconFamily: IconType;
   name: string;
   subtitle: string;
+  productId: string;
 }
 
 interface IAdsListItem {
-  item: IProduct;
+  item: IProduct & PurchasesPackage;
   index: number;
-  onPress: (item: IProduct, index: number) => void;
+  onPress: (item: IProduct & PurchasesPackage, index: number) => void;
 }
 
 const PurchaseListItem = (props: IAdsListItem) => {
@@ -49,7 +50,7 @@ const PurchaseListItem = (props: IAdsListItem) => {
           {item.subtitle}
         </Text>
         <Text numberOfLines={2} style={[styles.subtitleText, { color: `${colors.text}60` }]}>
-          {item.localizedPrice}
+          {item.product.priceString}
         </Text>
       </View>
       <TouchableOpacity

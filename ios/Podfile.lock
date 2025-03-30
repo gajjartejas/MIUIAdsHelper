@@ -130,6 +130,8 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
+  - PurchasesHybridCommon (13.21.0):
+    - RevenueCat (= 5.18.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1313,6 +1315,7 @@ PODS:
     - React-logger (= 0.74.3)
     - React-perflogger (= 0.74.3)
     - React-utils (= 0.74.3)
+  - RevenueCat (5.18.0)
   - RNCAsyncStorage (1.24.0):
     - React-Core
   - RNDeviceInfo (11.1.0):
@@ -1329,11 +1332,12 @@ PODS:
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
-  - RNIap (12.15.1):
-    - React-Core
   - RNInAppBrowser (3.7.0):
     - React-Core
   - RNLocalize (3.2.0):
+    - React-Core
+  - RNPurchases (8.7.0):
+    - PurchasesHybridCommon (= 13.21.0)
     - React-Core
   - RNScreens (3.32.0):
     - DoubleConversion
@@ -1424,9 +1428,9 @@ DEPENDENCIES:
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
-  - RNIap (from `../node_modules/react-native-iap`)
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNLocalize (from `../node_modules/react-native-localize`)
+  - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1449,6 +1453,8 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PromisesSwift
+    - PurchasesHybridCommon
+    - RevenueCat
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1575,12 +1581,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBCrashlytics:
     :path: "../node_modules/@react-native-firebase/crashlytics"
-  RNIap:
-    :path: "../node_modules/react-native-iap"
   RNInAppBrowser:
     :path: "../node_modules/react-native-inappbrowser-reborn"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
+  RNPurchases:
+    :path: "../node_modules/react-native-purchases"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   Yoga:
@@ -1610,6 +1616,7 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
+  PurchasesHybridCommon: 9691d74a051f30858360d78936d59dc14575014e
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: 4c7eeb42be0b2e95195563c49be08d0b839d22b4
   RCTRequired: d530a0f489699c8500e944fde963102c42dcd0c2
@@ -1660,18 +1667,19 @@ SPEC CHECKSUMS:
   React-runtimescheduler: e4ad653e1d2f5ff40ba047446cacde009694f0ed
   React-utils: 6f7ac39d9a0de447d4334bb25d144a28c0c5d8c9
   ReactCommon: 4a09c7d8a06e93c1e2e988a3b9f3db3d2449f2fc
+  RevenueCat: e825836f5d6baa870c53d7281be25a5fd91abd91
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
   RNFBAnalytics: 3f336502732e51de9f5a5be8b5e3df879bf2eca7
   RNFBApp: 9acbe359ef3559d6f8ca5c350db471f2b352f98a
   RNFBCrashlytics: a4a66785997e629313ec8005a0811765738239fd
-  RNIap: 17583f958d35788a87948e94072ff6edd3580497
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNLocalize: b77875884750cb6a58cd6865863fe2ba2729b72b
+  RNPurchases: 3b35539c86769ad8a8f838060559cf13d0a8fcb1
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  Yoga: eed50599a85bd9f6882a9938d118aed6a397db9c
+  Yoga: bd92064a0d558be92786820514d74fc4dddd1233
 
 PODFILE CHECKSUM: 471b30df133a6535ede0f285b43b4261098fab34
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

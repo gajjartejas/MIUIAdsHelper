@@ -1,23 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, ScrollView, Text, View, Alert } from 'react-native';
+import { ScrollView, Text, View, Alert } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PurchaseListItem, { IProduct } from 'app/components/PurchaseListItem';
 import { useTranslation } from 'react-i18next';
-import {
-  finishTransaction,
-  flushFailedPurchasesCachedAsPendingAndroid,
-  getAvailablePurchases,
-  getProducts,
-  ProductPurchase,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-  requestPurchase,
-  Sku,
-} from 'react-native-iap';
 import { useTheme } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native-paper';
+import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
 //App Modules
 import styles from './styles';
@@ -27,16 +17,7 @@ import { AppTheme } from 'app/models/theme';
 import useAppConfigStore from 'app/store/appConfig';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
-
-const itemSkus = [
-  'com.tejasgajjar.miuiadshelper.item1',
-  'com.tejasgajjar.miuiadshelper.item2',
-  'com.tejasgajjar.miuiadshelper.item3',
-  'com.tejasgajjar.miuiadshelper.item4',
-];
-
-let purchaseUpdateSubscription: any = null;
-let purchaseErrorSubscription: any = null;
+import crashlytics from '@react-native-firebase/crashlytics';
 
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'Purchase'>;
 
@@ -49,122 +30,97 @@ const Purchase = ({ navigation, route }: Props) => {
 
   //States
   const [loading, setLoading] = useState(true);
-  const [entries, setEntries] = useState<IProduct[]>([]);
+  const [entries, setEntries] = useState<(IProduct & PurchasesPackage)[]>([]);
 
-  useEffect(() => {
-    initPurchase();
-    return () => {
-      if (purchaseUpdateSubscription) {
-        purchaseUpdateSubscription.remove();
-        purchaseUpdateSubscription = null;
+  const handlePurchase = useCallback(
+    (message: string) => {
+      setPurchased(true);
+      if (!route.params || !route.params.fromTheme) {
+        navigation.pop();
+        setTimeout(() => {
+          Alert.alert(message);
+        }, 500);
+      } else {
+        navigation.navigate('SelectAppearance', {});
       }
-      if (purchaseErrorSubscription) {
-        purchaseErrorSubscription.remove();
-        purchaseErrorSubscription = null;
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    },
+    [navigation, route.params, setPurchased],
+  );
 
-  const getPurchases = useCallback(async () => {
+  const restorePurchases = useCallback(async () => {
     try {
-      const purchases = await getAvailablePurchases();
-      if (purchases && purchases.length > 0) {
-        setPurchased(true);
-        if (!route.params || !route.params.fromTheme) {
-          setTimeout(() => {
-            navigation.pop();
-          }, 2000);
-
-          setTimeout(() => {
-            Alert.alert(t('iap_purchased_already'));
-          }, 3000);
-        } else {
-          setTimeout(() => {
-            navigation.navigate('SelectAppearance', {});
-          }, 2000);
-        }
+      const purchases = await Purchases.restorePurchases();
+      if (!purchases || purchases.allPurchasedProductIdentifiers.length < 1) {
+        return;
       }
-      console.log('purchases', purchases);
-    } catch (err: any) {
-      console.warn(err);
-      console.warn('getPurchases:', err.code, err.message);
+      handlePurchase(t('iap_purchased_already'));
+      console.log('Purchase->purchases', purchases);
+    } catch (e: any) {
+      console.error('Purchase->restorePurchases:', e);
+      crashlytics().recordError(e, 'Purchase->restorePurchases');
     }
-  }, [navigation, route.params, setPurchased, t]);
+  }, [handlePurchase, t]);
 
   const getItems = useCallback(async () => {
     try {
-      const products = await getProducts({ skus: itemSkus });
-      const mappedEntries: IProduct[] = products.map(anObj1 => ({
-        ...iaps.find(anObj2 => anObj1.productId === anObj2.productId)!,
-        ...anObj1,
-      }));
-      setEntries(mappedEntries);
-    } catch (err: any) {
-      console.warn('getItems:', err.code, err.message);
-      Alert.alert(err.message);
+      const offerings = await Purchases.getOfferings();
+      if (offerings.current !== null && offerings.current.availablePackages.length !== 0) {
+        const products = offerings.current.availablePackages;
+        const mappedEntries: (IProduct & PurchasesPackage)[] = products.map(anObj1 => ({
+          ...iaps.find(anObj2 => anObj1.identifier === anObj2.productId)!,
+          ...anObj1,
+        }));
+        setEntries(mappedEntries);
+      }
+    } catch (e: any) {
+      console.error('Purchase->getItems:', e);
+      Alert.alert(e.message);
+      crashlytics().recordError(e, 'Purchase->getItems');
     }
   }, [iaps]);
 
-  const initPurchase = useCallback(async () => {
+  useEffect(() => {
     try {
-      await getPurchases();
-
-      await getItems();
-
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-
-      if (Platform.OS === 'android') {
-        await flushFailedPurchasesCachedAsPendingAndroid();
-      }
+      restorePurchases()
+        .then(() => {
+          return getItems();
+        })
+        .then(() => {
+          console.log('getItems done');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } catch (err: any) {
-      console.warn(err.code, err.message);
-      // @ts-ignore
+      console.warn('Purchase->err:', err.code, err.message);
       Alert.alert(err.message);
     }
+  }, [getItems, restorePurchases]);
 
-    purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase: ProductPurchase) => {
-      console.info('purchaseUpdatedListener->purchase', purchase);
-      const receipt = purchase.transactionReceipt;
-      console.info('purchaseUpdatedListener->receipt', receipt);
-      if (receipt) {
-        try {
-          const ackResult = await finishTransaction({ purchase, isConsumable: false });
-          console.info('purchaseUpdatedListener->ackResult', ackResult);
-          setPurchased(true);
-          Alert.alert(t('iap_purchased_success'));
+  const requestAppPurchase = useCallback(
+    async (item: IProduct & PurchasesPackage) => {
+      try {
+        const purchasePackageResponse = await Purchases.purchasePackage(item);
+        console.log('Purchase->purchasePackageResponse:', JSON.stringify(purchasePackageResponse));
+        const customerInfo = purchasePackageResponse.customerInfo;
+        if (typeof customerInfo.entitlements.active.pro !== 'undefined') {
           navigation.pop();
-        } catch (ackErr: any) {
-          console.warn('purchaseUpdatedListener->ackErr', ackErr);
-          Alert.alert(ackErr.message);
+          handlePurchase(t('iap_purchased_success'));
         }
-      } else {
-        console.warn('purchaseUpdatedListener->receipt->not found');
+      } catch (e: any) {
+        if (e.code !== Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
+          console.error('Purchase->requestAppPurchase:', e.code, e.message);
+          Alert.alert(e.message);
+          crashlytics().recordError(e, 'Purchase->requestAppPurchase');
+        }
       }
-    });
-
-    purchaseErrorSubscription = purchaseErrorListener(error => {
-      console.log('purchaseErrorListener', error);
-      Alert.alert(error.message);
-    });
-  }, [getItems, getPurchases, navigation, setPurchased, t]);
-
-  // Version 3 apis
-  const requestAppPurchase = useCallback(async (sku: Sku) => {
-    try {
-      let purchaseResult = await requestPurchase({ skus: [sku] });
-      console.log('purchaseResult', purchaseResult);
-    } catch (err: any) {
-      console.warn('requestAppPurchase:', err.code, err.message);
-      Alert.alert(err.message);
-    }
-  }, []);
+    },
+    [handlePurchase, navigation, t],
+  );
 
   const onPressItem = useCallback(
-    (item: IProduct, _index: number) => {
-      requestAppPurchase(item.productId);
+    (item: IProduct & PurchasesPackage, _index: number) => {
+      requestAppPurchase(item);
     },
     [requestAppPurchase],
   );
@@ -180,6 +136,7 @@ const Purchase = ({ navigation, route }: Props) => {
       </View>
     );
   }
+
   return (
     <Components.AppBaseView
       edges={['bottom', 'left', 'right']}
