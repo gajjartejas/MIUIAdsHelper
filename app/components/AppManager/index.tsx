@@ -7,8 +7,8 @@ import AppearancePreferences = Appearance.AppearancePreferences;
 import useThemeConfigStore, { IAppearanceType } from 'app/store/themeConfig';
 import i18n from 'app/locales';
 import useAppLangConfigStore from 'app/store/appLangConfig';
-import { getAvailablePurchases, initConnection } from 'react-native-iap';
 import useAppConfigStore from 'app/store/appConfig';
+import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 
 //Interface
 export type Props = {
@@ -24,10 +24,11 @@ const AppManager = ({ children }: Props) => {
   //States
   useEffect(() => {
     (async () => {
-      await initConnection();
-      const purchases = await getAvailablePurchases();
-      if (purchases && purchases.length > 0) {
-        setPurchased(true);
+      await Purchases.setLogLevel(__DEV__ ? LOG_LEVEL.VERBOSE : LOG_LEVEL.ERROR);
+      Purchases.configure({ apiKey: '' });
+      const purchases = await Purchases.restorePurchases();
+      if (purchases && purchases.allPurchasedProductIdentifiers.length > 0) {
+        setPurchased(!__DEV__);
       }
     })();
   }, [setPurchased]);
