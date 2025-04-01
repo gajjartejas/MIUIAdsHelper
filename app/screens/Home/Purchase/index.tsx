@@ -1,21 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, ScrollView, Text, View, Alert } from 'react-native';
+import { ScrollView, Text, View, Alert } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PurchaseListItem, { IProduct } from 'app/components/PurchaseListItem';
 import { useTranslation } from 'react-i18next';
-import {
-  finishTransaction,
-  flushFailedPurchasesCachedAsPendingAndroid,
-  getAvailablePurchases,
-  getProducts,
-  ProductPurchase,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-  requestPurchase,
-  Sku,
-} from 'react-native-iap';
+import { getAvailablePurchases, getProducts, requestPurchase, Sku, ErrorCode } from 'react-native-iap';
 import { useTheme } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -27,6 +17,7 @@ import { AppTheme } from 'app/models/theme';
 import useAppConfigStore from 'app/store/appConfig';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const itemSkus = [
   'com.tejasgajjar.miuiadshelper.item1',
@@ -34,9 +25,6 @@ const itemSkus = [
   'com.tejasgajjar.miuiadshelper.item3',
   'com.tejasgajjar.miuiadshelper.item4',
 ];
-
-let purchaseUpdateSubscription: any = null;
-let purchaseErrorSubscription: any = null;
 
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'Purchase'>;
 
@@ -51,46 +39,38 @@ const Purchase = ({ navigation, route }: Props) => {
   const [loading, setLoading] = useState(true);
   const [entries, setEntries] = useState<IProduct[]>([]);
 
-  useEffect(() => {
-    initPurchase();
-    return () => {
-      if (purchaseUpdateSubscription) {
-        purchaseUpdateSubscription.remove();
-        purchaseUpdateSubscription = null;
-      }
-      if (purchaseErrorSubscription) {
-        purchaseErrorSubscription.remove();
-        purchaseErrorSubscription = null;
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handlePurchase = useCallback(
+    (message: string) => {
+      setPurchased(true);
+      if (!route.params || !route.params.fromTheme) {
+        setTimeout(() => {
+          navigation.pop();
+        }, 2000);
 
-  const getPurchases = useCallback(async () => {
+        setTimeout(() => {
+          Alert.alert(message);
+        }, 3000);
+      } else {
+        setTimeout(() => {
+          navigation.navigate('SelectAppearance', {});
+        }, 2000);
+      }
+    },
+    [navigation, route.params, setPurchased],
+  );
+
+  const restorePurchase = useCallback(async () => {
     try {
       const purchases = await getAvailablePurchases();
       if (purchases && purchases.length > 0) {
-        setPurchased(true);
-        if (!route.params || !route.params.fromTheme) {
-          setTimeout(() => {
-            navigation.pop();
-          }, 2000);
-
-          setTimeout(() => {
-            Alert.alert(t('iap_purchased_already'));
-          }, 3000);
-        } else {
-          setTimeout(() => {
-            navigation.navigate('SelectAppearance', {});
-          }, 2000);
-        }
+        handlePurchase(t('iap_purchased_already'));
       }
-      console.log('purchases', purchases);
-    } catch (err: any) {
-      console.warn(err);
-      console.warn('getPurchases:', err.code, err.message);
+      console.log('Purchase->purchases:', purchases);
+    } catch (e: any) {
+      console.error('Purchase->restorePurchase:', e);
+      crashlytics().recordError(e, 'Purchase->restorePurchase->error');
     }
-  }, [navigation, route.params, setPurchased, t]);
+  }, [handlePurchase, t]);
 
   const getItems = useCallback(async () => {
     try {
@@ -100,67 +80,48 @@ const Purchase = ({ navigation, route }: Props) => {
         ...anObj1,
       }));
       setEntries(mappedEntries);
-    } catch (err: any) {
-      console.warn('getItems:', err.code, err.message);
-      Alert.alert(err.message);
+    } catch (e: any) {
+      console.error('Purchase->getItems:', e);
+      Alert.alert(e.message);
+      crashlytics().recordError(e, 'Purchase->getItems->error');
     }
   }, [iaps]);
 
-  const initPurchase = useCallback(async () => {
-    try {
-      await getPurchases();
+  useEffect(() => {
+    (async () => {
+      try {
+        await restorePurchase();
 
-      await getItems();
+        await getItems();
 
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-
-      if (Platform.OS === 'android') {
-        await flushFailedPurchasesCachedAsPendingAndroid();
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      } catch (e: any) {
+        console.error('useEffect:', e);
+        crashlytics().recordError(e, 'Purchase->useEffect->error');
+        Alert.alert(e.message);
       }
-    } catch (err: any) {
-      console.warn(err.code, err.message);
-      // @ts-ignore
-      Alert.alert(err.message);
-    }
+    })();
+  }, [getItems, restorePurchase]);
 
-    purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase: ProductPurchase) => {
-      console.info('purchaseUpdatedListener->purchase', purchase);
-      const receipt = purchase.transactionReceipt;
-      console.info('purchaseUpdatedListener->receipt', receipt);
-      if (receipt) {
-        try {
-          const ackResult = await finishTransaction({ purchase, isConsumable: false });
-          console.info('purchaseUpdatedListener->ackResult', ackResult);
-          setPurchased(true);
-          Alert.alert(t('iap_purchased_success'));
-          navigation.pop();
-        } catch (ackErr: any) {
-          console.warn('purchaseUpdatedListener->ackErr', ackErr);
-          Alert.alert(ackErr.message);
+  const requestAppPurchase = useCallback(
+    async (sku: Sku) => {
+      try {
+        let purchaseResult = await requestPurchase({ skus: [sku] });
+        console.log('Purchase->requestAppPurchase:', purchaseResult);
+      } catch (e: any) {
+        console.error('Purchase->requestAppPurchase:', e);
+        crashlytics().recordError(e, 'Purchase->requestAppPurchase->error');
+        if (e.code === ErrorCode.E_ALREADY_OWNED) {
+          handlePurchase(t('iap_purchased_already'));
+        } else if (e.code !== ErrorCode.E_USER_CANCELLED) {
+          Alert.alert(e.message);
         }
-      } else {
-        console.warn('purchaseUpdatedListener->receipt->not found');
       }
-    });
-
-    purchaseErrorSubscription = purchaseErrorListener(error => {
-      console.log('purchaseErrorListener', error);
-      Alert.alert(error.message);
-    });
-  }, [getItems, getPurchases, navigation, setPurchased, t]);
-
-  // Version 3 apis
-  const requestAppPurchase = useCallback(async (sku: Sku) => {
-    try {
-      let purchaseResult = await requestPurchase({ skus: [sku] });
-      console.log('purchaseResult', purchaseResult);
-    } catch (err: any) {
-      console.warn('requestAppPurchase:', err.code, err.message);
-      Alert.alert(err.message);
-    }
-  }, []);
+    },
+    [handlePurchase, t],
+  );
 
   const onPressItem = useCallback(
     (item: IProduct, _index: number) => {
