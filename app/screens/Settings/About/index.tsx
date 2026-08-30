@@ -13,7 +13,7 @@ import Utils from 'app/utils';
 
 //Modals
 import { ISettingItem, ISettingSection } from 'app/models/viewModels/settingItem';
-import Icon from 'react-native-easy-icon';
+import CommonIcon from 'app/components/CommonIcon';
 import styles from './styles';
 import Components from 'app/components';
 import { AppTheme } from 'app/models/theme';
@@ -38,8 +38,8 @@ const About = ({ navigation }: Props) => {
         items: [
           {
             id: 0,
-            iconName: 'information',
-            iconType: 'material-community',
+            iconName: 'information-outline',
+            iconType: 'material',
             title: t('aboutScreen.infoDescTitle'),
             description: '',
             route: '',
@@ -48,7 +48,7 @@ const About = ({ navigation }: Props) => {
           {
             id: 1,
             iconName: 'face-man',
-            iconType: 'material-community',
+            iconType: 'material',
             title: t('aboutScreen.infoAuthorNameTitle'),
             description: '',
             route: '',
@@ -62,8 +62,8 @@ const About = ({ navigation }: Props) => {
         items: [
           {
             id: 0,
-            iconName: 'briefcase',
-            iconType: 'material-community',
+            iconName: 'briefcase-outline',
+            iconType: 'material',
             title: t('aboutScreen.portfolioTitle'),
             description: t('aboutScreen.portfolioSubTitle')!,
             route: '',
@@ -71,8 +71,8 @@ const About = ({ navigation }: Props) => {
           },
           {
             id: 1,
-            iconName: 'instagram',
-            iconType: 'material-community',
+            iconName: 'camera-outline',
+            iconType: 'material',
             title: t('aboutScreen.instagramTitle'),
             description: t('aboutScreen.instagramSubTitle')!,
             route: '',
@@ -80,8 +80,8 @@ const About = ({ navigation }: Props) => {
           },
           {
             id: 3,
-            iconName: 'telegram-plane',
-            iconType: 'font-awesome5',
+            iconName: 'send-outline',
+            iconType: 'material',
             title: t('aboutScreen.telegramTitle'),
             description: t('aboutScreen.telegramSubTitle')!,
             route: '',
@@ -90,7 +90,7 @@ const About = ({ navigation }: Props) => {
           {
             id: 4,
             iconName: 'github',
-            iconType: 'material-community',
+            iconType: 'material',
             title: t('aboutScreen.githubTitle'),
             description: t('aboutScreen.githubSubTitle')!,
             route: '',
@@ -99,7 +99,7 @@ const About = ({ navigation }: Props) => {
           {
             id: 5,
             iconName: 'twitter',
-            iconType: 'material-community',
+            iconType: 'material',
             title: t('aboutScreen.twitterTitle'),
             description: t('aboutScreen.twitterSubTitle')!,
             route: '',
@@ -170,15 +170,16 @@ const About = ({ navigation }: Props) => {
                   return (
                     <View key={subItem.id.toString()}>
                       <List.Item
+                        style={styles.itemContainer}
                         titleStyle={{ color: colors.onSurface }}
-                        descriptionStyle={{ color: `${colors.onSurface}88` }}
+                        descriptionStyle={[{ color: `${colors.onSurface}88` }, styles.topMargin]}
                         titleNumberOfLines={0}
                         onPress={() => onPressAboutOption(item, index, subItem, subIndex)}
                         title={subItem.title}
                         description={subItem.description}
                         disabled={!subItem.touchable}
                         left={() => (
-                          <Icon
+                          <CommonIcon
                             style={styles.listIcon}
                             type={subItem.iconType}
                             name={subItem.iconName}

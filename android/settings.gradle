@@ -1,4 +1,59 @@
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+
+static def resolveNodeExecutable() {
+    if (System.env.NODE_BINARY && new File(System.env.NODE_BINARY).exists()) {
+        return System.env.NODE_BINARY
+    }
+    def standardPaths = [
+        "/opt/homebrew/bin/node",
+        "/usr/local/bin/node",
+        "/usr/bin/node",
+        "/bin/node"
+    ]
+    for (path in standardPaths) {
+        if (new File(path).exists()) {
+            return path
+        }
+    }
+    def userHome = System.getProperty("user.home") ?: ""
+    if (userHome) {
+        def nvmDir = new File(userHome, ".nvm/versions/node")
+        if (nvmDir.exists() && nvmDir.isDirectory()) {
+            def nvmNodes = nvmDir.listFiles()?.findAll { it.isDirectory() }
+                ?.collect { new File(it, "bin/node") }
+                ?.findAll { it.exists() }
+                ?.sort { a, b -> b.parentFile.parentFile.name <=> a.parentFile.parentFile.name }
+            if (nvmNodes && !nvmNodes.isEmpty()) {
+                return nvmNodes.first().absolutePath
+            }
+        }
+        def managerPaths = [
+            "$userHome/.local/share/fnm/current/bin/node",
+            "$userHome/.fnm/current/bin/node",
+            "$userHome/.volta/bin/node",
+            "$userHome/.asdf/shims/node",
+            "$userHome/.nodenv/shims/node"
+        ]
+        for (path in managerPaths) {
+            if (new File(path).exists()) {
+                return path
+            }
+        }
+    }
+    return "node"
+}
+
+def nodeExec = resolveNodeExecutable()
+def cliEntry = file("../node_modules/@react-native-community/cli/build/bin.js")
+
+extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
+    if (cliEntry.exists()) {
+        ex.autolinkLibrariesFromCommand([nodeExec, cliEntry.absolutePath, "config"])
+    } else {
+        ex.autolinkLibrariesFromCommand()
+    }
+}
 rootProject.name = 'MIUIAdsHelper'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')

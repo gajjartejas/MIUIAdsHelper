@@ -1,53 +1,41 @@
 import { IAdsActivity } from 'app/components/AdsListItem';
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-export interface LoadingParams {}
-export interface MoreAppsParams {}
-export interface SettingsParams {}
-export interface LicenseTypes {}
-export interface AboutParams {}
-export interface SelectAppearanceParams {}
-export interface TranslatorsParams {}
-export interface ChangeLanguageParams {}
-export interface DashboardTab {
-  userId: string;
-}
+export type LoadingParams = undefined | Record<string, never>;
+export type MoreAppsParams = undefined | Record<string, never>;
+export type SettingsParams = undefined | Record<string, never>;
+export type LicenseTypes = undefined | Record<string, never>;
+export type AboutParams = undefined | Record<string, never>;
+export type SelectAppearanceParams = undefined | Record<string, never>;
+export type TranslatorsParams = undefined | Record<string, never>;
+export type ChangeLanguageParams = undefined | Record<string, never>;
+
 export interface PurchaseScreen {
   fromTheme: boolean;
 }
 export interface AdsDetails {
   item: IAdsActivity;
 }
-export interface ChangeLanguageParams {}
-
-export interface AdsDetails {
-  item: IAdsActivity;
-}
-
-export interface HomeTabsParams {}
-
-export interface MoreTabParams {}
-export interface DashboardTabParams {}
-
-export type LoggedInTabNavigatorParams = {
-  Loading: LoadingParams;
-  HomeTabs: HomeTabsParams;
-  MoreApps: MoreAppsParams;
-  Settings: SettingsParams;
-  About: AboutParams;
-  SelectAppearance: SelectAppearanceParams;
-  License: LicenseTypes;
-  Translators: TranslatorsParams;
-  AdsDetails: AdsDetails;
-  Purchase: PurchaseScreen;
-  ChangeLanguage: ChangeLanguageParams;
-};
 
 export type HomeTabsNavigatorParams = {
-  DashboardTab: DashboardTabParams;
-  MoreTab: MoreTabParams;
+  DashboardTab?: undefined | Record<string, never>;
+  MoreTab?: undefined | Record<string, never>;
+};
+
+export type LoggedInTabNavigatorParams = {
+  Loading?: LoadingParams;
+  HomeTabs?: NavigatorScreenParams<HomeTabsNavigatorParams>;
+  MoreApps?: MoreAppsParams;
+  Settings?: SettingsParams;
+  About?: AboutParams;
+  SelectAppearance?: SelectAppearanceParams;
+  License?: LicenseTypes;
+  Translators?: TranslatorsParams;
+  AdsDetails: AdsDetails;
+  Purchase: PurchaseScreen;
+  ChangeLanguage?: ChangeLanguageParams;
 };
 
 export type HomeTabNavigatorParams = {
-  LoggedInTabNavigator: NavigatorScreenParams<LoggedInTabNavigatorParams>;
+  LoggedInTabNavigator?: NavigatorScreenParams<LoggedInTabNavigatorParams>;
 };

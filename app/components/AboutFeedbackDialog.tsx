@@ -3,11 +3,11 @@ import { StyleSheet, View } from 'react-native';
 
 //ThirdParty
 import { useTranslation } from 'react-i18next';
-import Icon from 'react-native-easy-icon';
-import { Dialog, Paragraph, TouchableRipple, useTheme, Button, Portal } from 'react-native-paper';
+import { Dialog, TouchableRipple, useTheme, Button, Portal, Text } from 'react-native-paper';
 
 //App Modules
 import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
+import CommonIcon from 'app/components/CommonIcon';
 
 //Interface
 interface IAboutFeedbackDialogProps {
@@ -31,9 +31,9 @@ function AboutFeedbackDialog(props: IAboutFeedbackDialogProps) {
         onDismiss={props.onPressHideDialog}>
         <Dialog.Title style={{ color: colors.onBackground }}>{t('about.sendFeedback')}</Dialog.Title>
         <Dialog.Content>
-          <Paragraph style={[styles.descriptionText, { color: `${colors.onBackground}88` }]}>
+          <Text variant={'bodySmall'} style={[styles.descriptionText, { color: `${colors.onBackground}88` }]}>
             {t('about.sendFeedbackDetail')}
-          </Paragraph>
+          </Text>
         </Dialog.Content>
         <View style={styles.buttonsContainer}>
           <TouchableRipple
@@ -41,19 +41,14 @@ function AboutFeedbackDialog(props: IAboutFeedbackDialogProps) {
             style={[styles.button, { backgroundColor: `${colors.onBackground}33` }]}
             onPress={props.onPressGithub}
             rippleColor="rgba(0, 0, 0, .32)">
-            <Icon type="font-awesome-brands" name="github" color={`${colors.onBackground}88`} size={24} />
+            <CommonIcon type="material" name="code-tags" color={`${colors.onBackground}88`} size={24} />
           </TouchableRipple>
           <TouchableRipple
             borderless={true}
             style={[styles.button, { backgroundColor: `${colors.onBackground}33` }]}
             onPress={props.onPressGithubDiscussion}
             rippleColor="rgba(0, 0, 0, .32)">
-            <Icon
-              type="material-community"
-              name="comment-question-outline"
-              color={`${colors.onBackground}88`}
-              size={24}
-            />
+            <CommonIcon type="material" name="forum" color={`${colors.onBackground}88`} size={24} />
           </TouchableRipple>
         </View>
         <Dialog.Actions>

@@ -1,26 +1,29 @@
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import { Alert, Linking } from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
+import { Linking } from 'react-native';
+import crashlytics from 'app/services/crashlytics';
+import { showAppDialog } from 'app/store/dialogStore';
 
-const openInAppBrowser = async (url: string) => {
+const openInAppBrowser = async (url: string): Promise<void> => {
   try {
     if (await InAppBrowser.isAvailable()) {
       await InAppBrowser.open(url);
     } else {
       await Linking.openURL(url);
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     crashlytics().recordError(e, 'openInAppBrowser.ts->openInAppBrowser');
-    Alert.alert(JSON.stringify(e));
+    const message = e instanceof Error ? e.message : JSON.stringify(e);
+    showAppDialog(message);
   }
 };
 
-export const openBrowser = async (url: string) => {
+export const openBrowser = async (url: string): Promise<void> => {
   try {
     await Linking.openURL(url);
-  } catch (e: any) {
+  } catch (e: unknown) {
     crashlytics().recordError(e, 'openInAppBrowser.ts->openBrowser');
-    Alert.alert(e.message);
+    const message = e instanceof Error ? e.message : String(e);
+    showAppDialog(message);
   }
 };
 

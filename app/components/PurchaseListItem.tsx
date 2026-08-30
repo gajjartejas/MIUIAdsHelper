@@ -2,9 +2,7 @@ import React, { memo } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
 //Third Party
-import Icon from 'react-native-easy-icon';
-import { IconType } from 'react-native-easy-icon/src/Icon';
-import { Product } from 'react-native-iap';
+import CommonIcon, { IconType } from 'app/components/CommonIcon';
 import { useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 
@@ -12,13 +10,16 @@ import { useTranslation } from 'react-i18next';
 import { AppTheme } from 'app/models/theme';
 
 //Interface
-export interface IProduct extends Product {
+export interface IProduct {
   id: number;
+  productId: string;
   iconBackgroundColor: string;
   iconName: string;
   iconFamily: IconType;
   name: string;
   subtitle: string;
+  localizedPrice?: string;
+  displayPrice?: string;
 }
 
 interface IAdsListItem {
@@ -40,7 +41,7 @@ const PurchaseListItem = (props: IAdsListItem) => {
         props.onPress(item, index);
       }}
       style={[styles.container, { backgroundColor: `${colors.onBackground}20`, shadowColor: colors.background }]}>
-      <Icon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={24} />
+      <CommonIcon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={24} />
       <View style={styles.textContainer}>
         <Text numberOfLines={1} style={[styles.titleText, { color: colors.text }]}>
           {item.name}
@@ -49,7 +50,7 @@ const PurchaseListItem = (props: IAdsListItem) => {
           {item.subtitle}
         </Text>
         <Text numberOfLines={2} style={[styles.subtitleText, { color: `${colors.text}60` }]}>
-          {item.localizedPrice}
+          {item.displayPrice || item.localizedPrice}
         </Text>
       </View>
       <TouchableOpacity

@@ -13,8 +13,8 @@ const useInAppPurchases = (): IProduct[] => {
     return [
       {
         id: 0,
-        iconName: 'coffee',
-        iconFamily: 'font-awesome',
+        iconName: 'mug-saucer',
+        iconFamily: 'fontawesome6',
         iconBackgroundColor: colors.primary,
         name: t('iap_item_1'),
         subtitle: t('iap_item_1_desc'),
@@ -29,7 +29,7 @@ const useInAppPurchases = (): IProduct[] => {
       {
         id: 1,
         iconName: 'pizza',
-        iconFamily: 'material-community',
+        iconFamily: 'material',
         iconBackgroundColor: colors.primary,
         name: t('iap_item_2'),
         subtitle: t('iap_item_2_desc'),
@@ -43,7 +43,7 @@ const useInAppPurchases = (): IProduct[] => {
       },
       {
         id: 2,
-        iconName: 'food-bank',
+        iconName: 'silverware-fork-knife',
         iconFamily: 'material',
         iconBackgroundColor: colors.primary,
         name: t('iap_item_3'),
@@ -58,7 +58,7 @@ const useInAppPurchases = (): IProduct[] => {
       },
       {
         id: 3,
-        iconName: 'emoji-emotions',
+        iconName: 'emoticon-happy-outline',
         iconFamily: 'material',
         iconBackgroundColor: colors.primary,
         name: t('iap_item_4'),

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image } from 'react-native';
+import { FlatList, Image, ImageSourcePropType } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -19,7 +19,7 @@ import i18n, { SUPPORTED_LANGUAGES } from 'app/locales';
 //Interfaces
 interface IChangeLanguage {
   id: number;
-  icon: any;
+  icon: ImageSourcePropType;
   language: string;
   translators: string[];
   code: string;

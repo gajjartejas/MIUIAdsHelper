@@ -29,7 +29,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#ff0051',
         iconName: 'music',
-        iconFamily: 'font-awesome',
+        iconFamily: 'fontawesome6',
         hideButton: false,
         appType: IAdsSettingAppType.AudioVideo,
       },
@@ -52,8 +52,8 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#993df2',
-        iconName: 'play-circle',
-        iconFamily: 'font-awesome',
+        iconName: 'circle-play',
+        iconFamily: 'fontawesome6',
         hideButton: false,
         appType: IAdsSettingAppType.AudioVideo,
       },
@@ -76,7 +76,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#009DCC',
-        iconName: 'color-lens',
+        iconName: 'palette',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.ThemeLockScreen,
@@ -121,7 +121,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#2399E3',
         iconName: 'globe',
-        iconFamily: 'font-awesome',
+        iconFamily: 'fontawesome6',
         hideButton: false,
         appType: IAdsSettingAppType.Internet,
       },
@@ -145,7 +145,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#FF6827',
         iconName: 'download',
-        iconFamily: 'font-awesome',
+        iconFamily: 'fontawesome6',
         hideButton: false,
         appType: IAdsSettingAppType.Internet,
       },
@@ -168,7 +168,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#00D59D',
-        iconName: 'security',
+        iconName: 'shield-check',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Security,
@@ -201,7 +201,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#E89736',
         iconName: 'trash',
-        iconFamily: 'font-awesome',
+        iconFamily: 'fontawesome6',
         hideButton: false,
         appType: IAdsSettingAppType.Security,
       },
@@ -229,7 +229,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#00B17D',
         iconName: 'lock',
-        iconFamily: 'font-awesome',
+        iconFamily: 'fontawesome6',
         hideButton: false,
         appType: IAdsSettingAppType.Security,
       },
@@ -257,7 +257,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#5062EC',
         iconName: 'speedometer',
-        iconFamily: 'ionicon',
+        iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Security,
       },
@@ -332,8 +332,8 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#5062EC',
-        iconName: 'adversal',
-        iconFamily: 'font-awesome5',
+        iconName: 'bullhorn',
+        iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.System,
       },
@@ -372,7 +372,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#00659D',
-        iconName: 'clear-all',
+        iconName: 'select-all',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.System,
@@ -393,7 +393,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         ],
         iconBackgroundColor: '#4285f4',
         iconName: 'google',
-        iconFamily: 'font-awesome',
+        iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Other,
       },
@@ -412,7 +412,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#E89736',
-        iconName: 'person',
+        iconName: 'account',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.System,
@@ -440,7 +440,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#FF5722',
-        iconName: 'screen-lock-portrait',
+        iconName: 'lock-open',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.ThemeLockScreen,
@@ -488,8 +488,8 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#008eeb',
-        iconName: 'share-alt-square',
-        iconFamily: 'font-awesome5',
+        iconName: 'share-variant',
+        iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Utilities,
       },
@@ -516,7 +516,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#e7277a',
-        iconName: 'screen-lock-portrait',
+        iconName: 'lock-open',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.ThemeLockScreen,
@@ -544,7 +544,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#018700',
-        iconName: 'screen-lock-portrait',
+        iconName: 'whatsapp',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Security,
@@ -568,7 +568,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#018700',
-        iconName: 'screen-lock-portrait',
+        iconName: 'gamepad-variant',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Other,
@@ -592,7 +592,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
         ],
         iconBackgroundColor: '#ff5300',
-        iconName: 'screen-lock-portrait',
+        iconName: 'shopping',
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Other,
@@ -600,9 +600,10 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
     ];
   }, [t]);
 
-  const groupBy = useCallback((xs: any, key: string) => {
-    return xs.reduce((rv: any, x: any) => {
-      (rv[x[key]] = rv[x[key]] || []).push(x);
+  const groupBy = useCallback(<T, K extends keyof T>(xs: T[], key: K): Record<string, T[]> => {
+    return xs.reduce<Record<string, T[]>>((rv, x) => {
+      const groupKey = String(x[key]);
+      (rv[groupKey] = rv[groupKey] || []).push(x);
       return rv;
     }, {});
   }, []);
@@ -612,7 +613,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
   }, [entries, groupBy]);
 
   const groupedEntries = useMemo(() => {
-    return Object.keys(res).map((key, _index) => {
+    return Object.keys(res).map((key) => {
       return { title: key, data: res[key] } as IAdsActivitySection;
     });
   }, [res]);

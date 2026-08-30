@@ -3,8 +3,7 @@ import { Dimensions, View, StyleSheet } from 'react-native';
 
 //Third Party
 import { TouchableRipple, useTheme, Text } from 'react-native-paper';
-import Icon from 'react-native-easy-icon';
-import { IconType } from 'react-native-easy-icon/src/Icon';
+import CommonIcon, { IconType } from 'app/components/CommonIcon';
 
 //Constants
 const { width } = Dimensions.get('window');
@@ -78,7 +77,7 @@ const AdsListItem = (props: IAdsListItem) => {
         style={[styles.touchableButton, { backgroundColor: `${colors.onBackground}20` }]}
         onPress={() => props.onPress(item, index, sectionIndex)}>
         <>
-          <Icon type={item.iconFamily} name={item.iconName} color={colors.white} size={24} />
+          <CommonIcon type={item.iconFamily} name={item.iconName} color={colors.white} size={24} />
           <Text numberOfLines={1} style={[styles.titleText, { color: colors.white }]}>
             {item.title}
           </Text>

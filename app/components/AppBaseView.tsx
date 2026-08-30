@@ -3,8 +3,8 @@ import { ScrollView, ViewProps, ViewStyle } from 'react-native';
 import { Edge, SafeAreaView } from 'react-native-safe-area-context';
 
 interface IAppBaseViewProps extends ViewProps {
-  children: any;
-  style: ViewStyle | ViewStyle[];
+  children?: React.ReactNode;
+  style?: ViewStyle | ViewStyle[];
   edges?: Edge[] | undefined;
   scroll?: boolean | undefined;
 }

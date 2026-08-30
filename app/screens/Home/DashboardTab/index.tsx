@@ -5,8 +5,13 @@ import { ScrollView, TextInput, View } from 'react-native';
 import { IconButton, Text, TouchableRipple, useTheme } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
-import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
+import {
+  finishTransaction,
+  getAvailablePurchases,
+  initConnection,
+} from 'react-native-iap';
 
 //App modules
 import Components from 'app/components';
@@ -17,10 +22,11 @@ import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigat
 import { AppTheme } from 'app/models/theme';
 import { IAdsActivity, IAdsActivitySection } from 'app/components/AdsListItem';
 import useAppConfigStore from 'app/store/appConfig';
+import { showAppDialog } from 'app/store/dialogStore';
 
 //Params
 type DashboardTabNavigationProp = CompositeNavigationProp<
-  MaterialBottomTabNavigationProp<HomeTabsNavigatorParams, 'DashboardTab'>,
+  BottomTabNavigationProp<HomeTabsNavigatorParams, 'DashboardTab'>,
   NativeStackNavigationProp<LoggedInTabNavigatorParams>
 >;
 
@@ -43,11 +49,12 @@ export function useSearch(array: IAdsActivitySection[], searchTerm: string): IAd
     .filter(v => v.data.length > 0);
 }
 
-const DashboardTab = ({}: any) => {
+const DashboardTab = () => {
   //Refs
 
   //Actions
   const purchased = useAppConfigStore(state => state.purchased);
+  const setPurchased = useAppConfigStore(state => state.setPurchased);
   const navigation = useNavigation<DashboardTabNavigationProp>();
 
   //Constants
@@ -91,6 +98,30 @@ const DashboardTab = ({}: any) => {
     setSearchText('');
   }, []);
 
+  const onResetDevPurchases = useCallback(async () => {
+    try {
+      await initConnection();
+      const purchases = await getAvailablePurchases();
+      if (purchases && purchases.length > 0) {
+        for (const purchase of purchases) {
+          try {
+            await finishTransaction({ purchase, isConsumable: true });
+          } catch (consumeErr) {
+            console.warn('DashboardTab->onResetDevPurchases->consumeErr:', consumeErr);
+          }
+        }
+      }
+      setPurchased(false);
+      showAppDialog(
+        'DEV: Test Purchases Consumed',
+        'All purchases have been consumed in Google Play and reset locally. You can now test purchasing again.',
+      );
+    } catch (e: unknown) {
+      console.error('DashboardTab DEV consume error:', e);
+      showAppDialog('DEV Reset Error', String(e));
+    }
+  }, [setPurchased]);
+
   return (
     <Components.AppBaseView
       edges={['top', 'left', 'right']}
@@ -117,6 +148,16 @@ const DashboardTab = ({}: any) => {
                 <IconButton icon={'close'} iconColor={`${colors.text}`} size={22} onPress={onClearSearch} />
               </View>
             )}
+            {__DEV__ && (
+              <View style={[styles.rightSearchButton]}>
+                <IconButton
+                  icon={'refresh'}
+                  iconColor={colors.error || '#DC143C'}
+                  size={20}
+                  onPress={onResetDevPurchases}
+                />
+              </View>
+            )}
           </View>
         </View>
 
@@ -125,6 +166,22 @@ const DashboardTab = ({}: any) => {
             <>
               <Text style={[styles.bannerText]}>{t('home.app_support')}</Text>
               <IconButton icon={'arrow-right'} iconColor={`${colors.onPrimary}`} size={22} onPress={onPressMore} />
+            </>
+          </TouchableRipple>
+        )}
+
+        {__DEV__ && purchased && (
+          <TouchableRipple
+            onPress={onResetDevPurchases}
+            style={[styles.bannerContainer, { backgroundColor: colors.error || '#DC143C' }]}>
+            <>
+              <Text style={[styles.bannerText]}>DEV: Reset / Consume Purchases</Text>
+              <IconButton
+                icon={'refresh'}
+                iconColor={`${colors.onPrimary || '#FFFFFF'}`}
+                size={22}
+                onPress={onResetDevPurchases}
+              />
             </>
           </TouchableRipple>
         )}
