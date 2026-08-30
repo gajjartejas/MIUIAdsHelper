@@ -1,73 +1,97 @@
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
-import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+  Theme,
+} from '@react-navigation/native';
+import { AppTheme } from 'app/models/theme';
+
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
   reactNavigationDark: NavigationDarkTheme,
 });
 
-export const PaperThemeDefault = {
-  ...MD3LightTheme,
-  ...LightTheme,
+export type ExtendedMD3Theme = AppTheme;
+
+export const CombinedDefaultTheme: Theme = {
+  ...NavigationDefaultTheme,
   colors: {
-    ...MD3LightTheme.colors,
-    ...LightTheme.colors,
-
+    ...NavigationDefaultTheme.colors,
     primary: '#DC143C',
-    onPrimary: '#FFFFFF',
-
-    secondaryContainer: '#DC143C',
-    onSecondary: '#FFFFFF',
-
     background: '#F9F9F9',
-    onBackground: '#000000',
-
-    surface: '#F9F9F9',
-    onSurface: '#000000',
-
-    error: '#FF0000',
-    shadow: '#000000',
-
-    textTitle: '#535b6b',
-    card: '#FFFFFF',
-    opacity: '80',
-
-    white: '#ffffff',
-    black: '#000000',
-
+    card: '#ffffff',
     text: '#000000',
+    border: '#000000',
+    notification: '#ffffff',
   },
 };
 
-export const PaperThemeDark = {
+export const CombinedDarkTheme: Theme = {
+  ...NavigationDarkTheme,
+  colors: {
+    ...NavigationDarkTheme.colors,
+    primary: '#DC143C',
+    background: '#000000',
+    card: '#1e1e1e',
+    text: '#ffffff',
+    border: '#ffffff',
+    notification: '#ffffff',
+  },
+};
+
+export const PaperThemeDefault: ExtendedMD3Theme = {
+  ...MD3LightTheme,
+  ...LightTheme,
+  fonts: MD3LightTheme.fonts,
+  colors: {
+    ...MD3LightTheme.colors,
+    ...LightTheme.colors,
+    primary: '#DC143C',
+    onPrimary: '#000000',
+    secondaryContainer: '#DC143C',
+    onSecondary: '#FFFFFF',
+    background: '#F9F9F9',
+    onBackground: '#000000',
+    surface: '#F9F9F9',
+    onSurface: '#000000',
+    error: '#FF0000',
+    shadow: '#000000',
+    textTitle: '#535b6b',
+    opacity: '80',
+    white: '#ffffff',
+    black: '#000000',
+    card: '#ffffff',
+    text: '#000000',
+    border: '#000000',
+    notification: '#ffffff',
+  },
+};
+
+export const PaperThemeDark: ExtendedMD3Theme = {
   ...MD3DarkTheme,
   ...DarkTheme,
+  fonts: MD3DarkTheme.fonts,
   dark: true,
   colors: {
     ...MD3DarkTheme.colors,
     ...DarkTheme.colors,
-
     primary: '#DC143C',
-    onPrimary: '#FFFFFF',
-
+    onPrimary: '#000000',
     secondaryContainer: '#DC143C',
-    onSecondary: '#FFFFFF',
-
+    onSecondary: '#000000',
     background: '#000000',
     onBackground: '#FFFFFF',
-
     surface: '#222222',
     onSurface: '#FFFFFF',
-
     error: '#FF0000',
     shadow: '#000000',
-
     textTitle: '#FFFFFF',
-    card: '#1E1E1E',
     opacity: '99',
-
     white: '#ffffff',
     black: '#000000',
-
-    text: '#FFFFFF',
+    card: '#1e1e1e',
+    text: '#ffffff',
+    border: '#ffffff',
+    notification: '#ffffff',
   },
 };

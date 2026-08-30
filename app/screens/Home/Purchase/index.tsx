@@ -1,23 +1,33 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, Text, View, Alert } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import PurchaseListItem, { IProduct } from 'app/components/PurchaseListItem';
 import { useTranslation } from 'react-i18next';
-import { getAvailablePurchases, getProducts, requestPurchase, Sku, ErrorCode } from 'react-native-iap';
-import { useTheme } from 'react-native-paper';
-import { ActivityIndicator } from 'react-native-paper';
+import {
+  getAvailablePurchases,
+  fetchProducts,
+  requestPurchase,
+  ErrorCode,
+  ProductOrSubscription,
+  PurchaseError,
+  initConnection,
+  finishTransaction,
+} from 'react-native-iap';
+import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
 
 //App Modules
 import styles from './styles';
+import PurchaseListItem, { IProduct } from 'app/components/PurchaseListItem';
 import useInappPurchases from 'app/config/inapp-purchases';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 import { AppTheme } from 'app/models/theme';
 import useAppConfigStore from 'app/store/appConfig';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
-import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from 'app/services/crashlytics';
+import analytics from 'app/services/analytics';
+import { showAppDialog } from 'app/store/dialogStore';
 
 const itemSkus = [
   'com.tejasgajjar.miuiadshelper.item1',
@@ -26,47 +36,104 @@ const itemSkus = [
   'com.tejasgajjar.miuiadshelper.item4',
 ];
 
+//Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'Purchase'>;
 
 const Purchase = ({ navigation, route }: Props) => {
-  //Const
-  const iaps = useInappPurchases();
-  const { colors } = useTheme<AppTheme>();
+  //Constants
+  const { fromTheme } = route.params;
   const { t } = useTranslation();
+  const { colors } = useTheme<AppTheme>();
+  const iaps = useInappPurchases();
   const setPurchased = useAppConfigStore(state => state.setPurchased);
 
   //States
-  const [loading, setLoading] = useState(true);
-  const [entries, setEntries] = useState<IProduct[]>([]);
+  const [entries, setEntries] = useState<IProduct[]>(iaps);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [processingMessage, setProcessingMessage] = useState<string>('');
+
+  const onGoBack = useCallback(() => {
+    navigation.pop();
+  }, [navigation]);
+
+  const navigatePostPurchase = useCallback(() => {
+    if (fromTheme) {
+      navigation.navigate('SelectAppearance');
+    } else {
+      navigation.navigate('HomeTabs', { screen: 'DashboardTab' });
+    }
+  }, [fromTheme, navigation]);
 
   const handlePurchase = useCallback(
     (message: string) => {
       setPurchased(true);
-      if (!route.params || !route.params.fromTheme) {
-        setTimeout(() => {
-          navigation.pop();
-        }, 2000);
-
-        setTimeout(() => {
-          Alert.alert(message);
-        }, 3000);
-      } else {
-        setTimeout(() => {
-          navigation.navigate('SelectAppearance', {});
-        }, 2000);
-      }
+      analytics().logEvent('iap_purchase_flow_complete', {
+        fromTheme: Boolean(fromTheme),
+      });
+      showAppDialog(
+        '',
+        message,
+        [
+          {
+            text: 'OKAY',
+            onPress: navigatePostPurchase,
+          },
+        ],
+        {
+          onDismiss: navigatePostPurchase,
+        },
+      );
     },
-    [navigation, route.params, setPurchased],
+    [fromTheme, navigatePostPurchase, setPurchased],
   );
+
+  const onResetDevPurchases = useCallback(async () => {
+    try {
+      setIsProcessing(true);
+      setProcessingMessage('Resetting & consuming test purchases...');
+      await initConnection();
+      const purchases = await getAvailablePurchases();
+      if (purchases && purchases.length > 0) {
+        for (const purchase of purchases) {
+          try {
+            await finishTransaction({ purchase, isConsumable: true });
+          } catch (consumeErr) {
+            console.warn('Purchase->onResetDevPurchases->consumeErr:', consumeErr);
+          }
+        }
+      }
+      setPurchased(false);
+      setIsProcessing(false);
+      showAppDialog(
+        'DEV: Test Purchases Consumed',
+        'All purchases have been consumed and released in Google Play. You can now test purchasing any item again.',
+      );
+    } catch (e: unknown) {
+      setIsProcessing(false);
+      console.error('DEV consume error:', e);
+      showAppDialog('DEV Reset Error', String(e));
+    }
+  }, [setPurchased]);
 
   const restorePurchase = useCallback(async () => {
     try {
+      await initConnection();
       const purchases = await getAvailablePurchases();
       if (purchases && purchases.length > 0) {
+        for (const purchase of purchases) {
+          if ('isAcknowledgedAndroid' in purchase && !purchase.isAcknowledgedAndroid) {
+            try {
+              await finishTransaction({ purchase, isConsumable: false });
+            } catch (ackError) {
+              console.warn('Purchase->restorePurchase->ackError:', ackError);
+            }
+          }
+        }
         handlePurchase(t('iap_purchased_already'));
       }
       console.log('Purchase->purchases:', purchases);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Purchase->restorePurchase:', e);
       crashlytics().recordError(e, 'Purchase->restorePurchase->error');
     }
@@ -74,53 +141,104 @@ const Purchase = ({ navigation, route }: Props) => {
 
   const getItems = useCallback(async () => {
     try {
-      const products = await getProducts({ skus: itemSkus });
-      const mappedEntries: IProduct[] = products.map(anObj1 => ({
-        ...iaps.find(anObj2 => anObj1.productId === anObj2.productId)!,
-        ...anObj1,
-      }));
-      setEntries(mappedEntries);
-    } catch (e: any) {
+      await initConnection();
+      const products = await fetchProducts({ skus: itemSkus });
+      if (products && products.length > 0) {
+        const mappedEntries: IProduct[] = products.map((anObj1: ProductOrSubscription) => {
+          const matchingConfig = iaps.find(anObj2 => anObj1.id === anObj2.productId);
+          const displayPrice = 'displayPrice' in anObj1 ? anObj1.displayPrice || '' : '';
+          return {
+            ...matchingConfig!,
+            displayPrice,
+            localizedPrice: displayPrice,
+            id: matchingConfig?.id ?? 0,
+            productId: anObj1.id,
+          };
+        });
+        setEntries(mappedEntries);
+      } else {
+        setEntries(iaps);
+      }
+    } catch (e: unknown) {
       console.error('Purchase->getItems:', e);
-      Alert.alert(e.message);
+      setEntries(iaps);
       crashlytics().recordError(e, 'Purchase->getItems->error');
     }
   }, [iaps]);
 
   useEffect(() => {
+    let isMounted = true;
     (async () => {
       try {
         await restorePurchase();
-
         await getItems();
-
-        setTimeout(() => {
+      } catch (e: unknown) {
+        console.error('Purchase->init:', e);
+        crashlytics().recordError(e, 'Purchase->init->error');
+      } finally {
+        if (isMounted) {
           setLoading(false);
-        }, 1000);
-      } catch (e: any) {
-        console.error('useEffect:', e);
-        crashlytics().recordError(e, 'Purchase->useEffect->error');
-        Alert.alert(e.message);
+        }
       }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [getItems, restorePurchase]);
 
   const requestAppPurchase = useCallback(
-    async (sku: Sku) => {
+    async (sku: string) => {
       try {
-        let purchaseResult = await requestPurchase({ skus: [sku] });
+        setIsProcessing(true);
+        setProcessingMessage('Connecting to Google Play Store...');
+        await initConnection();
+        const purchaseResult = await requestPurchase({
+          type: 'in-app',
+          request: {
+            google: {
+              skus: [sku],
+            },
+            apple: {
+              sku: sku,
+            },
+          },
+        });
+        setIsProcessing(false);
         console.log('Purchase->requestAppPurchase:', purchaseResult);
-      } catch (e: any) {
+      } catch (e: unknown) {
+        setIsProcessing(false);
         console.error('Purchase->requestAppPurchase:', e);
-        crashlytics().recordError(e, 'Purchase->requestAppPurchase->error');
-        if (e.code === ErrorCode.E_ALREADY_OWNED) {
+        const purchaseError = e as PurchaseError;
+        if (purchaseError.code === ErrorCode.AlreadyOwned) {
+          if (__DEV__) {
+            showAppDialog(
+              'DEV: Item Already Owned',
+              'Google Play indicates this item is already owned by your test account. Would you like to consume and reset it now to test purchasing again?',
+              [
+                {
+                  text: 'Cancel',
+                  onPress: () => handlePurchase(t('iap_purchased_already')),
+                },
+                {
+                  text: 'Reset / Consume',
+                  onPress: async () => {
+                    await onResetDevPurchases();
+                  },
+                },
+              ],
+            );
+            return;
+          }
           handlePurchase(t('iap_purchased_already'));
-        } else if (e.code !== ErrorCode.E_USER_CANCELLED) {
-          Alert.alert(e.message);
+        } else if (purchaseError.code !== ErrorCode.UserCancelled) {
+          const message = purchaseError.message || 'Purchase error';
+          showAppDialog(message);
+          crashlytics().recordError(e, 'Purchase->requestAppPurchase->error');
         }
       }
     },
-    [handlePurchase, t],
+    [handlePurchase, onResetDevPurchases, t],
   );
 
   const onPressItem = useCallback(
@@ -129,10 +247,6 @@ const Purchase = ({ navigation, route }: Props) => {
     },
     [requestAppPurchase],
   );
-
-  const onGoBack = useCallback(() => {
-    navigation.pop();
-  }, [navigation]);
 
   if (loading) {
     return (
@@ -150,6 +264,17 @@ const Purchase = ({ navigation, route }: Props) => {
         onPressBackButton={onGoBack}
         title={t('iap_navigation_title')}
         style={{ backgroundColor: colors.background }}
+        RightViewComponent={
+          __DEV__ ? (
+            <Button
+              mode="text"
+              compact
+              textColor={colors.error || '#DC143C'}
+              onPress={onResetDevPurchases}>
+              DEV Reset
+            </Button>
+          ) : null
+        }
       />
       <ScrollView style={styles.scrollview}>
         <Text style={[styles.titleText, { color: `${colors.text}cc` }]}>{t('iap_title')}</Text>
@@ -157,7 +282,18 @@ const Purchase = ({ navigation, route }: Props) => {
         {entries.map((item, index) => {
           return <PurchaseListItem onPress={onPressItem} key={item.id} item={item} index={index} />;
         })}
+        {__DEV__ && (
+          <View style={{ margin: 16, marginTop: 24, alignItems: 'center' }}>
+            <Button
+              mode="outlined"
+              textColor={colors.error || '#DC143C'}
+              onPress={onResetDevPurchases}>
+              Reset / Consume Test Purchases (DEV)
+            </Button>
+          </View>
+        )}
       </ScrollView>
+      <Components.ProcessingOverlay visible={isProcessing} message={processingMessage} />
     </Components.AppBaseView>
   );
 };

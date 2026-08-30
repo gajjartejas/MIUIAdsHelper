@@ -1,21 +1,16 @@
-import { MD3Colors } from 'react-native-paper/src/types';
 import { MD3Theme } from 'react-native-paper';
 
-export interface AppColors extends MD3Colors {
-  primary: string;
-  onPrimary: string;
-  background: string;
-  onBackground: string;
-  surface: string;
-  onSurface: string;
-  error: string;
+export type AppColors = MD3Theme['colors'] & {
+  textTitle: string;
   card: string;
   opacity: string;
   white: string;
   black: string;
-  textTitle: string;
   text: string;
-}
-export interface AppTheme extends MD3Theme {
+  border?: string;
+  notification?: string;
+};
+
+export type AppTheme = MD3Theme & {
   colors: AppColors;
-}
+};

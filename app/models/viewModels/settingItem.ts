@@ -1,6 +1,7 @@
 //Interfaces
 import { IAppearanceType } from 'app/store/themeConfig';
-import { IconType } from 'react-native-easy-icon/src/Icon';
+import { IconType } from 'app/components/CommonIcon';
+import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 
 export interface ISettingItem {
   id: number;
@@ -8,9 +9,9 @@ export interface ISettingItem {
   iconType: IconType;
   title: string;
   description: string;
-  route?: any;
+  route?: keyof LoggedInTabNavigatorParams | string;
   touchable?: boolean;
-  value?: any;
+  value?: unknown;
   inputType?: 'input' | 'switch';
 }
 

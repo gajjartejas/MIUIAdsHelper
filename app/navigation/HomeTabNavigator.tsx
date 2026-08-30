@@ -3,10 +3,12 @@ import React from 'react';
 //Third Party
 import { useTheme } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Icon from 'react-native-easy-icon';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 //Screens
+import Loading from 'app/screens/Loading';
+import ChangeLanguage from 'app/screens/Settings/ChangeLanguage';
 import DashboardTab from 'app/screens/Home/DashboardTab';
 import MoreTab from 'app/screens/Home/MoreTab';
 import MoreApps from 'app/screens/Settings/MoreApps';
@@ -20,12 +22,11 @@ import Purchase from 'app/screens/Home/Purchase';
 
 //App Modules
 import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigation/types';
-import Loading from 'app/screens/Loading';
 import { AppTheme } from 'app/models/theme';
-import ChangeLanguage from 'app/screens/Settings/ChangeLanguage';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CommonIcon from 'app/components/CommonIcon';
 
-const Tab = createMaterialBottomTabNavigator<HomeTabsNavigatorParams>();
+
+const Tab = createBottomTabNavigator<HomeTabsNavigatorParams>();
 
 function HomeTabs() {
   //Constants
@@ -34,21 +35,25 @@ function HomeTabs() {
 
   return (
     <Tab.Navigator
-      screenOptions={{}}
-      inactiveColor={colors.secondaryContainer}
-      activeColor={colors.secondaryContainer}
-      barStyle={{ backgroundColor: colors.background, height: insets.bottom + 60 }}>
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          height: insets.bottom + 44,
+          borderTopWidth: 0,
+        },
+      }}>
       <Tab.Screen
         name="DashboardTab"
         component={DashboardTab}
         options={{
-          tabBarLabel: '',
           tabBarIcon: ({ focused }) => (
-            <Icon
-              type="material-community"
+            <CommonIcon
+              type="material"
               name="view-dashboard"
-              color={focused ? colors.white : colors.primary}
-              size={21}
+              size={22}
+              color={focused ? colors.primary : colors.onSurfaceVariant}
             />
           ),
         }}
@@ -57,13 +62,12 @@ function HomeTabs() {
         name="MoreTab"
         component={MoreTab}
         options={{
-          tabBarLabel: '',
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              type="material-community"
-              name="dots-horizontal"
-              color={focused ? colors.white : colors.primary}
-              size={21}
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <CommonIcon
+              type="fontawesome6"
+              name="ellipsis"
+              size={20}
+              color={focused ? colors.primary : colors.onSurfaceVariant}
             />
           ),
         }}

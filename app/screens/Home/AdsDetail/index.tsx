@@ -1,30 +1,40 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Text, View, NativeModules, ScrollView, Alert, useWindowDimensions } from 'react-native';
+import { Text, View, NativeModules, ScrollView, useWindowDimensions } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, IconButton, TouchableRipple, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
-import Icon from 'react-native-easy-icon';
+import CommonIcon from 'app/components/CommonIcon';
 
 //App Modules
 import styles from './styles';
 import { IAdsActivity, IAdsSettingPath } from 'app/components/AdsListItem';
 import { AppTheme } from 'app/models/theme';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
-import analytics from '@react-native-firebase/analytics';
+import analytics from 'app/services/analytics';
 import DeviceInfo from 'react-native-device-info';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
 import useAppConfigStore from 'app/store/appConfig';
 import ParsedText from 'react-native-parsed-text';
+import { showAppDialog } from 'app/store/dialogStore';
 
 //Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'AdsDetails'>;
 
+interface IDeviceInfoData {
+  brand: string;
+  buildNumber: string;
+  nickName: string;
+  appVersion: string;
+  systemVersion: string;
+  buildId: string;
+}
+
 const AdsDetails = ({ route, navigation }: Props) => {
   //Refs
-  const refDeviceInfo = useRef<any | null>(null);
+  const refDeviceInfo = useRef<IDeviceInfoData | null>(null);
 
   //Constants
   const { t } = useTranslation();
@@ -42,19 +52,27 @@ const AdsDetails = ({ route, navigation }: Props) => {
       .then(_r => {});
   }, [item.title]);
 
-  const openActivity = useCallback((packageName: string | null, activityName: string | null) => {
-    return new Promise((resolve, _reject) => {
-      NativeModules.OpenSettings.openNetworkSettings(packageName, activityName, (data: any) => {
-        if (data !== true) {
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
+  const openActivity = useCallback((packageName: string | null, activityName: string | null): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (!NativeModules.OpenSettings || typeof NativeModules.OpenSettings.openNetworkSettings !== 'function') {
+        resolve(false);
+        return;
+      }
+      try {
+        NativeModules.OpenSettings.openNetworkSettings(packageName, activityName, (data: boolean | unknown) => {
+          if (data === true) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      } catch {
+        resolve(false);
+      }
     });
   }, []);
 
-  const getDeviceInfo = useCallback(async () => {
+  const getDeviceInfo = useCallback(async (): Promise<IDeviceInfoData> => {
     let brand = DeviceInfo.getBrand();
     let buildNumber = DeviceInfo.getBuildNumber();
     let nickName = await DeviceInfo.getDevice();
@@ -102,7 +120,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
       }
       if (!isActivityExists) {
         logEvent(adsActivity, null);
-        Alert.alert(t('ads_detail_app_not_available'));
+        showAppDialog(t('ads_detail_app_not_available'));
       }
     },
     [logEvent, openActivity, t],
@@ -133,7 +151,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
   );
 
   const renderText = useCallback(
-    (matchingString: string, _matches: any) => {
+    (matchingString: string, _matches?: string[]) => {
       let match = matchingString.match(regex);
       return `${extractTextBetweenStars(match ? match[0] : '')}`;
     },
@@ -162,7 +180,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
 
         <View
           style={[styles.headerContainer, { height: height * 0.25, backgroundColor: `${item.iconBackgroundColor}50` }]}>
-          <Icon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={height * 0.1} />
+          <CommonIcon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={height * 0.1} />
         </View>
         <View style={styles.parallexContainerView}>
           <Text style={[styles.adsDetailDescText, { color: colors.text }]}>{t('ads_detail_desc')}</Text>
@@ -178,7 +196,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
             <Button
               labelStyle={styles.bottomButtonLabel}
               style={[styles.bottomButton, { backgroundColor: `${item.iconBackgroundColor}` }]}
-              icon={() => <Icon type={item.iconFamily} name={item.iconName} color={'white'} size={22} />}
+              icon={() => <CommonIcon type={item.iconFamily} name={item.iconName} color={'white'} size={22} />}
               mode="contained"
               onPress={() => openActivities(item)}>
               {`${t('ads_detail_open')} ${t(item.appname)}`}

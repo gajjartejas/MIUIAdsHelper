@@ -25,7 +25,7 @@ const Loading = ({ navigation }: Props) => {
       setAppearance(IAppearanceType.Light);
     }
 
-    navigation.replace('HomeTabs', {});
+    navigation.replace('HomeTabs');
     Utils.rateApp.rateAppIfNeeded().then(() => {
       console.log('Rate app opens');
     });

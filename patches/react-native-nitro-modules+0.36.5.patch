@@ -1,0 +1,27 @@
+diff --git a/node_modules/react-native-nitro-modules/android/build.gradle b/node_modules/react-native-nitro-modules/android/build.gradle
+index f564aad..7eed3f0 100644
+--- a/node_modules/react-native-nitro-modules/android/build.gradle
++++ b/node_modules/react-native-nitro-modules/android/build.gradle
+@@ -157,6 +157,17 @@ if (isNewArchitectureEnabled()) {
+   }
+ }
+ 
++def copyHeaders = {
++  copy {
++    from fileTree('./src/main/cpp').filter { it.isFile() }
++    from fileTree('../cpp/').filter { it.isFile() }
++    include "*.hpp"
++    into "${project.buildDir}/headers/nitromodules/NitroModules/"
++    includeEmptyDirs = false
++  }
++}
++copyHeaders()
++
+ tasks.register('prepareHeaders', Copy) {
+   from fileTree('./src/main/cpp').filter { it.isFile() }
+   from fileTree('../cpp/').filter { it.isFile() }
+@@ -166,3 +177,4 @@ tasks.register('prepareHeaders', Copy) {
+ }
+ 
+ preBuild.dependsOn(prepareHeaders)
++

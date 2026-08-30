@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, ImageSourcePropType, Text, View } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -18,7 +18,7 @@ import AppHeader from 'app/components/AppHeader';
 //Interfaces
 interface ITranslator {
   id: number;
-  icon: any;
+  icon: ImageSourcePropType;
   language: string;
   translators: string[];
 }

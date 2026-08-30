@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, InteractionManager } from 'react-native';
+import { FlatList } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -47,7 +47,7 @@ const License = ({ navigation }: Props) => {
 
   //npx npm-license-crawler -onlyDirectDependencies -json licenses.json
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    requestAnimationFrame(() => {
       const licenses: { [id: string]: ILicense } = require('../../../../licenses.json');
       const numberRegex = /\d+(\.\d+)*/;
       const atRegex = /@/gi;

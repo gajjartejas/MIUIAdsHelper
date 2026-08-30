@@ -4,11 +4,9 @@ import { Image, Platform, View } from 'react-native';
 //ThirdParty
 import { useTranslation } from 'react-i18next';
 import { Divider, List, Text, useTheme } from 'react-native-paper';
-import { IconType } from 'react-native-easy-icon/src/Icon';
 import DeviceInfo from 'react-native-device-info';
-import Icon from 'react-native-easy-icon';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
 
 //App Modules
@@ -22,6 +20,7 @@ import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigat
 import { AppTheme } from 'app/models/theme';
 import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
 import getSystemInfo from 'app/utils/getSystemInfo';
+import CommonIcon, { IconType } from 'app/components/CommonIcon.tsx';
 
 //Interfaces
 interface IMoreItem {
@@ -33,7 +32,7 @@ interface IMoreItem {
 
 //Params
 type MoreTabNavigationProp = CompositeNavigationProp<
-  MaterialBottomTabNavigationProp<HomeTabsNavigatorParams, 'MoreTab'>,
+  BottomTabNavigationProp<HomeTabsNavigatorParams, 'MoreTab'>,
   NativeStackNavigationProp<LoggedInTabNavigatorParams>
 >;
 
@@ -54,38 +53,38 @@ const MoreTab = () => {
     return [
       {
         id: 0,
-        iconName: 'feedback',
+        iconName: 'comment-alert',
         iconType: 'material',
         title: t('about.sendFeedback'),
       },
       {
         id: 1,
         iconName: 'star',
-        iconType: 'font-awesome',
+        iconType: 'fontawesome6',
         title: t('about.rateApp'),
       },
       {
         id: 2,
-        iconName: 'apps',
-        iconType: 'material-community',
+        iconName: 'view-grid',
+        iconType: 'material',
         title: t('about.moreApps'),
       },
       {
         id: 3,
         iconName: 'github',
-        iconType: 'entypo',
+        iconType: 'material',
         title: t('about.github'),
       },
       {
         id: 4,
         iconName: 'gear',
-        iconType: 'font-awesome',
+        iconType: 'fontawesome6',
         title: t('about.setting'),
       },
       {
         id: 5,
-        iconName: 'info-circle',
-        iconType: 'font-awesome',
+        iconName: 'circle-info',
+        iconType: 'fontawesome6',
         title: t('about.app'),
       },
     ];
@@ -185,7 +184,7 @@ const MoreTab = () => {
                     onPress={() => onPress(subItem, subIndex)}
                     title={subItem.title}
                     left={() => (
-                      <Icon
+                      <CommonIcon
                         style={styles.listIcon}
                         type={subItem.iconType}
                         name={subItem.iconName}

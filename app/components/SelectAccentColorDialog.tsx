@@ -41,7 +41,7 @@ function SelectAccentDialog(props: ISelectAccentDialogProps) {
       { primary: '#f186c0', onPrimary: '#000000' },
       { primary: '#f5b6da', onPrimary: '#000000' },
 
-      { primary: '#DC143C', onPrimary: '#ffffff' },
+      { primary: '#e44304', onPrimary: '#ffffff' },
       { primary: '#ee6002', onPrimary: '#ffffff' },
       { primary: '#ff9e22', onPrimary: '#000000' },
       { primary: '#ffc77d', onPrimary: '#000000' },

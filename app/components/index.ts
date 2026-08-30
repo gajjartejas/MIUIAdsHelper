@@ -7,6 +7,9 @@ import SelectAccentDialog from './SelectAccentColorDialog';
 import AdsListItem from './AdsListItem';
 import AppBaseView from './AppBaseView';
 import AppHeader from 'app/components/AppHeader';
+import CommonIcon from 'app/components/CommonIcon';
+import CommonDialog from './CommonDialog';
+import ProcessingOverlay from './ProcessingOverlay';
 
 const Components = {
   AppNoConnection,
@@ -18,6 +21,9 @@ const Components = {
   AdsListItem,
   AppBaseView,
   AppHeader,
+  CommonIcon,
+  CommonDialog,
+  ProcessingOverlay,
 };
 
 export default Components;

@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useEffect } from 'react';
-import { Alert, Appearance, EmitterSubscription, View } from 'react-native';
+import { Appearance, View } from 'react-native';
 
 //App Modules
 import styles from './styles';
@@ -8,18 +8,21 @@ import useThemeConfigStore, { IAppearanceType } from 'app/store/themeConfig';
 import i18n from 'app/locales';
 import useAppLangConfigStore from 'app/store/appLangConfig';
 import {
+  endConnection,
+  ErrorCode,
   finishTransaction,
-  flushFailedPurchasesCachedAsPendingAndroid,
   getAvailablePurchases,
   initConnection,
-  ProductPurchase,
+  Purchase,
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap';
 import useAppConfigStore from 'app/store/appConfig';
-import { navigationRef } from 'app/navigation/NavigationService';
+import NavigationService from 'app/navigation/NavigationService';
 import { useTranslation } from 'react-i18next';
-import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from 'app/services/crashlytics';
+import analytics from 'app/services/analytics';
+import { showAppDialog } from 'app/store/dialogStore';
 
 //Interface
 export type Props = {
@@ -33,47 +36,80 @@ const AppManager = ({ children }: Props) => {
   const selectedLanguageCode = useAppLangConfigStore(store => store.selectedLanguageCode);
   const { t } = useTranslation();
 
-  //States
-
   useEffect(() => {
-    let purchaseUpdateSubscription: EmitterSubscription;
-    let purchaseErrorSubscription: EmitterSubscription;
+    let purchaseUpdateSubscription: { remove: () => void } | undefined;
+    let purchaseErrorSubscription: { remove: () => void } | undefined;
 
-    (async () => {
-      await initConnection();
-      await flushFailedPurchasesCachedAsPendingAndroid();
+    const setupIAP = async () => {
+      try {
+        await initConnection();
 
-      const purchases = await getAvailablePurchases();
-      if (purchases && purchases.length > 0) {
-        setPurchased(__DEV__ ? false : true);
+        const purchases = await getAvailablePurchases();
+        if (purchases && purchases.length > 0) {
+          for (const purchase of purchases) {
+            if ('isAcknowledgedAndroid' in purchase && !purchase.isAcknowledgedAndroid) {
+              try {
+                await finishTransaction({ purchase, isConsumable: false });
+              } catch (ackError) {
+                console.warn('AppManager->ackError:', ackError);
+              }
+            }
+          }
+          setPurchased(__DEV__ ? false : true);
+        }
+      } catch (e: unknown) {
+        console.error('AppManager->setupIAP->error:', e);
+        crashlytics().recordError(e, 'AppManager->setupIAP->error');
       }
 
-      purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase: ProductPurchase) => {
-        const receipt = purchase.transactionReceipt;
-        console.log('AppManager->useEffect->purchaseUpdatedListener->receipt', receipt);
-        if (receipt) {
+      purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase: Purchase) => {
+        console.log('AppManager->purchaseUpdatedListener->purchase:', purchase);
+        if (purchase) {
           try {
-            const ackResult = await finishTransaction({ purchase, isConsumable: false });
-            console.log('AppManager->useEffect->purchaseUpdatedListener->ackResult', ackResult);
+            await finishTransaction({ purchase, isConsumable: false });
             setPurchased(true);
-            Alert.alert(t('iap_purchased_success'));
-            navigationRef.current?.goBack();
-          } catch (e: any) {
-            console.error('AppManager->useEffect->purchaseUpdatedListener->error:', e);
-            Alert.alert(e.message);
-            crashlytics().recordError(e, 'AppManager->useEffect->purchaseUpdatedListener->error');
+            analytics().logEvent('iap_purchase_success', {
+              productId: purchase.productId,
+              transactionId: purchase.transactionId ?? '',
+            });
+            showAppDialog(
+              '',
+              t('iap_purchased_success'),
+              [
+                {
+                  text: 'OKAY',
+                  onPress: () => {
+                    NavigationService.goBack();
+                  },
+                },
+              ],
+              {
+                onDismiss: () => {
+                  NavigationService.goBack();
+                },
+              },
+            );
+          } catch (e: unknown) {
+            console.error('AppManager->purchaseUpdatedListener->error:', e);
+            const message = e instanceof Error ? e.message : String(e);
+            showAppDialog(message);
+            crashlytics().recordError(e, 'AppManager->purchaseUpdatedListener->error');
           }
-        } else {
-          console.warn('AppManager->useEffect->purchaseUpdatedListener->receipt->not found');
         }
       });
 
       purchaseErrorSubscription = purchaseErrorListener(e => {
-        console.log('purchaseErrorListener', e);
-        Alert.alert(e.message);
-        crashlytics().recordError(e, 'AppManager->useEffect->purchaseErrorListener');
+        console.log('AppManager->purchaseErrorListener:', e);
+        if (e.code === ErrorCode.UserCancelled) {
+          return;
+        }
+        const message = e.message || 'Purchase error';
+        showAppDialog(message);
+        crashlytics().recordError(e, 'AppManager->purchaseErrorListener');
       });
-    })();
+    };
+
+    setupIAP();
 
     return () => {
       if (purchaseUpdateSubscription) {
@@ -82,6 +118,9 @@ const AppManager = ({ children }: Props) => {
       if (purchaseErrorSubscription) {
         purchaseErrorSubscription.remove();
       }
+      endConnection().catch(e => {
+        console.log('AppManager->endConnection->error:', e);
+      });
     };
   }, [setPurchased, t]);
 

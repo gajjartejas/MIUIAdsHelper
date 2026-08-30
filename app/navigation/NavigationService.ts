@@ -1,19 +1,32 @@
 import * as React from 'react';
-import { NavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainerRefWithCurrent, NavigationState } from '@react-navigation/native';
+import { HomeTabNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigation/types';
 
-// NavigationContainer is referred here - Check NavigationStack
-export const navigationRef = React.createRef<NavigationContainerRef<any>>();
+export const navigationRef = React.createRef<NavigationContainerRefWithCurrent<HomeTabNavigatorParams>>();
 
-function navigate(name: string, params?: any) {
-  navigationRef.current?.navigate(name, params);
+function navigate<RouteName extends keyof LoggedInTabNavigatorParams>(
+  name: RouteName,
+  params?: LoggedInTabNavigatorParams[RouteName],
+) {
+  if (navigationRef.current?.isReady()) {
+    // Navigate via the LoggedInTabNavigator stack
+    (navigationRef.current as any).navigate('LoggedInTabNavigator', {
+      screen: name,
+      params,
+    });
+  }
 }
 
 function goBack() {
-  navigationRef.current?.goBack();
+  if (navigationRef.current?.isReady() && navigationRef.current?.canGoBack()) {
+    navigationRef.current.goBack();
+  }
 }
 
-function reset(params: any) {
-  navigationRef.current?.reset(params);
+function reset(params: NavigationState) {
+  if (navigationRef.current?.isReady()) {
+    navigationRef.current.reset(params);
+  }
 }
 
 export default {

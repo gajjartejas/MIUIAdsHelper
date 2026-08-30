@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { View } from 'react-native';
+import { ImageSourcePropType, View } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -20,7 +20,7 @@ import AppHeader from 'app/components/AppHeader';
 //Interfaces
 interface IMoreAppItem {
   id: number;
-  icon: string;
+  icon: ImageSourcePropType;
   title: string;
   description: string;
   showLinks: boolean;
