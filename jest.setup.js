@@ -108,5 +108,8 @@ NativeModules.OpenSettings = {
   openNotificationSettings: jest.fn((pkg, cb) => cb && cb(true)),
   openAppSettings: jest.fn((pkg, cb) => cb && cb(true)),
   readMIVersion: jest.fn().mockResolvedValue({ versionCode: '14.0', versionName: 'V14.0.0' }),
+  isPackageInstalled: jest.fn().mockResolvedValue(true),
+  checkInstalledPackages: jest.fn().mockResolvedValue({}),
+  checkItemsAvailability: jest.fn().mockResolvedValue({}),
 };
 

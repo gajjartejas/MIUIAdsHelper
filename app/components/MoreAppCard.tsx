@@ -25,7 +25,8 @@ function MoreAppCard(props: IMoreAppCard) {
   return (
     <TouchableRipple
       onPress={props.onPressPlayStore}
-      style={[styles.container, { backgroundColor: `${colors.card}`, shadowColor: `${colors.shadow}` }, props.style]}>
+      style={[styles.container, { backgroundColor: `${colors.card}`, shadowColor: `${colors.shadow}` }, props.style]}
+    >
       <View>
         <View style={styles.titleImageTextContainer}>
           <Image source={props.icon} style={[styles.icon, { borderColor: colors.backdrop }]} />
@@ -80,9 +81,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   githubButton: {
-    alignSelf: 'center',
-  },
-  playstoreButton: {
     alignSelf: 'center',
   },
 });

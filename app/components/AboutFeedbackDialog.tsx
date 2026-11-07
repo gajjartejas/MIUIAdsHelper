@@ -28,7 +28,8 @@ function AboutFeedbackDialog(props: IAboutFeedbackDialogProps) {
       <Dialog
         style={[largeScreenMode && styles.cardTablet]}
         visible={props.visible}
-        onDismiss={props.onPressHideDialog}>
+        onDismiss={props.onPressHideDialog}
+      >
         <Dialog.Title style={{ color: colors.onBackground }}>{t('about.sendFeedback')}</Dialog.Title>
         <Dialog.Content>
           <Text variant={'bodySmall'} style={[styles.descriptionText, { color: `${colors.onBackground}88` }]}>
@@ -40,14 +41,16 @@ function AboutFeedbackDialog(props: IAboutFeedbackDialogProps) {
             borderless={true}
             style={[styles.button, { backgroundColor: `${colors.onBackground}33` }]}
             onPress={props.onPressGithub}
-            rippleColor="rgba(0, 0, 0, .32)">
+            rippleColor="rgba(0, 0, 0, .32)"
+          >
             <CommonIcon type="material" name="code-tags" color={`${colors.onBackground}88`} size={24} />
           </TouchableRipple>
           <TouchableRipple
             borderless={true}
             style={[styles.button, { backgroundColor: `${colors.onBackground}33` }]}
             onPress={props.onPressGithubDiscussion}
-            rippleColor="rgba(0, 0, 0, .32)">
+            rippleColor="rgba(0, 0, 0, .32)"
+          >
             <CommonIcon type="material" name="forum" color={`${colors.onBackground}88`} size={24} />
           </TouchableRipple>
         </View>

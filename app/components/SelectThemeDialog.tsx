@@ -31,7 +31,8 @@ function SelectThemeDialog(props: ISelectThemeDialogProps) {
       <Dialog
         style={[{ backgroundColor: theme.colors.surface }, largeScreenMode && styles.cardTablet]}
         visible={props.visible}
-        onDismiss={props.onPressHideDialog}>
+        onDismiss={props.onPressHideDialog}
+      >
         <Dialog.Title style={{ color: theme.colors.onSurface }}>{t('appearanceSettings.themeOption')}</Dialog.Title>
         <View>
           <RadioButton.Group
@@ -39,7 +40,8 @@ function SelectThemeDialog(props: ISelectThemeDialogProps) {
               const [item] = props.themeOptions.filter(c => c.value === v);
               props.onSelect(item, props.themeOptions.indexOf(item));
             }}
-            value={props.appearance}>
+            value={props.appearance}
+          >
             {props.themeOptions.map((item, index) => {
               return (
                 <TouchableRipple
@@ -48,7 +50,8 @@ function SelectThemeDialog(props: ISelectThemeDialogProps) {
                   borderless={true}
                   onPress={() => props.onSelect(item, index)}
                   rippleColor="rgba(0, 0, 0, .32)"
-                  style={styles.itemButton}>
+                  style={styles.itemButton}
+                >
                   <View style={styles.itemButtonContainer}>
                     <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>{item.title}</Text>
                     <RadioButton color={theme.colors.primary} value={item.value} />
@@ -79,23 +82,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 24,
     paddingVertical: 6,
-  },
-  button: {
-    alignSelf: 'center',
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    marginHorizontal: 8,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-  descriptionText: {
-    fontSize: 16,
   },
   cardTablet: {
     width: '70%',

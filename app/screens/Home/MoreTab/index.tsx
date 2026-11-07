@@ -162,7 +162,8 @@ const MoreTab = () => {
   return (
     <Components.AppBaseView
       edges={['bottom', 'left', 'right']}
-      style={[styles.container, { backgroundColor: colors.background }]}>
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <Components.AppBaseView edges={['top']} scroll={true} style={styles.scrollView}>
         <View style={styles.subView}>
           <View style={[styles.imageBackground, largeScreenMode && styles.cardTablet]}>

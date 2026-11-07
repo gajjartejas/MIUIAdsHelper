@@ -4,11 +4,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerStyle: {},
-  safeArea: {
-    flex: 1,
-  },
-  scrollView: {},
   subView: {
     flex: 1,
   },

@@ -25,7 +25,6 @@ import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigat
 import { AppTheme } from 'app/models/theme';
 import CommonIcon from 'app/components/CommonIcon';
 
-
 const Tab = createBottomTabNavigator<HomeTabsNavigatorParams>();
 
 function HomeTabs() {
@@ -43,7 +42,8 @@ function HomeTabs() {
           height: insets.bottom + 44,
           borderTopWidth: 0,
         },
-      }}>
+      }}
+    >
       <Tab.Screen
         name="DashboardTab"
         component={DashboardTab}

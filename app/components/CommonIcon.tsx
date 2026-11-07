@@ -22,15 +22,7 @@ export interface CommonIconProps {
   iconStyle?: 'solid' | 'regular' | 'brand';
 }
 
-const CommonIcon: React.FC<CommonIconProps> = ({
-  type,
-  name,
-  size,
-  color,
-  style,
-  onPress,
-  iconStyle = 'solid',
-}) => {
+const CommonIcon: React.FC<CommonIconProps> = ({ type, name, size, color, style, onPress, iconStyle = 'solid' }) => {
   if (type === 'fontawesome6') {
     if (iconStyle === 'regular') {
       return (

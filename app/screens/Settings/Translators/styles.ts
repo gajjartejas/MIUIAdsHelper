@@ -4,15 +4,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerStyle: {},
   safeArea: {
     flex: 1,
   },
-  scrollView: {},
   flatlist: {
     paddingHorizontal: 16,
   },
-  subView: {},
   listItemImage: {
     width: 36,
     height: 36,

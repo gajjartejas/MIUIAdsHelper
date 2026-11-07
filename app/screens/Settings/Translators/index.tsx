@@ -109,7 +109,8 @@ const Translators = ({ navigation }: Props) => {
   return (
     <Components.AppBaseView
       edges={['bottom', 'left', 'right']}
-      style={[styles.container, { backgroundColor: colors.background }]}>
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <AppHeader
         showBackButton={true}
         onPressBackButton={onGoBack}

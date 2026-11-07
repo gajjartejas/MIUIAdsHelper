@@ -50,7 +50,8 @@ const AppHeader = (props: AppHeaderProps) => {
         paddingRight: insets.right,
         backgroundColor: colors.background,
         ...props.style,
-      }}>
+      }}
+    >
       <View style={[styles.statusBar, { height: statusBarHeight }]} />
       <View style={[styles.navigationContainer, props.largeHeader && styles.largeStatusBarHeight]}>
         <View style={[StyleSheet.absoluteFill, styles.titleViewStyle]}>
@@ -58,7 +59,8 @@ const AppHeader = (props: AppHeaderProps) => {
             <Text
               numberOfLines={1}
               ellipsizeMode={'tail'}
-              style={{ ...styles.titleTextStyle, color: colors.text, ...backButtonPaddingForTitle, ...textStyle }}>
+              style={{ ...styles.titleTextStyle, color: colors.text, ...backButtonPaddingForTitle, ...textStyle }}
+            >
               {props.title}
             </Text>
           )}
@@ -111,10 +113,6 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     overflow: 'hidden',
     alignSelf: 'center',
-  },
-  drawerImage: {
-    width: 18,
-    height: 18,
   },
   titleTextStyle: {
     fontSize: 16,

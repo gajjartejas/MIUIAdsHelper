@@ -86,7 +86,8 @@ function SelectAccentDialog(props: ISelectAccentDialogProps) {
                   borderless={true}
                   onPress={() => onSelect(item)}
                   centered={true}
-                  rippleColor="rgba(0, 0, 0, .32)">
+                  rippleColor="rgba(0, 0, 0, .32)"
+                >
                   <View />
                 </TouchableRipple>
               );

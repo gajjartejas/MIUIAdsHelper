@@ -258,7 +258,8 @@ const Purchase = ({ navigation, route }: Props) => {
   return (
     <Components.AppBaseView
       edges={['bottom', 'left', 'right']}
-      style={[styles.container, { backgroundColor: colors.background }]}>
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <AppHeader
         showBackButton={true}
         onPressBackButton={onGoBack}
@@ -266,11 +267,7 @@ const Purchase = ({ navigation, route }: Props) => {
         style={{ backgroundColor: colors.background }}
         RightViewComponent={
           __DEV__ ? (
-            <Button
-              mode="text"
-              compact
-              textColor={colors.error || '#DC143C'}
-              onPress={onResetDevPurchases}>
+            <Button mode="text" compact textColor={colors.error || '#DC143C'} onPress={onResetDevPurchases}>
               DEV Reset
             </Button>
           ) : null
@@ -284,10 +281,7 @@ const Purchase = ({ navigation, route }: Props) => {
         })}
         {__DEV__ && (
           <View style={{ margin: 16, marginTop: 24, alignItems: 'center' }}>
-            <Button
-              mode="outlined"
-              textColor={colors.error || '#DC143C'}
-              onPress={onResetDevPurchases}>
+            <Button mode="outlined" textColor={colors.error || '#DC143C'} onPress={onResetDevPurchases}>
               Reset / Consume Test Purchases (DEV)
             </Button>
           </View>

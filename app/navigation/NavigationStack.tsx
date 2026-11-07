@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 //Third Party
 import { NavigationContainer, Theme } from '@react-navigation/native';
@@ -125,9 +125,14 @@ const RootNavigation: React.FC = () => {
       <NavigationContainer ref={navigationRef} theme={navTheme} onReady={onReady} onStateChange={onStateChange}>
         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} animated={true} />
         {__DEV__ && !!devScreenName && (
-          <View pointerEvents="none" style={[styles.devScreenBadge, { top: Math.max(insets.top, 8) + 2 }]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            onPress={() => setDevScreenName('')}
+            style={[styles.devScreenBadge, { top: Math.max(insets.top, 8) + 2 }]}
+          >
             <Text style={styles.devScreenText}>{devScreenName}</Text>
-          </View>
+          </TouchableOpacity>
         )}
         <Stack.Navigator>
           <Stack.Screen name="LoggedInTabNavigator" component={LoggedInTabNavigator} options={homeOptions} />
