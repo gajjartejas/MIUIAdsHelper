@@ -1,84 +1,180 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  flatlist: {
-    flex: 1,
-  },
   container: {
     flex: 1,
   },
   carouselContainer: {
     flex: 1,
   },
+  headerStickyContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 10,
+  },
+  searchContainer: {
+    height: 46,
+    borderRadius: 14,
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  leftSearchButton: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchTextInputText: {
+    fontSize: 14.5,
+    flex: 1,
+    paddingVertical: 0,
+    fontWeight: '400',
+  },
+  rightSearchButton: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterRowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  filterPillScrollView: {
+    flex: 1,
+  },
+  filterPillScrollContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 12,
+  },
+  filterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 13,
+    paddingVertical: 7,
+    borderRadius: 20,
+    borderWidth: 1,
+    gap: 6,
+    marginRight: 8,
+  },
+  filterPillText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.1,
+  },
+  viewModeToggleButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+  },
+  bannerContainer: {
+    marginTop: 12,
+    marginHorizontal: 16,
+    padding: 12,
+    flexDirection: 'row',
+    borderRadius: 16,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  bannerIconWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  bannerContent: {
+    flex: 1,
+  },
+  bannerTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 17,
+  },
+  bannerSubtitle: {
+    fontSize: 11,
+    fontWeight: '400',
+    marginTop: 1,
+    lineHeight: 14,
+  },
+  bannerActionArrow: {
+    marginLeft: 6,
+  },
+  listContainer: {
+    paddingTop: 8,
+    paddingBottom: 24,
+  },
+  section: {
+    paddingHorizontal: 16,
+    marginTop: 14,
+  },
+  sectionHeaderTouchable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
+  sectionHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   sectionHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 10,
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.2,
   },
-  whiteSectionHeader: {
-    color: 'white',
+  sectionCountBadge: {
+    paddingHorizontal: 7,
+    paddingVertical: 1.5,
+    borderRadius: 10,
   },
-  headerImage: {
-    width: '100%',
-    height: 250,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    position: 'absolute',
+  sectionCountText: {
+    fontSize: 11,
+    fontWeight: '700',
   },
-  section: { paddingHorizontal: 16 },
-  sectionItem: {
+  sectionChevronWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sectionGridItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
   },
-  listContainer: {
-    paddingTop: 16,
+  sectionListItem: {
+    flexDirection: 'column',
   },
-  headerDetailContainer: {
-    paddingHorizontal: 14,
-    paddingTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomEndRadius: 50,
-    borderBottomStartRadius: 50,
-  },
-  headerDetailText: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: 'white',
-  },
-  searchTextInputText: {
-    fontSize: 16,
-    flex: 1,
-  },
-  searchContainer: { flex: 1, height: 50, borderRadius: 25, overflow: 'hidden', flexDirection: 'row' },
-  leftSearchButton: {
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
+  emptyContainer: {
+    paddingTop: 56,
+    paddingHorizontal: 32,
     alignItems: 'center',
-  },
-  rightSearchButton: {
-    width: 50,
-    height: 50,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  bannerContainer: {
-    marginTop: 16,
-    paddingLeft: 16,
-    paddingVertical: 4,
-    marginHorizontal: 16,
-    flexDirection: 'row',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+  emptyTitleText: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 10,
+    textAlign: 'center',
   },
-  bannerText: {
-    fontSize: 12,
-    color: 'white',
-    flex: 1,
-    lineHeight: 16,
+  emptySubtitleText: {
+    fontSize: 12.5,
+    marginTop: 4,
+    textAlign: 'center',
   },
 });
 

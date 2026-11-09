@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  flatlist: {
-    flex: 1,
-  },
   container: {
     flex: 1,
   },
@@ -24,6 +21,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 16,
     marginBottom: 30,
+  },
+  recovery: {
+    gap: 16,
+    marginHorizontal: 20,
+    marginBottom: 16,
+  },
+  recoveryText: {
+    textAlign: 'center',
   },
   activityIndicator: {
     flex: 1,

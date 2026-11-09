@@ -25,22 +25,28 @@ export interface IProduct {
 interface IAdsListItem {
   item: IProduct;
   index: number;
+  disabled?: boolean;
   onPress: (item: IProduct, index: number) => void;
 }
 
 const PurchaseListItem = (props: IAdsListItem) => {
   //Const
   const { colors } = useTheme<AppTheme>();
-  const { item, index } = props;
+  const { item, index, disabled = false } = props;
   const { t } = useTranslation();
 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      accessibilityLabel={`${item.name}, ${item.displayPrice || item.localizedPrice}`}
       onPress={() => {
         props.onPress(item, index);
       }}
-      style={[styles.container, { backgroundColor: `${colors.onBackground}20`, shadowColor: colors.background }]}>
+      style={[styles.container, { backgroundColor: `${colors.onBackground}20`, shadowColor: colors.background }]}
+    >
       <CommonIcon type={item.iconFamily} name={item.iconName} color={item.iconBackgroundColor} size={24} />
       <View style={styles.textContainer}>
         <Text numberOfLines={1} style={[styles.titleText, { color: colors.text }]}>
@@ -54,10 +60,15 @@ const PurchaseListItem = (props: IAdsListItem) => {
         </Text>
       </View>
       <TouchableOpacity
+        disabled={disabled}
+        accessibilityRole="button"
+        accessibilityState={{ disabled }}
+        accessibilityLabel={`${t('iap_buy')} ${item.name}`}
         onPress={() => {
           props.onPress(item, index);
         }}
-        style={styles.buyButton}>
+        style={styles.buyButton}
+      >
         <Text style={[styles.buyTextButton, { color: colors.primary }]}>{t('iap_buy')}</Text>
       </TouchableOpacity>
     </TouchableOpacity>

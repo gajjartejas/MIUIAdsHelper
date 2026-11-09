@@ -25,21 +25,16 @@ const CommonDialog = () => {
   }
 
   const buttons =
-    options.buttons && options.buttons.length > 0
-      ? options.buttons
-      : [{ text: 'OKAY', onPress: () => {} }];
+    options.buttons && options.buttons.length > 0 ? options.buttons : [{ text: 'OKAY', onPress: () => {} }];
 
   return (
     <Portal>
       <Dialog
         visible={visible}
         onDismiss={handleDismiss}
-        style={[styles.dialog, largeScreenMode && styles.cardTablet, { backgroundColor: colors.surface }]}>
-        {!!options.title && (
-          <Dialog.Title style={[styles.title, { color: colors.text }]}>
-            {options.title}
-          </Dialog.Title>
-        )}
+        style={[styles.dialog, largeScreenMode && styles.cardTablet, { backgroundColor: colors.surface }]}
+      >
+        {!!options.title && <Dialog.Title style={[styles.title, { color: colors.text }]}>{options.title}</Dialog.Title>}
         <Dialog.Content>
           <Text variant="bodyMedium" style={[styles.message, { color: `${colors.text}DD` }]}>
             {options.message}
@@ -58,7 +53,8 @@ const CommonDialog = () => {
                 if (btn.onPress) {
                   btn.onPress();
                 }
-              }}>
+              }}
+            >
               {btn.text}
             </Button>
           ))}

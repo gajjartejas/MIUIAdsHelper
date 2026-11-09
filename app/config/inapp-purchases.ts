@@ -3,6 +3,7 @@ import { IProduct } from 'app/components/PurchaseListItem';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'react-native-paper';
 import { useMemo } from 'react';
+import productIds from 'app/assets/data/purchase-products.json';
 
 const useInAppPurchases = (): IProduct[] => {
   //Const
@@ -19,7 +20,7 @@ const useInAppPurchases = (): IProduct[] => {
         name: t('iap_item_1'),
         subtitle: t('iap_item_1_desc'),
         localizedPrice: '...',
-        productId: 'com.tejasgajjar.miuiadshelper.item1',
+        productId: productIds[0],
         type: 'iap',
         title: '',
         description: '',
@@ -34,7 +35,7 @@ const useInAppPurchases = (): IProduct[] => {
         name: t('iap_item_2'),
         subtitle: t('iap_item_2_desc'),
         localizedPrice: '...',
-        productId: 'com.tejasgajjar.miuiadshelper.item2',
+        productId: productIds[1],
         type: 'iap',
         title: '',
         description: '',
@@ -49,7 +50,7 @@ const useInAppPurchases = (): IProduct[] => {
         name: t('iap_item_3'),
         subtitle: t('iap_item_3_desc'),
         localizedPrice: '...',
-        productId: 'com.tejasgajjar.miuiadshelper.item3',
+        productId: productIds[2],
         type: 'iap',
         title: '',
         description: '',
@@ -64,7 +65,7 @@ const useInAppPurchases = (): IProduct[] => {
         name: t('iap_item_4'),
         subtitle: t('iap_item_4_desc'),
         localizedPrice: '...',
-        productId: 'com.tejasgajjar.miuiadshelper.item4',
+        productId: productIds[3],
         type: 'iap',
         title: '',
         description: '',

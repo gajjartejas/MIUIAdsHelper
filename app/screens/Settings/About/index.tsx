@@ -54,6 +54,15 @@ const About = ({ navigation }: Props) => {
             route: '',
             touchable: false,
           },
+          {
+            id: 2,
+            iconName: 'shield-alert-outline',
+            iconType: 'material',
+            title: t('aboutScreen.disclaimerTitle'),
+            description: t('aboutScreen.disclaimerDesc')!,
+            route: '',
+            touchable: false,
+          },
         ],
       },
       {
@@ -141,7 +150,8 @@ const About = ({ navigation }: Props) => {
   return (
     <Components.AppBaseView
       edges={['bottom', 'left', 'right']}
-      style={[styles.container, { backgroundColor: colors.background }]}>
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <AppHeader
         showBackButton={true}
         onPressBackButton={onGoBack}
@@ -164,7 +174,8 @@ const About = ({ navigation }: Props) => {
                   largeScreenMode && styles.cardTablet,
                   { backgroundColor: `${colors.card}`, shadowColor: `${colors.shadow}` },
                 ]}
-                key={item.id.toString()}>
+                key={item.id.toString()}
+              >
                 <List.Subheader style={[styles.listSubHeader, { color: colors.primary }]}>{item.title}</List.Subheader>
                 {item.items.map((subItem, subIndex) => {
                   return (
@@ -174,6 +185,7 @@ const About = ({ navigation }: Props) => {
                         titleStyle={{ color: colors.onSurface }}
                         descriptionStyle={[{ color: `${colors.onSurface}88` }, styles.topMargin]}
                         titleNumberOfLines={0}
+                        descriptionNumberOfLines={8}
                         onPress={() => onPressAboutOption(item, index, subItem, subIndex)}
                         title={subItem.title}
                         description={subItem.description}

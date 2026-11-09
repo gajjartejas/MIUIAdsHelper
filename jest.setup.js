@@ -48,7 +48,10 @@ jest.mock('react-native-mmkv', () => {
 jest.mock('@react-native-firebase/analytics', () => {
   return {
     getAnalytics: jest.fn(),
-    logScreenView: jest.fn(),
+    logScreenView: jest.fn().mockResolvedValue(undefined),
+    logEvent: jest.fn().mockResolvedValue(undefined),
+    setUserId: jest.fn().mockResolvedValue(undefined),
+    setUserProperties: jest.fn().mockResolvedValue(undefined),
   };
 });
 
@@ -72,8 +75,11 @@ jest.mock('react-native-iap', () => ({
   fetchProducts: jest.fn().mockResolvedValue([]),
   requestPurchase: jest.fn().mockResolvedValue(true),
   ErrorCode: {
-    E_UNKNOWN: 'E_UNKNOWN',
-    E_USER_CANCELLED: 'E_USER_CANCELLED',
+    Unknown: 'unknown', UserCancelled: 'user-cancelled', AlreadyOwned: 'already-owned',
+    Pending: 'pending', DeferredPayment: 'deferred-payment', NetworkError: 'network-error',
+    ServiceDisconnected: 'service-disconnected', ServiceError: 'service-error', ServiceTimeout: 'service-timeout',
+    ConnectionClosed: 'connection-closed', InitConnection: 'init-connection', ItemUnavailable: 'item-unavailable',
+    BillingUnavailable: 'billing-unavailable', DeveloperError: 'developer-error', SyncError: 'sync-error', PurchaseVerificationFailed: 'purchase-verification-failed',
   },
 }));
 
@@ -108,5 +114,8 @@ NativeModules.OpenSettings = {
   openNotificationSettings: jest.fn((pkg, cb) => cb && cb(true)),
   openAppSettings: jest.fn((pkg, cb) => cb && cb(true)),
   readMIVersion: jest.fn().mockResolvedValue({ versionCode: '14.0', versionName: 'V14.0.0' }),
+  isPackageInstalled: jest.fn().mockResolvedValue(true),
+  checkInstalledPackages: jest.fn().mockResolvedValue({}),
+  checkItemsAvailability: jest.fn().mockResolvedValue({}),
 };
 

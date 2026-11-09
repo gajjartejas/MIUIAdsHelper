@@ -4,14 +4,17 @@ import zustandStorage from 'app/store/zustandStorage';
 
 interface IAppConfigState {
   purchased: boolean;
+  viewMode: 'grid' | 'list';
 }
 
 interface IAppConfigActions {
   setPurchased: (purchased: boolean) => void;
+  setViewMode: (viewMode: 'grid' | 'list') => void;
 }
 
 const initialState: IAppConfigState = {
   purchased: false,
+  viewMode: 'grid',
 };
 
 const useAppConfigStore = create<IAppConfigState & IAppConfigActions>()(
@@ -20,6 +23,7 @@ const useAppConfigStore = create<IAppConfigState & IAppConfigActions>()(
       set => ({
         ...initialState,
         setPurchased: (s: boolean) => set(_state => ({ purchased: s })),
+        setViewMode: (mode: 'grid' | 'list') => set(_state => ({ viewMode: mode })),
       }),
       {
         name: 'app-config-storage',

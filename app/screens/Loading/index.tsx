@@ -1,9 +1,5 @@
 import React from 'react';
 
-//ThirdParty
-
-//Redux
-
 //App Modules
 import Utils from 'app/utils';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
@@ -18,7 +14,6 @@ const Loading = ({ navigation }: Props) => {
   //Constants
   const purchased = useAppConfigStore(store => store.purchased);
   const setAppearance = useThemeConfigStore(store => store.setAppearance);
-  const isDark = useThemeConfigStore(state => state.isDark);
 
   React.useEffect(() => {
     if (!purchased) {
@@ -29,7 +24,7 @@ const Loading = ({ navigation }: Props) => {
     Utils.rateApp.rateAppIfNeeded().then(() => {
       console.log('Rate app opens');
     });
-  }, [isDark, navigation, purchased, setAppearance]);
+  }, [navigation, purchased, setAppearance]);
 
   return null;
 };

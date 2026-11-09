@@ -4,15 +4,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerStyle: {},
   safeArea: {
     flex: 1,
-  },
-  scrollView: {
-    paddingBottom: 36,
-  },
-  subView: {
-    marginHorizontal: 32,
   },
   appNameText: {
     marginTop: 20,

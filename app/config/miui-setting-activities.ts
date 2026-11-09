@@ -10,7 +10,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
   const entries: IAdsActivity[] = useMemo(() => {
     return [
       {
-        id: 0,
+        id: 1,
         appname: t('ads_step_0_appname'),
         title: t('ads_step_0_title'),
         subtitle: t('ads_step_0_subtitle'),
@@ -34,7 +34,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.AudioVideo,
       },
       {
-        id: 1,
+        id: 2,
         appname: t('ads_step_1_appname'),
         title: t('ads_step_1_title'),
         subtitle: t('ads_step_1_subtitle'),
@@ -58,7 +58,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.AudioVideo,
       },
       {
-        id: 2,
+        id: 3,
         appname: t('ads_step_2_appname'),
         title: t('ads_step_2_title'),
         subtitle: t('ads_step_2_subtitle'),
@@ -82,7 +82,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.ThemeLockScreen,
       },
       {
-        id: 3,
+        id: 4,
         appname: t('ads_step_3_appname'),
         title: t('ads_step_3_title'),
         subtitle: t('ads_step_3_subtitle'),
@@ -106,7 +106,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Utilities,
       },
       {
-        id: 4,
+        id: 5,
         appname: t('ads_step_4_appname'),
         title: t('ads_step_4_title'),
         subtitle: t('ads_step_4_subtitle'),
@@ -126,7 +126,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Internet,
       },
       {
-        id: 5,
+        id: 6,
         appname: t('ads_step_5_appname'),
         title: t('ads_step_5_title'),
         subtitle: t('ads_step_5_subtitle'),
@@ -150,7 +150,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Internet,
       },
       {
-        id: 6,
+        id: 7,
         appname: t('ads_step_6_appname'),
         title: t('ads_step_6_title'),
         subtitle: t('ads_step_6_subtitle'),
@@ -162,10 +162,6 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
             package: 'com.miui.securitycenter',
             activity: 'com.miui.securityscan.ui.settings.SettingsActivity',
           },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
-          },
         ],
         iconBackgroundColor: '#00D59D',
         iconName: 'shield-check',
@@ -174,7 +170,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Security,
       },
       {
-        id: 7,
+        id: 8,
         appname: t('ads_step_7_appname'),
         title: t('ads_step_7_title'),
         subtitle: t('ads_step_7_subtitle'),
@@ -190,14 +186,6 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
             package: 'com.miui.cleanmaster',
             activity: 'com.miui.optimizecenter.settings.SettingsActivity',
           },
-          {
-            package: 'com.miui.cleaner',
-            activity: 'com.miui.optimizecenter.MainActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
-          },
         ],
         iconBackgroundColor: '#E89736',
         iconName: 'trash',
@@ -206,7 +194,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Security,
       },
       {
-        id: 8,
+        id: 9,
         appname: t('ads_step_8_appname'),
         title: t('ads_step_8_title'),
         subtitle: t('ads_step_8_subtitle'),
@@ -220,10 +208,6 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
           {
             package: 'com.miui.securitycenter',
-            activity: 'com.miui.applicationlock.SettingLockActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
             activity: 'com.miui.securityscan.MainActivity',
           },
         ],
@@ -234,7 +218,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Security,
       },
       {
-        id: 9,
+        id: 10,
         appname: t('ads_step_9_appname'),
         title: t('ads_step_9_title'),
         subtitle: t('ads_step_9_subtitle'),
@@ -244,15 +228,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         adsSettingPaths: [
           {
             package: 'com.miui.securitycenter',
-            activity: 'com.miui.optimizemanage.SettingsActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
             activity: 'com.miui.optimizemanage.OptimizemanageMainActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
           },
         ],
         iconBackgroundColor: '#5062EC',
@@ -262,7 +238,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Security,
       },
       {
-        id: 10,
+        id: 11,
         appname: t('ads_step_10_appname'),
         title: t('ads_step_10_title'),
         subtitle: t('ads_step_10_subtitle'),
@@ -272,15 +248,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         adsSettingPaths: [
           {
             package: 'com.miui.securitycenter',
-            activity: 'com.miui.appmanager.AppManagerSettings',
-          },
-          {
-            package: 'com.miui.securitycenter',
             activity: 'com.miui.appmanager.AppManagerMainActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
           },
         ],
         iconBackgroundColor: '#FACE59',
@@ -290,7 +258,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Security,
       },
       {
-        id: 11,
+        id: 12,
         appname: t('ads_step_11_appname'),
         title: t('ads_step_11_title'),
         subtitle: t('ads_step_11_subtitle'),
@@ -304,11 +272,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
           },
           {
             package: 'com.android.settings',
-            activity: 'com.android.settings.SubSettings',
-          },
-          {
-            package: 'com.android.settings',
-            activity: 'com.android.settings.MainSettings',
+            activity: 'com.android.settings.MiuiSettings',
           },
         ],
         iconBackgroundColor: '#FF2781',
@@ -318,7 +282,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.System,
       },
       {
-        id: 12,
+        id: 13,
         appname: t('ads_step_12_appname'),
         title: t('ads_step_12_title'),
         subtitle: t('ads_step_12_subtitle'),
@@ -338,7 +302,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.System,
       },
       {
-        id: 13,
+        id: 14,
         appname: t('ads_step_13_appname'),
         title: t('ads_step_13_title'),
         subtitle: t('ads_step_13_subtitle'),
@@ -358,7 +322,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.System,
       },
       {
-        id: 14,
+        id: 15,
         appname: t('ads_step_14_appname'),
         title: t('ads_step_14_title'),
         subtitle: t('ads_step_14_subtitle'),
@@ -378,7 +342,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.System,
       },
       {
-        id: 15,
+        id: 16,
         appname: t('ads_step_15_appname'),
         title: t('ads_step_15_title'),
         subtitle: t('ads_step_15_subtitle'),
@@ -398,7 +362,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.Other,
       },
       {
-        id: 16,
+        id: 17,
         appname: t('ads_step_16_appname'),
         title: t('ads_step_16_title'),
         subtitle: t('ads_step_16_subtitle'),
@@ -418,7 +382,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.System,
       },
       {
-        id: 17,
+        id: 18,
         appname: t('ads_step_17_appname'),
         title: t('ads_step_17_title'),
         subtitle: t('ads_step_17_subtitle'),
@@ -428,15 +392,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         adsSettingPaths: [
           {
             package: 'com.miui.android.fashiongallery',
-            activity: 'com.miui.android.fashiongallery.glance.GlanceActivity',
-          },
-          {
-            package: 'com.miui.android.fashiongallery',
             activity: 'com.miui.android.fashiongallery.setting.SettingActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
           },
         ],
         iconBackgroundColor: '#FF5722',
@@ -446,7 +402,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.ThemeLockScreen,
       },
       {
-        id: 18,
+        id: 19,
         appname: t('ads_step_18_appname'),
         title: t('ads_step_18_title'),
         subtitle: t('ads_step_18_subtitle'),
@@ -466,7 +422,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         appType: IAdsSettingAppType.System,
       },
       {
-        id: 19,
+        id: 20,
         appname: t('ads_step_19_appname'),
         title: t('ads_step_19_title'),
         subtitle: t('ads_step_19_subtitle'),
@@ -474,14 +430,6 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         steps: t('ads_step_19_steps'),
         specialNote: t('ads_step_19_specialNote'),
         adsSettingPaths: [
-          {
-            package: 'com.xiaomi.midrop',
-            activity: 'com.xiaomi.midrop.about.FeedbackActivity',
-          },
-          {
-            package: 'com.xiaomi.midrop',
-            activity: 'com.xiaomi.midrop.about.AboutActivity',
-          },
           {
             package: 'com.xiaomi.midrop',
             activity: 'com.xiaomi.midrop.SplashScreen',
@@ -492,110 +440,6 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
         iconFamily: 'material',
         hideButton: false,
         appType: IAdsSettingAppType.Utilities,
-      },
-      {
-        id: 20,
-        appname: t('ads_step_20_appname'),
-        title: t('ads_step_20_title'),
-        subtitle: t('ads_step_20_subtitle'),
-        detail: t('ads_step_20_detail'),
-        steps: t('ads_step_20_steps'),
-        specialNote: t('ads_step_20_specialNote'),
-        adsSettingPaths: [
-          {
-            package: 'com.miui.android.fashiongallery',
-            activity: 'com.miui.nicegallery.setting.KPrivacyActivity',
-          },
-          {
-            package: 'com.miui.android.fashiongallery',
-            activity: 'com.miui.android.fashiongallery.setting.PrivacyActivity',
-          },
-          {
-            package: 'com.miui.android.fashiongallery',
-            activity: 'com.miui.android.fashiongallery.setting.SettingActivity',
-          },
-        ],
-        iconBackgroundColor: '#e7277a',
-        iconName: 'lock-open',
-        iconFamily: 'material',
-        hideButton: false,
-        appType: IAdsSettingAppType.ThemeLockScreen,
-      },
-      {
-        id: 21,
-        appname: t('ads_step_21_appname'),
-        title: t('ads_step_21_title'),
-        subtitle: t('ads_step_21_subtitle'),
-        detail: t('ads_step_21_detail'),
-        steps: t('ads_step_21_steps'),
-        specialNote: t('ads_step_21_specialNote'),
-        adsSettingPaths: [
-          {
-            package: 'com.miui.cleaner',
-            activity: 'com.miui.optimizecenter.deepclean.appclean.whatsapp.WhatsappSettingsActivity',
-          },
-          {
-            package: 'com.miui.cleaner',
-            activity: 'com.miui.optimizecenter.deepclean.appclean.whatsapp.WhatsappCleanerActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
-          },
-        ],
-        iconBackgroundColor: '#018700',
-        iconName: 'whatsapp',
-        iconFamily: 'material',
-        hideButton: false,
-        appType: IAdsSettingAppType.Security,
-      },
-      {
-        id: 22,
-        appname: t('ads_step_22_appname'),
-        title: t('ads_step_22_title'),
-        subtitle: t('ads_step_22_subtitle'),
-        detail: t('ads_step_22_detail'),
-        steps: t('ads_step_22_steps'),
-        specialNote: t('ads_step_22_specialNote'),
-        adsSettingPaths: [
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.gamebooster.ui.GameBoosterMainActivity',
-          },
-          {
-            package: 'com.miui.securitycenter',
-            activity: 'com.miui.securityscan.MainActivity',
-          },
-        ],
-        iconBackgroundColor: '#018700',
-        iconName: 'gamepad-variant',
-        iconFamily: 'material',
-        hideButton: false,
-        appType: IAdsSettingAppType.Other,
-      },
-      {
-        id: 23,
-        appname: t('ads_step_23_appname'),
-        title: t('ads_step_23_title'),
-        subtitle: t('ads_step_23_subtitle'),
-        detail: t('ads_step_23_detail'),
-        steps: t('ads_step_23_steps'),
-        specialNote: t('ads_step_23_specialNote'),
-        adsSettingPaths: [
-          {
-            package: 'com.mi.global.shop',
-            activity: 'com.mi.global.user.ui.NotificationActivity',
-          },
-          {
-            package: 'com.mi.global.shop',
-            activity: 'com.mi.global.home.ui.LaunchActivity',
-          },
-        ],
-        iconBackgroundColor: '#ff5300',
-        iconName: 'shopping',
-        iconFamily: 'material',
-        hideButton: false,
-        appType: IAdsSettingAppType.Other,
       },
     ];
   }, [t]);
@@ -613,7 +457,7 @@ const useGetSettingActivities = (): { entries: IAdsActivity[]; groupedEntries: I
   }, [entries, groupBy]);
 
   const groupedEntries = useMemo(() => {
-    return Object.keys(res).map((key) => {
+    return Object.keys(res).map(key => {
       return { title: key, data: res[key] } as IAdsActivitySection;
     });
   }, [res]);
