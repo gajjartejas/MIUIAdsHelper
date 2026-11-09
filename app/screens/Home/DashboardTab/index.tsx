@@ -17,11 +17,12 @@ import Utils from 'app/utils';
 import useGetSettingActivities from 'app/config/miui-setting-activities';
 import { HomeTabsNavigatorParams, LoggedInTabNavigatorParams } from 'app/navigation/types';
 import { AppTheme } from 'app/models/theme';
-import { IAdsActivity, IAdsActivitySection, IAdsSettingAppType } from 'app/components/AdsListItem';
+import { IAdsActivity, IAdsActivitySection } from 'app/components/AdsListItem';
 import useAppConfigStore from 'app/store/appConfig';
 import useThemeConfigStore from 'app/store/themeConfig';
 import { showAppDialog } from 'app/store/dialogStore';
 import useInstalledPackages from 'app/hooks/useInstalledPackages';
+import { useReducedMotion } from 'app/hooks/useReducedMotion';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -33,10 +34,10 @@ type DashboardTabNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<LoggedInTabNavigatorParams>
 >;
 
-export function useSearch(
+export function filterSettingSections(
   array: IAdsActivitySection[],
   searchTerm: string,
-  filterType: 'all' | 'installed' | 'to_disable',
+  filterType: 'all' | 'installed',
   isItemInstalled: (item: IAdsActivity) => boolean,
 ): IAdsActivitySection[] {
   const trimmed = searchTerm ? searchTerm.trim().toLowerCase() : '';
@@ -49,14 +50,7 @@ export function useSearch(
           v.title.toLowerCase().includes(trimmed) ||
           v.appname.toLowerCase().includes(trimmed);
 
-        let matchesFilter = false;
-        if (filterType === 'all') {
-          matchesFilter = v.appType !== IAdsSettingAppType.DisableEnable;
-        } else if (filterType === 'installed') {
-          matchesFilter = v.appType !== IAdsSettingAppType.DisableEnable && isItemInstalled(v);
-        } else if (filterType === 'to_disable') {
-          matchesFilter = v.appType === IAdsSettingAppType.DisableEnable && isItemInstalled(v);
-        }
+        const matchesFilter = filterType === 'all' || isItemInstalled(v);
 
         return matchesSearch && matchesFilter;
       });
@@ -70,7 +64,7 @@ export function useSearch(
 let __DEV__ = false;
 const DashboardTab = () => {
   //Actions
-  const purchased = true; //useAppConfigStore(state => state.purchased);
+  const purchased = useAppConfigStore(state => state.purchased);
   const setPurchased = useAppConfigStore(state => state.setPurchased);
   const viewMode = useAppConfigStore(state => state.viewMode || 'grid');
   const setViewMode = useAppConfigStore(state => state.setViewMode);
@@ -87,28 +81,29 @@ const DashboardTab = () => {
 
   //States
   const [searchText, setSearchText] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'installed' | 'to_disable'>('installed');
+  const [filterType, setFilterType] = useState<'all' | 'installed'>('all');
+  const reducedMotion = useReducedMotion();
+  const animateLayout = useCallback(() => {
+    if (!reducedMotion) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [reducedMotion]);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
   const scrollRef = useRef<React.ElementRef<typeof ScrollView>>(null);
 
-  const filteredArray = useSearch(allEntries, searchText, filterType, isItemInstalled);
+  const filteredArray = useMemo(
+    () => filterSettingSections(allEntries, searchText, filterType, isItemInstalled),
+    [allEntries, searchText, filterType, isItemInstalled],
+  );
 
-  const onSelectFilter = useCallback((type: 'all' | 'installed' | 'to_disable') => {
+  const onSelectFilter = useCallback((type: 'all' | 'installed') => {
+    animateLayout();
     setFilterType(type);
     scrollRef.current?.scrollTo({ y: 0, animated: false });
-  }, []);
+  }, [animateLayout]);
 
   //Counts
-  const allGuidesCount = useMemo(
-    () => allFlatEntries.filter(v => v.appType !== IAdsSettingAppType.DisableEnable).length,
-    [allFlatEntries],
-  );
+  const allGuidesCount = allFlatEntries.length;
   const installedGuidesCount = useMemo(
-    () => allFlatEntries.filter(v => v.appType !== IAdsSettingAppType.DisableEnable && isItemInstalled(v)).length,
-    [allFlatEntries, isItemInstalled],
-  );
-  const toDisableCount = useMemo(
-    () => allFlatEntries.filter(v => v.appType === IAdsSettingAppType.DisableEnable && isItemInstalled(v)).length,
+    () => allFlatEntries.filter(isItemInstalled).length,
     [allFlatEntries, isItemInstalled],
   );
 
@@ -121,17 +116,17 @@ const DashboardTab = () => {
   );
 
   const toggleSectionCollapse = useCallback((sectionTitle: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    animateLayout();
     setCollapsedSections(prev => ({
       ...prev,
       [sectionTitle]: !prev[sectionTitle],
     }));
-  }, []);
+  }, [animateLayout]);
 
   const toggleViewMode = useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    animateLayout();
     setViewMode(viewMode === 'grid' ? 'list' : 'grid');
-  }, [viewMode, setViewMode]);
+  }, [viewMode, setViewMode, animateLayout]);
 
   const renderItem = useCallback(
     ({ item, index, sectionIndex }: { item: IAdsActivity; index: number; sectionIndex: number }) => {
@@ -154,9 +149,12 @@ const DashboardTab = () => {
     navigation.navigate('Purchase', { fromTheme: false });
   };
 
-  const onClearSearch = useCallback(() => {
-    setSearchText('');
-  }, []);
+  const onChangeSearch = useCallback((value: string) => {
+    animateLayout();
+    setSearchText(value);
+  }, [animateLayout]);
+
+  const onClearSearch = useCallback(() => onChangeSearch(''), [onChangeSearch]);
 
   const onResetDevPurchases = useCallback(async () => {
     try {
@@ -216,8 +214,9 @@ const DashboardTab = () => {
           </View>
           <TextInput
             value={searchText}
-            onChangeText={v => setSearchText(v)}
-            placeholder={t('home.search_text')!}
+            onChangeText={onChangeSearch}
+            placeholder={t('home.search_text')}
+            accessibilityLabel={t('home.search_text')}
             placeholderTextColor={isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)'}
             style={[styles.searchTextInputText, { color: colors.text }]}
           />
@@ -328,51 +327,14 @@ const DashboardTab = () => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => onSelectFilter('to_disable')}
-              style={[
-                styles.filterPill,
-                filterType === 'to_disable'
-                  ? {
-                      backgroundColor: colors.primary,
-                      borderColor: colors.primary,
-                    }
-                  : {
-                      backgroundColor: isDark ? '#1E1D2A' : '#F2F3F7',
-                      borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
-                    },
-              ]}
-            >
-              <CommonIcon
-                type="material"
-                name="cancel"
-                color={
-                  filterType === 'to_disable' ? '#FFFFFF' : isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)'
-                }
-                size={15}
-              />
-              <Text
-                style={[
-                  styles.filterPillText,
-                  {
-                    color:
-                      filterType === 'to_disable'
-                        ? '#FFFFFF'
-                        : isDark
-                        ? 'rgba(255, 255, 255, 0.85)'
-                        : 'rgba(0, 0, 0, 0.75)',
-                  },
-                ]}
-              >
-                {t('home.filter_to_disable')} ({toDisableCount})
-              </Text>
-            </TouchableOpacity>
+
           </ScrollView>
 
           {/* Grid / List View Mode Toggle Button */}
           <TouchableOpacity
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={t(viewMode === 'grid' ? 'home.show_list' : 'home.show_grid')}
             onPress={toggleViewMode}
             style={[
               styles.viewModeToggleButton,
@@ -477,24 +439,10 @@ const DashboardTab = () => {
         {/* Section List / Empty State */}
         {filteredArray.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <CommonIcon
-              type="material"
-              name={filterType === 'to_disable' ? 'shield-check-outline' : 'cloud-search-outline'}
-              size={52}
-              color={
-                filterType === 'to_disable' ? '#4CAF50' : isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.25)'
-              }
-            />
-            <Text style={[styles.emptyTitleText, { color: colors.text }]}>
-              {filterType === 'to_disable' ? t('home.no_to_disable_apps') : t('home.no_installed_apps')}
-            </Text>
-            <Text
-              style={[styles.emptySubtitleText, { color: isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.45)' }]}
-            >
-              {filterType === 'to_disable'
-                ? t('home.dashboard_empty_to_disable') ||
-                  'No optional background services or partner apps were detected on your device.'
-                : 'Try searching for a different keyword or switch to All Guides'}
+            <CommonIcon type="material" name="cloud-search-outline" size={52} color={colors.onSurfaceVariant} />
+            <Text style={[styles.emptyTitleText, { color: colors.text }]}>{t('home.no_results')}</Text>
+            <Text style={[styles.emptySubtitleText, { color: colors.onSurfaceVariant }]}>
+              {t('home.search_hint')}
             </Text>
           </View>
         ) : (
@@ -506,6 +454,9 @@ const DashboardTab = () => {
                   {/* Collapsible Section Header */}
                   <TouchableOpacity
                     activeOpacity={0.7}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: !isCollapsed }}
+                    accessibilityLabel={t(section.title)}
                     onPress={() => toggleSectionCollapse(section.title)}
                     style={styles.sectionHeaderTouchable}
                   >

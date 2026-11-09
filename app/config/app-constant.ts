@@ -4,10 +4,11 @@ App constants
 
 const GITHUB_PROFILE = 'https://github.com/gajjartejas';
 const GITHUB_PROJECT_LINK = 'https://github.com/gajjartejas/MIUIAdsHelper';
+const WEBSITE_URL = 'https://gajjartejas.github.io/miui-ads-helper-website';
 
 const Constant = {
-  APP_STORE_URL: 'market://details?id=com.tejasgajjar.kano',
-  PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.tejasgajjar.kano',
+  APP_STORE_URL: 'market://details?id=com.tejasgajjar.miuiadshelper',
+  PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.tejasgajjar.miuiadshelper',
 
   REPO_URL: GITHUB_PROJECT_LINK,
 
@@ -27,13 +28,13 @@ const Constant = {
   MORE_APPS_4_GITHUB: `${GITHUB_PROFILE}/OHM-Client`,
   MORE_APPS_4_PLAY_STORE: 'https://play.google.com/store/apps/details?id=com.tejasgajjar.ohmc',
 
-  CHANGE_LOG: `${GITHUB_PROJECT_LINK}/releases`,
-  FAQ: `${GITHUB_PROJECT_LINK}/blob/main/docs/faqs.md#frequently-asked-questions`,
-  TRANSLATE_APP: `${GITHUB_PROJECT_LINK}/tree/main/app/locales`,
-  PRIVACY_POLICY: `${GITHUB_PROJECT_LINK}/blob/main/docs/privacy.md`,
-  TERMS_OF_SERVICE: `${GITHUB_PROJECT_LINK}/blob/main/docs/terms.md`,
+  CHANGE_LOG: `${WEBSITE_URL}/updates/`,
+  FAQ: `${WEBSITE_URL}/faq/`,
+  TRANSLATE_APP: `${WEBSITE_URL}/translate/`,
+  PRIVACY_POLICY: `${WEBSITE_URL}/privacy/`,
+  TERMS_OF_SERVICE: `${WEBSITE_URL}/terms/`,
+  ABOUT_HELP: `${WEBSITE_URL}/help/`,
 
-  ABOUT_HELP: `${GITHUB_PROJECT_LINK}/blob/main/docs/help.md#help`,
   ABOUT_PORTFOLIO: 'https://903381.xyz',
   ABOUT_INSTAGRAM: 'https://www.instagram.com/gajjartejas',
   ABOUT_JOIN_TELEGRAM: 'https://t.me/tejasapps',

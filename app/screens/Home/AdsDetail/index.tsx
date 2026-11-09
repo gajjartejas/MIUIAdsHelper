@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { NativeModules, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 //ThirdParty
@@ -7,37 +7,24 @@ import { TouchableRipple, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import CommonIcon from 'app/components/CommonIcon';
 import ParsedText from 'react-native-parsed-text';
-import DeviceInfo from 'react-native-device-info';
 
 //App Modules
 import styles from './styles';
-import { IAdsActivity, IAdsSettingPath } from 'app/components/AdsListItem';
+import { IAdsActivity } from 'app/components/AdsListItem';
 import { AppTheme } from 'app/models/theme';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 import analytics from 'app/services/analytics';
-import { logActivityDetailView } from 'app/services/activityAnalytics';
 import AppHeader from 'app/components/AppHeader';
 import Components from 'app/components';
 import useAppConfigStore from 'app/store/appConfig';
 import useThemeConfigStore from 'app/store/themeConfig';
 import { showAppDialog } from 'app/store/dialogStore';
+import { openSettingPaths } from 'app/utils/openSettingPaths';
 
 //Params
 type Props = NativeStackScreenProps<LoggedInTabNavigatorParams, 'AdsDetails'>;
 
-interface IDeviceInfoData {
-  brand: string;
-  buildNumber: string;
-  nickName: string;
-  appVersion: string;
-  systemVersion: string;
-  buildId: string;
-}
-
 const AdsDetails = ({ route, navigation }: Props) => {
-  //Refs
-  const refDeviceInfo = useRef<IDeviceInfoData | null>(null);
-
   //Constants
   const { t } = useTranslation();
   const { colors } = useTheme<AppTheme>();
@@ -54,8 +41,7 @@ const AdsDetails = ({ route, navigation }: Props) => {
         screen_class: 'AdsDetail',
       })
       .then(_r => {});
-    logActivityDetailView(item, canOpenSettings);
-  }, [item, canOpenSettings]);
+  }, [item]);
 
   const openActivity = useCallback((packageName: string | null, activityName: string | null): Promise<boolean> => {
     return new Promise(resolve => {
@@ -95,67 +81,14 @@ const AdsDetails = ({ route, navigation }: Props) => {
     });
   }, []);
 
-  const getDeviceInfo = useCallback(async (): Promise<IDeviceInfoData> => {
-    let brand = DeviceInfo.getBrand();
-    let buildNumber = DeviceInfo.getBuildNumber();
-    let nickName = await DeviceInfo.getDevice();
-    let appVersion = DeviceInfo.getReadableVersion();
-    let systemVersion = DeviceInfo.getSystemVersion();
-    let buildId = await DeviceInfo.getBuildId();
-    return {
-      brand,
-      buildNumber,
-      nickName,
-      appVersion,
-      systemVersion,
-      buildId,
-    };
-  }, []);
-
-  const logEvent = useCallback(
-    async (adsActivity: IAdsActivity, openBy: IAdsSettingPath | null) => {
-      if (!refDeviceInfo.current) {
-        refDeviceInfo.current = await getDeviceInfo();
-      }
-      await analytics().logEvent('open_ads_settings', {
-        id: adsActivity.id,
-        appName: adsActivity.appname,
-        openBy: openBy?.activity,
-        success: openBy !== null,
-        ...refDeviceInfo.current,
-      });
-    },
-    [getDeviceInfo],
-  );
-
   const openActivities = useCallback(
     async (adsActivity: IAdsActivity) => {
-      let isActivityExists = false;
-      for (let i = 0; i < adsActivity.adsSettingPaths.length; i++) {
-        const adsSetting = adsActivity.adsSettingPaths[i];
-        if (adsSetting.activity) {
-          const result = await openActivity(adsSetting.package, adsSetting.activity);
-          if (result) {
-            isActivityExists = true;
-            logEvent(adsActivity, adsSetting);
-            break;
-          }
-        }
-        if (adsSetting.package) {
-          const result = await openAppDetails(adsSetting.package);
-          if (result) {
-            isActivityExists = true;
-            logEvent(adsActivity, adsSetting);
-            break;
-          }
-        }
-      }
-      if (!isActivityExists) {
-        logEvent(adsActivity, null);
+      const openedPath = await openSettingPaths(adsActivity.adsSettingPaths, openActivity, openAppDetails);
+      if (!openedPath) {
         showAppDialog(t('ads_detail_app_not_available'));
       }
     },
-    [logEvent, openActivity, openAppDetails, t],
+    [openActivity, openAppDetails, t],
   );
 
   const onGoBack = useCallback(() => {

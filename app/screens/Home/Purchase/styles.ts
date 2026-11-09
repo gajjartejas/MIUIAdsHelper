@@ -22,6 +22,14 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 30,
   },
+  recovery: {
+    gap: 16,
+    marginHorizontal: 20,
+    marginBottom: 16,
+  },
+  recoveryText: {
+    textAlign: 'center',
+  },
   activityIndicator: {
     flex: 1,
     alignItems: 'center',

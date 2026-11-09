@@ -25,18 +25,23 @@ export interface IProduct {
 interface IAdsListItem {
   item: IProduct;
   index: number;
+  disabled?: boolean;
   onPress: (item: IProduct, index: number) => void;
 }
 
 const PurchaseListItem = (props: IAdsListItem) => {
   //Const
   const { colors } = useTheme<AppTheme>();
-  const { item, index } = props;
+  const { item, index, disabled = false } = props;
   const { t } = useTranslation();
 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      accessibilityLabel={`${item.name}, ${item.displayPrice || item.localizedPrice}`}
       onPress={() => {
         props.onPress(item, index);
       }}
@@ -55,6 +60,10 @@ const PurchaseListItem = (props: IAdsListItem) => {
         </Text>
       </View>
       <TouchableOpacity
+        disabled={disabled}
+        accessibilityRole="button"
+        accessibilityState={{ disabled }}
+        accessibilityLabel={`${t('iap_buy')} ${item.name}`}
         onPress={() => {
           props.onPress(item, index);
         }}

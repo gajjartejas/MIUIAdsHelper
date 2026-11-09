@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NativeModules, Platform } from 'react-native';
 import { IAdsActivity } from 'app/components/AdsListItem';
-import { reportDeviceActivityInventory } from 'app/services/activityAnalytics';
 
 const { OpenSettings } = NativeModules;
 
@@ -41,9 +40,13 @@ export const useInstalledPackages = (entries: IAdsActivity[]): IInstalledPackage
           const id = Number(key);
           parsedMap[id] = Boolean(result[key]);
         });
+        // Manual guides have no app destination and remain available on every device.
+        entries.forEach(entry => {
+          if (entry.hideButton && entry.adsSettingPaths.every(path => !path.package)) {
+            parsedMap[entry.id] = true;
+          }
+        });
         setItemAvailabilityMap(parsedMap);
-        // Automatically report installed and not-installed activities to analytics
-        reportDeviceActivityInventory(entries, parsedMap);
       }
     } catch (e) {
       console.warn('useInstalledPackages error:', e);
@@ -63,6 +66,7 @@ export const useInstalledPackages = (entries: IAdsActivity[]): IInstalledPackage
   const isItemInstalled = useCallback(
     (item: IAdsActivity): boolean => {
       // If running on non-Android or not checked yet, treat as available
+      if (item.hideButton && item.adsSettingPaths.every(path => !path.package)) return true;
       if (Platform.OS !== 'android') {
         return true;
       }

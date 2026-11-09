@@ -113,8 +113,8 @@ android {
         applicationId "com.tejasgajjar.miuiadshelper"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 36
-        versionName "3.0.0"
+        versionCode 34
+        versionName "2.3.0"
         missingDimensionStrategy "store", "play"
     }
     signingConfigs {
@@ -148,6 +148,9 @@ android {
 }
 
 dependencies {
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.mockito:mockito-core:5.14.2"
+
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

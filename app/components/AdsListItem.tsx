@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 //Third Party
 import { TouchableRipple, useTheme, Text } from 'react-native-paper';
@@ -7,9 +7,7 @@ import { useTranslation } from 'react-i18next';
 import CommonIcon, { IconType } from 'app/components/CommonIcon';
 
 //Constants
-const { width } = Dimensions.get('window');
 import { AppTheme } from 'app/models/theme';
-import useThemeConfigStore from 'app/store/themeConfig';
 
 //Interface
 export interface IAdsActivity {
@@ -59,8 +57,6 @@ interface IAdsListItem {
   onPress: (item: IAdsActivity, index: number, sectionIndex: number) => void;
 }
 
-const GRID_CARD_WIDTH = (width - 44) / 2;
-
 const AdsListItem = (props: IAdsListItem) => {
   //Const
   const { colors } = useTheme<AppTheme>();
@@ -68,7 +64,6 @@ const AdsListItem = (props: IAdsListItem) => {
   const { item, index, isInstalled = true, viewMode = 'grid' } = props;
   const sectionIndex = props.sectionIndex;
 
-  const isDark = useThemeConfigStore(store => store.isDark);
 
   if (viewMode === 'list') {
     return (
@@ -76,20 +71,22 @@ const AdsListItem = (props: IAdsListItem) => {
         style={[
           styles.listContainer,
           {
-            backgroundColor: isDark ? '#1C1B24' : '#FFFFFF',
-            borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
-            shadowColor: isDark ? '#000000' : '#000000',
+            backgroundColor: colors.card,
+            borderColor: colors.outlineVariant,
+            shadowColor: colors.shadow,
           },
         ]}
       >
         <TouchableRipple
           rippleColor={`${colors.primary}20`}
-          style={styles.listTouchableButton}
+          accessibilityRole="button"
+          accessibilityLabel={`${item.title}. ${item.subtitle}`}
+          style={[styles.listTouchableButton, { backgroundColor: colors.card }]}
           onPress={() => props.onPress(item, index, sectionIndex)}
         >
           <View style={styles.listContentWrapper}>
             <View style={[styles.listIconAvatar, { backgroundColor: item.iconBackgroundColor }]}>
-              <CommonIcon type={item.iconFamily} name={item.iconName} color="#FFFFFF" size={18} />
+              <CommonIcon type={item.iconFamily} name={item.iconName} color={colors.white} size={18} />
             </View>
 
             <View style={styles.listTextContainer}>
@@ -100,7 +97,7 @@ const AdsListItem = (props: IAdsListItem) => {
                 numberOfLines={1}
                 style={[
                   styles.listSubtitleText,
-                  { color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.55)' },
+                  { color: colors.onSurfaceVariant },
                 ]}
               >
                 {item.subtitle}
@@ -113,31 +110,31 @@ const AdsListItem = (props: IAdsListItem) => {
                   style={[
                     styles.notInstalledBadge,
                     {
-                      backgroundColor: isDark ? 'rgba(244, 67, 54, 0.15)' : '#FEECEC',
-                      borderColor: isDark ? 'rgba(244, 67, 54, 0.3)' : '#FDCACA',
+                      backgroundColor: colors.errorContainer,
+                      borderColor: colors.error,
                     },
                   ]}
                 >
-                  <CommonIcon type="material" name="cloud-off-outline" color="#E53935" size={10} />
-                  <Text style={styles.notInstalledBadgeText}>{t('home.not_installed')}</Text>
+                  <CommonIcon type="material" name="cloud-off-outline" color={colors.onErrorContainer} size={10} />
+                  <Text style={[styles.notInstalledBadgeText, { color: colors.onErrorContainer }]}>{t('home.not_installed')}</Text>
                 </View>
               ) : (
                 <View
                   style={[
                     styles.installedBadge,
                     {
-                      backgroundColor: isDark ? 'rgba(76, 175, 80, 0.15)' : '#EDF7ED',
-                      borderColor: isDark ? 'rgba(76, 175, 80, 0.25)' : '#C8E6C9',
+                      backgroundColor: colors.secondaryContainer,
+                      borderColor: colors.outlineVariant,
                     },
                   ]}
                 >
-                  <CommonIcon type="material" name="check" color={isDark ? '#81C784' : '#2E7D32'} size={11} />
+                  <CommonIcon type="material" name="check" color={colors.onSecondaryContainer} size={11} />
                 </View>
               )}
               <CommonIcon
                 type="material"
                 name="chevron-right"
-                color={isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.3)'}
+                color={colors.onSurfaceVariant}
                 size={18}
                 style={styles.listChevron}
               />
@@ -153,46 +150,48 @@ const AdsListItem = (props: IAdsListItem) => {
       style={[
         styles.gridContainer,
         {
-          backgroundColor: isDark ? '#1C1B24' : '#FFFFFF',
-          borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
-          shadowColor: isDark ? '#000000' : '#000000',
+          backgroundColor: colors.card,
+          borderColor: colors.outlineVariant,
+          shadowColor: colors.shadow,
         },
       ]}
     >
       <TouchableRipple
         rippleColor={`${colors.primary}20`}
-        style={styles.gridTouchableButton}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.title}. ${item.subtitle}`}
+        style={[styles.gridTouchableButton, { backgroundColor: colors.card }]}
         onPress={() => props.onPress(item, index, sectionIndex)}
       >
         <View style={styles.gridContentWrapper}>
           <View style={styles.gridTopRow}>
             <View style={[styles.gridIconAvatar, { backgroundColor: item.iconBackgroundColor }]}>
-              <CommonIcon type={item.iconFamily} name={item.iconName} color="#FFFFFF" size={20} />
+              <CommonIcon type={item.iconFamily} name={item.iconName} color={colors.white} size={20} />
             </View>
             {!isInstalled ? (
               <View
                 style={[
                   styles.notInstalledBadge,
                   {
-                    backgroundColor: isDark ? 'rgba(244, 67, 54, 0.15)' : '#FEECEC',
-                    borderColor: isDark ? 'rgba(244, 67, 54, 0.3)' : '#FDCACA',
+                    backgroundColor: colors.errorContainer,
+                    borderColor: colors.error,
                   },
                 ]}
               >
-                <CommonIcon type="material" name="cloud-off-outline" color="#E53935" size={10} />
-                <Text style={styles.notInstalledBadgeText}>{t('home.not_installed')}</Text>
+                <CommonIcon type="material" name="cloud-off-outline" color={colors.onErrorContainer} size={10} />
+                <Text style={[styles.notInstalledBadgeText, { color: colors.onErrorContainer }]}>{t('home.not_installed')}</Text>
               </View>
             ) : (
               <View
                 style={[
                   styles.installedBadge,
                   {
-                    backgroundColor: isDark ? 'rgba(76, 175, 80, 0.15)' : '#EDF7ED',
-                    borderColor: isDark ? 'rgba(76, 175, 80, 0.25)' : '#C8E6C9',
+                    backgroundColor: colors.secondaryContainer,
+                    borderColor: colors.outlineVariant,
                   },
                 ]}
               >
-                <CommonIcon type="material" name="check" color={isDark ? '#81C784' : '#2E7D32'} size={11} />
+                <CommonIcon type="material" name="check" color={colors.onSecondaryContainer} size={11} />
               </View>
             )}
           </View>
@@ -203,7 +202,7 @@ const AdsListItem = (props: IAdsListItem) => {
             </Text>
             <Text
               numberOfLines={2}
-              style={[styles.gridSubtitleText, { color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.55)' }]}
+              style={[styles.gridSubtitleText, { color: colors.onSurfaceVariant }]}
             >
               {item.subtitle}
             </Text>
@@ -217,11 +216,10 @@ const AdsListItem = (props: IAdsListItem) => {
 const styles = StyleSheet.create({
   // Grid Styles
   gridContainer: {
-    width: GRID_CARD_WIDTH,
+    width: '48%',
     minHeight: 136,
     borderRadius: 16,
     borderWidth: 1,
-    overflow: 'hidden',
     marginBottom: 12,
     elevation: 2,
     shadowOffset: { width: 0, height: 2 },
@@ -229,6 +227,8 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   gridTouchableButton: {
+    borderRadius: 16,
+    overflow: 'hidden',
     flex: 1,
     padding: 12,
   },
@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
     shadowRadius: 2,
@@ -275,7 +274,6 @@ const styles = StyleSheet.create({
     minHeight: 68,
     borderRadius: 14,
     borderWidth: 1,
-    overflow: 'hidden',
     marginBottom: 8,
     elevation: 1.5,
     shadowOffset: { width: 0, height: 1 },
@@ -283,6 +281,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   listTouchableButton: {
+    borderRadius: 14,
+    overflow: 'hidden',
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -339,7 +339,6 @@ const styles = StyleSheet.create({
   notInstalledBadgeText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#E53935',
   },
   installedBadge: {
     width: 20,
