@@ -54,7 +54,7 @@ const Translators = ({ navigation }: Props) => {
       { id: 16, icon: Config.Images.icons.flag_ms, translators: [], language: 'Bahasa Melayu' },
       { id: 17, icon: Config.Images.icons.flag_nl, translators: [], language: 'Nederlands' },
       { id: 18, icon: Config.Images.icons.flag_no, translators: [], language: 'Norsk' },
-      { id: 19, icon: Config.Images.icons.flag_pl, translators: [], language: 'język polski' },
+      { id: 19, icon: Config.Images.icons.flag_pl, translators: ['beler88'], language: 'język polski' },
       { id: 20, icon: Config.Images.icons.flag_pt_pt, translators: [], language: 'Português' },
       { id: 21, icon: Config.Images.icons.flag_pt_br, translators: [], language: 'Português (Brasil)' },
       { id: 22, icon: Config.Images.icons.flag_ro, translators: [], language: 'Română' },

@@ -53,10 +53,21 @@ export const SUPPORTED_LANGUAGES = [
     translators: [],
     language: 'русский(Russian)',
   },
+  {
+    id: 7,
+    selected: false,
+    code: 'pl',
+    icon: Config.Images.icons.flag_pl,
+    translators: ['beler88'],
+    language: 'Polski(Polish)',
+  },
 ];
 
 // tips: export each translation to a seperate file
 const resources = {
+  pl: {
+    translation: require('./pl.json'),
+  },
   en: {
     translation: require('./en.json'),
   },
