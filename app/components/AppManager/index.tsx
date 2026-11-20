@@ -16,6 +16,7 @@ import productIds from 'app/assets/data/purchase-products.json';
 import analytics from 'app/services/analytics';
 import { completePurchaseEntitlement, restorePurchaseEntitlement } from 'app/services/purchaseEntitlements';
 import { showAppDialog } from 'app/store/dialogStore';
+import { getNativeApplicationLocale, setNativeApplicationLocale } from 'app/services/perAppLanguage';
 
 //Interface
 export type Props = {
@@ -105,6 +106,31 @@ const AppManager = ({ children }: Props) => {
 
   useEffect(() => {
     i18n.changeLanguage(selectedLanguageCode).then(() => {});
+    setNativeApplicationLocale(selectedLanguageCode).catch(() => {});
+  }, [selectedLanguageCode]);
+
+  useEffect(() => {
+    let active = true;
+    const syncNativeLocale = async () => {
+      try {
+        const nativeLocale = await getNativeApplicationLocale();
+        if (active && nativeLocale && nativeLocale !== selectedLanguageCode) {
+          useAppLangConfigStore.getState().setSelectedLanguageCode(nativeLocale);
+        }
+      } catch {
+        // Safe fallback
+      }
+    };
+    syncNativeLocale();
+    const foregroundLocaleSubscription = AppState.addEventListener('change', state => {
+      if (state === 'active') {
+        syncNativeLocale();
+      }
+    });
+    return () => {
+      active = false;
+      foregroundLocaleSubscription.remove();
+    };
   }, [selectedLanguageCode]);
 
   useEffect(() => {

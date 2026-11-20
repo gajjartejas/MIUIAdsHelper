@@ -2,13 +2,18 @@ package com.miuiadshelper.opensettings;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.LocaleManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.LocaleList;
 import android.provider.Settings;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -265,5 +270,88 @@ public class OpenSettingsModule extends ReactContextBaseJavaModule {
         } catch (RuntimeException error) {
             promise.reject("CHECK_ITEMS_ERROR", "Could not check guide availability", error);
         }
+    }
+
+    @RequiresApi(33)
+    private static class Api33LocaleHelper {
+        static String getApplicationLocales(Context context) {
+            LocaleManager localeManager = context.getSystemService(LocaleManager.class);
+            if (localeManager != null) {
+                LocaleList locales = localeManager.getApplicationLocales();
+                if (!locales.isEmpty()) {
+                    return locales.toLanguageTags();
+                }
+            }
+            return "";
+        }
+
+        static void setApplicationLocales(Context context, String languageTags) {
+            LocaleManager localeManager = context.getSystemService(LocaleManager.class);
+            if (localeManager != null) {
+                if (languageTags == null || languageTags.trim().isEmpty()) {
+                    localeManager.setApplicationLocales(LocaleList.getEmptyLocaleList());
+                } else {
+                    localeManager.setApplicationLocales(LocaleList.forLanguageTags(languageTags.replace('_', '-')));
+                }
+            }
+        }
+    }
+
+    @ReactMethod
+    public void isPerAppLanguageSupported(Promise promise) {
+        promise.resolve(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU);
+    }
+
+    @ReactMethod
+    public void getApplicationLocales(Promise promise) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                promise.resolve(Api33LocaleHelper.getApplicationLocales(getReactApplicationContext()));
+                return;
+            }
+            promise.resolve("");
+        } catch (Exception error) {
+            promise.reject("GET_APPLICATION_LOCALES_ERROR", "Could not get application locales", error);
+        }
+    }
+
+    @ReactMethod
+    public void setApplicationLocales(String languageTags, Promise promise) {
+        UiThreadUtil.runOnUiThread(() -> {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    Api33LocaleHelper.setApplicationLocales(getReactApplicationContext(), languageTags);
+                    promise.resolve(true);
+                } else {
+                    promise.resolve(false);
+                }
+            } catch (Exception error) {
+                promise.reject("SET_APPLICATION_LOCALES_ERROR", "Could not set application locales", error);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void openAppLanguageSettings(Promise promise) {
+        UiThreadUtil.runOnUiThread(() -> {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    Intent intent = new Intent(Settings.ACTION_APP_LOCALE_SETTINGS);
+                    intent.setData(Uri.fromParts("package", getReactApplicationContext().getPackageName(), null));
+                    Activity activity = getCurrentActivity();
+                    if (activity != null) {
+                        activity.startActivity(intent);
+                    } else {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getReactApplicationContext().startActivity(intent);
+                    }
+                    promise.resolve(true);
+                } else {
+                    promise.resolve(false);
+                }
+            } catch (Exception error) {
+                promise.reject("OPEN_APP_LANGUAGE_SETTINGS_ERROR", "Could not open app language settings", error);
+            }
+        });
     }
 }
