@@ -22,6 +22,14 @@ export const SUPPORTED_LANGUAGES = [
     language: 'Español(Spanish)',
   },
   {
+    id: 8,
+    selected: false,
+    code: 'fa',
+    icon: Config.Images.icons.flag_fa,
+    translators: [],
+    language: 'فارسی(Persian)',
+  },
+  {
     id: 3,
     selected: false,
     code: 'fr',
@@ -76,6 +84,9 @@ const resources = {
   },
   es: {
     translation: require('./es.json'),
+  },
+  fa: {
+    translation: require('./fa.json'),
   },
   fr: {
     translation: require('./fr.json'),
