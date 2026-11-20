@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, ImageSourcePropType } from 'react-native';
+import { FlatList, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 
 //ThirdParty
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,9 +12,15 @@ import Components from 'app/components';
 import { LoggedInTabNavigatorParams } from 'app/navigation/types';
 import { AppTheme } from 'app/models/theme';
 import AppHeader from 'app/components/AppHeader';
+import CommonIcon from 'app/components/CommonIcon';
 import useLargeScreenMode from 'app/hooks/useLargeScreenMode';
 import useAppLangConfigStore from 'app/store/appLangConfig';
 import i18n, { SUPPORTED_LANGUAGES } from 'app/locales';
+import {
+  isPerAppLanguageSupported,
+  openNativeAppLanguageSettings,
+  setNativeApplicationLocale,
+} from 'app/services/perAppLanguage';
 
 //Interfaces
 interface IChangeLanguage {
@@ -39,6 +45,17 @@ const ChangeLanguage = ({ navigation }: Props) => {
 
   //States
   const [finalLicense, setFinalLicense] = useState<IChangeLanguage[]>([]);
+  const [nativeSettingsAvailable, setNativeSettingsAvailable] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    isPerAppLanguageSupported().then(supported => {
+      if (isMounted) setNativeSettingsAvailable(supported);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const languages = SUPPORTED_LANGUAGES.map(v => {
@@ -74,6 +91,7 @@ const ChangeLanguage = ({ navigation }: Props) => {
     (item: IChangeLanguage, _index: number) => {
       setSelectedLanguageCode(item.code);
       i18n.changeLanguage(item.code).then(() => {});
+      setNativeApplicationLocale(item.code).catch(() => {});
       navigation.pop();
     },
     [navigation, setSelectedLanguageCode],
@@ -89,6 +107,18 @@ const ChangeLanguage = ({ navigation }: Props) => {
         onPressBackButton={onGoBack}
         title={t('changeLanguageScreen.title')}
         style={{ backgroundColor: colors.background }}
+        RightViewComponent={
+          nativeSettingsAvailable ? (
+            <TouchableOpacity
+              onPress={openNativeAppLanguageSettings}
+              accessibilityRole="button"
+              accessibilityLabel="Open System Language Settings"
+              style={{ padding: 8 }}
+            >
+              <CommonIcon type="material" name="cog-outline" size={24} color={colors.onBackground} />
+            </TouchableOpacity>
+          ) : null
+        }
       />
 
       <Components.AppBaseView edges={[]} style={styles.safeArea}>
