@@ -13,14 +13,44 @@ interface IAppLangConfigActions {
   setSelectedLanguageCode: (code: string) => void;
 }
 
-const DEVICE_LANGUAGE_CODE = RNLocalize.getLocales()[0].languageCode;
-const FOUND_LANGUAGE = SUPPORTED_LANGUAGES.filter(v => v.code === DEVICE_LANGUAGE_CODE);
+const resolveDeviceLanguage = () => {
+  const locales = RNLocalize.getLocales();
+  if (!locales || locales.length === 0) {
+    return SUPPORTED_LANGUAGES[0];
+  }
+  const primary = locales[0];
+  const langCode = (primary.languageCode || '').toLowerCase();
+  const countryCode = (primary.countryCode || '').toLowerCase();
+  const langTag = (primary.languageTag || '').toLowerCase().replace('-', '_');
+
+  // Match full tag or combined language_country (e.g., pt_br, zh_cn)
+  const matchTag =
+    SUPPORTED_LANGUAGES.find(v => v.code.toLowerCase() === langTag) ||
+    (countryCode ? SUPPORTED_LANGUAGES.find(v => v.code.toLowerCase() === `${langCode}_${countryCode}`) : undefined);
+  if (matchTag) {
+    return matchTag;
+  }
+
+  // Match base language code (e.g., ar, de, es, fr, hi, id, it, ja, ko, nl, no, pl, pt, ro, ru, sk, tr, uk, vi)
+  const matchCode = SUPPORTED_LANGUAGES.find(v => v.code.toLowerCase() === langCode);
+  if (matchCode) {
+    return matchCode;
+  }
+
+  // Fallback for Chinese variants
+  if (langCode === 'zh') {
+    const zhMatch = SUPPORTED_LANGUAGES.find(v => v.code === 'zh_cn');
+    if (zhMatch) return zhMatch;
+  }
+
+  return SUPPORTED_LANGUAGES[0];
+};
+
+const defaultLanguage = resolveDeviceLanguage();
 
 const initialState: IAppLangConfigState = {
-  selectedLanguageCode:
-    FOUND_LANGUAGE && FOUND_LANGUAGE.length > 0 ? FOUND_LANGUAGE[0].code : SUPPORTED_LANGUAGES[0].code,
-  selectedLanguageName:
-    FOUND_LANGUAGE && FOUND_LANGUAGE.length > 0 ? FOUND_LANGUAGE[0].language : SUPPORTED_LANGUAGES[0].language,
+  selectedLanguageCode: defaultLanguage.code,
+  selectedLanguageName: defaultLanguage.language,
 };
 
 const useAppLangConfigStore = create<IAppLangConfigState & IAppLangConfigActions>()(
@@ -29,10 +59,13 @@ const useAppLangConfigStore = create<IAppLangConfigState & IAppLangConfigActions
       set => ({
         ...initialState,
         setSelectedLanguageCode: (value: string) =>
-          set(() => ({
-            selectedLanguageCode: value,
-            selectedLanguageName: SUPPORTED_LANGUAGES.filter(v => v.code === value)[0].language,
-          })),
+          set(() => {
+            const found = SUPPORTED_LANGUAGES.find(v => v.code === value) || SUPPORTED_LANGUAGES[0];
+            return {
+              selectedLanguageCode: found.code,
+              selectedLanguageName: found.language,
+            };
+          }),
       }),
       {
         name: 'app-lang-config-storage',
