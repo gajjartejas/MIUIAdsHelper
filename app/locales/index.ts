@@ -97,11 +97,22 @@ export const SUPPORTED_LANGUAGES = [
     translators: [],
     language: '简体中文(Simplified Chinese)',
   },
+  {
+    id: 30,
+    selected: false,
+    code: 'bn',
+    icon: Config.Images.icons.flag_bn,
+    translators: [],
+    language: 'বাংলা(Bengali)',
+  },
 ];
 
 // tips: export each translation to a separate file
 const resources = {
   ar: { translation: require('./ar.json') },
+  bn: { translation: require('./bn.json') },
+  'bn-BD': { translation: require('./bn.json') },
+  'bn-IN': { translation: require('./bn.json') },
   cs: { translation: require('./cs.json') },
   da: { translation: require('./da.json') },
   de: { translation: require('./de.json') },
