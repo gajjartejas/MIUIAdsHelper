@@ -15,10 +15,10 @@ const source = flatten(english);
 const sourceKeys = Object.keys(source).sort();
 
 describe('Localization Coverage & Consistency for all supported languages', () => {
-  test('all 30 supported languages are properly registered in SUPPORTED_LANGUAGES', () => {
-    expect(SUPPORTED_LANGUAGES.length).toBe(30);
+  test('all 31 supported languages are properly registered in SUPPORTED_LANGUAGES', () => {
+    expect(SUPPORTED_LANGUAGES.length).toBe(31);
     const codes = SUPPORTED_LANGUAGES.map(item => item.code);
-    expect(new Set(codes).size).toBe(30);
+    expect(new Set(codes).size).toBe(31);
     for (const item of SUPPORTED_LANGUAGES) {
       expect(item.icon).toBeDefined();
       expect(item.language.trim()).not.toBe('');
@@ -29,8 +29,8 @@ describe('Localization Coverage & Consistency for all supported languages', () =
   const localesDir = path.join(__dirname, '../app/locales');
   const localeFiles = fs.readdirSync(localesDir).filter(file => file.endsWith('.json'));
 
-  test('locales directory contains exactly 30 locale JSON files', () => {
-    expect(localeFiles.length).toBe(30);
+  test('locales directory contains exactly 31 locale JSON files', () => {
+    expect(localeFiles.length).toBe(31);
   });
 
   localeFiles.forEach(file => {
@@ -79,6 +79,12 @@ describe('Localization Coverage & Consistency for all supported languages', () =
 
     await i18n.changeLanguage('ar-EG');
     expect(i18n.t('general.close')).toBe('إغلاق');
+
+    await i18n.changeLanguage('bn');
+    expect(i18n.t('general.close')).toBe('বন্ধ করুন');
+
+    await i18n.changeLanguage('bn-BD');
+    expect(i18n.t('general.close')).toBe('বন্ধ করুন');
   });
 
   test('unsupported locale falls back to English', async () => {

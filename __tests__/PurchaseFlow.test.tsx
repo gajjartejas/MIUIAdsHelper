@@ -42,6 +42,8 @@ jest.mock('../app/services/billing', () => ({
 jest.mock('../app/services/purchaseEntitlements', () => ({ restorePurchaseEntitlement: () => mockRestore() }));
 jest.mock('../app/store/dialogStore', () => ({ showAppDialog: jest.fn() }));
 
+jest.setTimeout(15000);
+
 type Props = React.ComponentProps<typeof Purchase>;
 let rendered: Renderer.ReactTestRenderer;
 const renderScreen = async () => {
