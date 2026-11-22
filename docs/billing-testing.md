@@ -16,7 +16,9 @@ The November 2026 Crashlytics review also found startup failures loading `librea
 
 Native libraries now use compressed packaging and installation-time extraction for APK and bundle delivery. This provides an extracted native-library directory and allows SoLoader's backup extraction source, instead of relying only on direct APK loading. The tradeoff is additional installed disk usage. This is a loading mitigation, not proof that the historical crashes all had the same cause; incomplete/sideloaded split installations can still fail.
 
-`./gradlew :app:assembleRelease :app:bundleRelease` also validates the resulting APK/AAB for nonempty React Native, Hermes, FBJNI, and C++ runtime libraries for every configured ABI. Keep all architecture splits when installing APKs generated from an AAB. Test a clean install and an upgrade from the Play internal-testing track, including cold starts on ARM64 and 16 KB page-size devices. Monitor the two native-loading Crashlytics issues after rollout. The activity-resume ScreenFragment correction is already in PR #83 and is not changed here.
+`./gradlew :app:assembleRelease :app:bundleRelease` also validates the resulting APK/AAB for nonempty React Native, Hermes, FBJNI, and C++ runtime libraries for every configured ABI. Keep all architecture splits when installing APKs generated from an AAB. Manually test a clean install and an upgrade from the Play internal-testing track on physical devices, including cold starts on ARM64 and 16 KB page-size devices. Monitor the two native-loading Crashlytics issues after rollout. The activity-resume ScreenFragment correction is already in PR #83 and is not changed here.
+
+Do not automatically run emulator tests on this Hackintosh: its Android emulator is unreliable. Use the automated tests and release artifact checks locally, and leave runtime and real-payment verification for manual testing on a physical device.
 
 ## Firebase diagnostics
 
