@@ -109,6 +109,13 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.miuiadshelper"
+    packaging {
+        jniLibs {
+            // Extract native libraries at installation instead of loading them directly
+            // from APK paths. This also enables SoLoader's backup extraction source.
+            useLegacyPackaging = true
+        }
+    }
     defaultConfig {
         applicationId "com.tejasgajjar.miuiadshelper"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -144,6 +151,39 @@ android {
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
         }
+    }
+}
+
+// Validate the distributed artifacts, not just intermediates: a missing runtime
+// library makes the app crash before JavaScript (and billing recovery) can run.
+def verifyNativeRuntime = { File artifact, String prefix ->
+    def abis = providers.gradleProperty("reactNativeArchitectures").get().split(",")*.trim()
+    def libraries = ["libreactnative.so", "libfbjni.so", "libc++_shared.so"]
+    if (hermesEnabled.toBoolean()) libraries += "libhermesvm.so"
+    def archive = new java.util.zip.ZipFile(artifact)
+    try {
+        abis.each { abi ->
+            libraries.each { library ->
+                def path = "${prefix}lib/${abi}/${library}"
+                def entry = archive.getEntry(path)
+                if (entry == null || entry.size <= 0) {
+                    throw new GradleException("Missing native runtime ${path} in ${artifact.name}")
+                }
+            }
+        }
+    } finally {
+        archive.close()
+    }
+}
+
+tasks.matching { it.name in ["assembleRelease", "bundleRelease"] }.configureEach {
+    doLast {
+        def bundle = name == "bundleRelease"
+        def artifacts = fileTree(layout.buildDirectory.dir(bundle ? "outputs/bundle/release" : "outputs/apk/release")) {
+            include(bundle ? "*.aab" : "*.apk")
+        }.files
+        if (artifacts.empty) throw new GradleException("No release artifact found for native runtime verification")
+        artifacts.each { verifyNativeRuntime(it, bundle ? "base/" : "") }
     }
 }
 

@@ -80,6 +80,7 @@ jest.mock('react-native-iap', () => ({
     ServiceDisconnected: 'service-disconnected', ServiceError: 'service-error', ServiceTimeout: 'service-timeout',
     ConnectionClosed: 'connection-closed', InitConnection: 'init-connection', ItemUnavailable: 'item-unavailable',
     BillingUnavailable: 'billing-unavailable', DeveloperError: 'developer-error', SyncError: 'sync-error', PurchaseVerificationFailed: 'purchase-verification-failed',
+    QueryProduct: 'query-product',
   },
 }));
 
