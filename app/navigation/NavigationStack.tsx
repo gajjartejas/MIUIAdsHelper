@@ -21,6 +21,7 @@ import {
   PaperThemeDefault,
 } from 'app/config/app-theme-config';
 import useThemeConfigStore from 'app/store/themeConfig';
+import useAppConfigStore from 'app/store/appConfig';
 import Components from 'app/components';
 import { navigationRef } from 'app/navigation/NavigationService';
 import { useCallback, useRef, useState } from 'react';
@@ -38,7 +39,11 @@ const RootNavigation: React.FC = () => {
   const [devScreenName, setDevScreenName] = useState<string>('');
   const insets = useSafeAreaInsets();
 
-  const isDark = useThemeConfigStore(state => state.isDark);
+  const preferredDark = useThemeConfigStore(state => state.isDark);
+  const purchased = useAppConfigStore(state => state.purchased);
+  // Restoration is asynchronous after reinstall. Keep the saved preference intact
+  // while limiting dark mode to a confirmed or cached purchase entitlement.
+  const isDark = purchased && preferredDark;
   const primary = useThemeConfigStore(state => state.primary);
   const onPrimary = useThemeConfigStore(state => state.onPrimary);
   const secondaryContainer = useThemeConfigStore(state => state.secondaryContainer);
