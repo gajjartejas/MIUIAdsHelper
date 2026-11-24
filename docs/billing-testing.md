@@ -8,6 +8,18 @@ Run `npm test -- --runInBand`, `npm run lint`, and `./node_modules/.bin/tsc --no
 
 Tests cover connection failures and bounded retries, concurrent taps, unavailable/unpriced products, cancellation, pending payment, AlreadyOwned restoration, acknowledgment failures, refunded purchases disappearing, offline cache preservation, stalled native reads, and diagnostic redaction/deduplication.
 
+Catalog queries retry once for transient SDK failures and for `query-product` errors wrapping Google Play network/service response codes (12, -1, 2, 6). Simultaneous catalog reads share the same query. Billing-unavailable (3), item-unavailable (4), developer errors (5), cancellation (1), unknown failures, and timed-out catalog reads are not retried automatically. A timed-out native query may still be running. Payment authorization requests are never retried automatically.
+
+## Native startup verification
+
+The November 2026 Crashlytics review also found startup failures loading `libreactnative.so` on 3.0.0 and `libhermes.so` on 2.2.8. The current React Native version uses `libhermesvm.so`; copying the old Hermes library into this build is not a compatible fix.
+
+Native libraries now use compressed packaging and installation-time extraction for APK and bundle delivery. This provides an extracted native-library directory and allows SoLoader's backup extraction source, instead of relying only on direct APK loading. The tradeoff is additional installed disk usage. This is a loading mitigation, not proof that the historical crashes all had the same cause; incomplete/sideloaded split installations can still fail.
+
+`./gradlew :app:assembleRelease :app:bundleRelease` also validates the resulting APK/AAB for nonempty React Native, Hermes, FBJNI, and C++ runtime libraries for every configured ABI. Keep all architecture splits when installing APKs generated from an AAB. Manually test a clean install and an upgrade from the Play internal-testing track on physical devices, including cold starts on ARM64 and 16 KB page-size devices. Monitor the two native-loading Crashlytics issues after rollout. The activity-resume ScreenFragment correction is already in PR #83 and is not changed here.
+
+Do not automatically run emulator tests on this Hackintosh: its Android emulator is unreliable. Use the automated tests and release artifact checks locally, and leave runtime and real-payment verification for manual testing on a physical device.
+
 ## Firebase diagnostics
 
 Handled billing failures are recorded as **non-fatal Firebase Crashlytics errors**. Search error names beginning with `IAP_`, such as `IAP_acknowledge_network-error` or `IAP_catalog_item-unavailable`. The error message and `IAP` log entry contain:
@@ -34,4 +46,4 @@ Install the correctly signed release from Google Play internal testing using a l
 7. Use Play Billing Lab's response simulator for connection, item-unavailable, developer/configuration, network, and acknowledgment errors. Confirm the matching stage/code appears as a non-fatal in Firebase Crashlytics after upload.
 8. Check a Xiaomi/HyperOS device and another Play-certified Android device, including app background/resume, rotation, and rapid taps. Check unsupported/no-Play devices fail cleanly with no purchasable placeholder rows.
 
-The current local release build is separately blocked by its unavailable configured Android SDK 37 and debug-key release-signing configuration. Resolve those before producing the internal-testing release.
+The repository's release build currently uses the debug signing configuration. Use the correct upload signing configuration before producing the Play internal-testing release; a successful local build does not establish Play Store installation or purchase success.

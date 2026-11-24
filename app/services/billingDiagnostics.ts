@@ -20,6 +20,22 @@ export const billingCode = (error: unknown): ErrorCode => {
   return Object.values(ErrorCode).includes(code as ErrorCode) ? (code as ErrorCode) : ErrorCode.Unknown;
 };
 
+export const isRetryableBillingRead = (error: unknown): boolean => {
+  const code = billingCode(error);
+  // Product queries wrap native network failures as QueryProduct, rather than NetworkError.
+  // Only retry read operations; never use this to retry a payment authorization.
+  if (code === ErrorCode.QueryProduct) {
+    return [12, -1, 2, 6].includes(field(error, 'responseCode') as number);
+  }
+  return [
+    ErrorCode.NetworkError,
+    ErrorCode.ServiceDisconnected,
+    ErrorCode.ServiceError,
+    ErrorCode.ServiceTimeout,
+    ErrorCode.ConnectionClosed,
+  ].includes(code);
+};
+
 export const expectedBillingOutcome = (error: unknown): boolean =>
   [ErrorCode.UserCancelled, ErrorCode.AlreadyOwned, ErrorCode.Pending, ErrorCode.DeferredPayment].includes(
     billingCode(error),

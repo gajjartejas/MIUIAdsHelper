@@ -19,6 +19,8 @@ beforeEach(() => {
   request.mockResolvedValue(null);
 });
 
+afterEach(() => jest.useRealTimers());
+
 it('treats false initialization as a connection failure and reports its stage', async () => {
   init.mockResolvedValueOnce(false);
   await expect(connectBilling()).rejects.toMatchObject({ code: ErrorCode.InitConnection });
@@ -63,6 +65,62 @@ it('requests one-time products and drops unknown or unpriced products', async ()
   fetch.mockResolvedValueOnce(products as Awaited<ReturnType<typeof fetchProducts>>);
   expect(await loadBillingProducts()).toEqual([products[0]]);
   expect(fetch).toHaveBeenCalledWith(expect.objectContaining({ type: 'in-app' }));
+});
+
+it('recovers a catalog query wrapped as QueryProduct with native network response 12', async () => {
+  const error = Object.assign(failure(ErrorCode.QueryProduct), { responseCode: 12 });
+  const products = [{ id: sku, displayPrice: '₹99' }] as Awaited<ReturnType<typeof fetchProducts>>;
+  fetch.mockRejectedValueOnce(error).mockResolvedValueOnce(products);
+  await expect(loadBillingProducts()).resolves.toEqual(products);
+  expect(fetch).toHaveBeenCalledTimes(2);
+  expect(report).toHaveBeenCalledWith('catalog', error);
+});
+
+it('bounds catalog retries and permits a later manual retry after repeated network failure', async () => {
+  const error = Object.assign(failure(ErrorCode.QueryProduct), { responseCode: 12 });
+  fetch.mockRejectedValueOnce(error).mockRejectedValueOnce(error).mockResolvedValueOnce([]);
+  await expect(loadBillingProducts()).rejects.toBe(error);
+  expect(fetch).toHaveBeenCalledTimes(2);
+  await expect(loadBillingProducts()).rejects.toMatchObject({ code: ErrorCode.ItemUnavailable });
+  expect(fetch).toHaveBeenCalledTimes(3);
+});
+
+it.each([3, 4, 5, 1, undefined, '12'])(
+  'does not retry a catalog response that is permanent, unknown, or malformed (%s)',
+  async responseCode => {
+    const error = Object.assign(failure(ErrorCode.QueryProduct), { responseCode });
+    fetch.mockRejectedValueOnce(error);
+    await expect(loadBillingProducts()).rejects.toBe(error);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  },
+);
+
+it('shares simultaneous catalog reads instead of duplicating native queries', async () => {
+  let finish!: (products: Awaited<ReturnType<typeof fetchProducts>>) => void;
+  fetch.mockReturnValueOnce(
+    new Promise(resolve => {
+      finish = resolve;
+    }),
+  );
+  const first = loadBillingProducts();
+  const second = loadBillingProducts();
+  await new Promise(resolve => setImmediate(resolve));
+  expect(fetch).toHaveBeenCalledTimes(1);
+  finish([]);
+  await Promise.all([
+    expect(first).rejects.toMatchObject({ code: ErrorCode.ItemUnavailable }),
+    expect(second).rejects.toMatchObject({ code: ErrorCode.ItemUnavailable }),
+  ]);
+});
+
+it('does not retry a timed-out catalog query while the original native query may still be running', async () => {
+  jest.useFakeTimers();
+  fetch.mockReturnValueOnce(new Promise(() => {}));
+  const assertion = expect(loadBillingProducts()).rejects.toMatchObject({ code: ErrorCode.ServiceTimeout });
+  await jest.advanceTimersByTimeAsync(15000);
+  await assertion;
+  expect(fetch).toHaveBeenCalledTimes(1);
+  expect(jest.getTimerCount()).toBe(0);
 });
 
 it('rejects overlapping requests without charging twice', async () => {
